@@ -1,0 +1,37 @@
+{
+    "name": "deegitalbe/trustup-pro-admin-common",
+    "description": "This package contains pieces of code that are shared between 'admin.trustup.pro' and 'trustup.pro'.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mathieu Henrotay",
+            "email": "mathieu.henrotay@gmail.com"
+        }
+    ],
+    "require": {
+        "jenssegers/mongodb": "^3.8",
+        "henrotaym/laravel-api-client": "^1.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Deegitalbe\\TrustupProAdminCommon\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Deegitalbe\\TrustupProAdminCommon\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Deegitalbe\\TrustupProAdminCommon\\Providers\\TrustupProAdminCommonServiceProvider"
+            ]
+        }
+    }
+}

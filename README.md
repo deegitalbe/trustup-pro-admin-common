@@ -1,2 +1,5 @@
-# trustup-pro-admin-common
-Code shared between trustup.pro and admin.trustup.pro 
+# Installation
+
+## Via composer
+
+    composer require deegitalbe/trustup-pro-admin-common

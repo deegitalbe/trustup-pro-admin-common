@@ -186,4 +186,61 @@ class ExampleTest extends TestCase
         
         $this->assertCount(1, Package::account()::accessedAtLeastAt(now()->subDays(2))->get());
     }
+
+    /**
+     * @test
+     */
+    public function account_access_entry_accessed_before_scope_getting_element_accessed_before_given_date()
+    {
+        
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now()->subDays(2))
+            ->persist();
+        
+        $this->assertCount(1, Package::accountAccessEntry()::accessedBefore(now())->get());
+    }
+
+    /**
+     * @test
+     */
+    public function account_access_entry_accessed_before_scope_not_getting_element_accessed_after_given_date()
+    {
+        
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now()->addDays(2))
+            ->persist();
+        
+        $this->assertCount(0, Package::accountAccessEntry()::accessedBefore(now())->get());
+    }
+
+    /**
+     * @test
+     */
+    public function account_access_entry_accessed_before_scope_not_getting_element_accessed_at_given_date()
+    {
+        $now = now();
+        
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt($now)
+            ->persist();
+        
+        $this->assertCount(0, Package::accountAccessEntry()::accessedBefore($now)->get());
+    }
+
+    /**
+     * @test
+     */
+    public function account_accessed_before_scope_getting_element_accessed_before_given_date()
+    {
+        $account = app(AccountContract::class)
+            ->setUuid('sdlfjslfj')
+            ->persist();
+        
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now()->subDays(2))
+            ->persist()
+            ->setAccount($account);
+        
+        $this->assertCount(1, Package::account()::lastAccessBefore(now())->get());
+    }
 }

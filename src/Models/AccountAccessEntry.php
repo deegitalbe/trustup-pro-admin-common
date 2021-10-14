@@ -109,4 +109,17 @@ class AccountAccessEntry extends MongoModel implements AccountAccessEntryContrac
     {
         return $query->where('access_at', '>=', $accessed_at_least_at);
     }
+
+    /**
+     * Scope limiting accounts access entries to those accessed strictly before specified date.
+     * 
+     * @param Builder $query
+     * @param Carbon $accessed_at_least_at.
+     * @return Builder
+     * 
+     */
+    public function scopeAccessedBefore(Builder $query, Carbon $accessed_before): Builder
+    {
+        return $query->where('access_at', '<', $accessed_before);
+    }
 }

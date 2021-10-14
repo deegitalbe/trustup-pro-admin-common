@@ -72,7 +72,7 @@ class ExampleTest extends TestCase
             ->setTranslated(true)
             ->persist();
 
-        $this->mock(AppClientContract::class)
+        $this->mockThis(AppClientContract::class)
             ->shouldReceive('getAllAccounts')
                 ->with()
                 ->andReturn(collect())

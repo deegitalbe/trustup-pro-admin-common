@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c47e35eb23d514d10cde41baed8c3291",
+    "content-hash": "fc651f778d26de99b71936f38ad86d49",
     "packages": [
         {
             "name": "brick/math",
@@ -910,16 +910,16 @@
         },
         {
             "name": "henrotaym/laravel-test-suite",
-            "version": "v1.0.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/henrotaym/laravel-test-suite.git",
-                "reference": "96b47da319f4e6b69ebe4ab285f843f8090de4e1"
+                "reference": "d090d8b8ddbe728b9228d406fd2b6afde5b140f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/henrotaym/laravel-test-suite/zipball/96b47da319f4e6b69ebe4ab285f843f8090de4e1",
-                "reference": "96b47da319f4e6b69ebe4ab285f843f8090de4e1",
+                "url": "https://api.github.com/repos/henrotaym/laravel-test-suite/zipball/d090d8b8ddbe728b9228d406fd2b6afde5b140f4",
+                "reference": "d090d8b8ddbe728b9228d406fd2b6afde5b140f4",
                 "shasum": ""
             },
             "require-dev": {
@@ -945,9 +945,9 @@
             "description": "Adding recurrent functionalities to laravel test suite.",
             "support": {
                 "issues": "https://github.com/henrotaym/laravel-test-suite/issues",
-                "source": "https://github.com/henrotaym/laravel-test-suite/tree/v1.0.1"
+                "source": "https://github.com/henrotaym/laravel-test-suite/tree/v2.0.0"
             },
-            "time": "2021-10-14T13:12:45+00:00"
+            "time": "2021-10-14T14:21:24+00:00"
         },
         {
             "name": "jean85/pretty-package-versions",
@@ -1092,16 +1092,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.63.0",
+            "version": "v8.64.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "8f3d280f36a427730c8c8fa34316c79eed38781e"
+                "reference": "3337c029e1bb31d9712d27437cc27010ba302c9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/8f3d280f36a427730c8c8fa34316c79eed38781e",
-                "reference": "8f3d280f36a427730c8c8fa34316c79eed38781e",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/3337c029e1bb31d9712d27437cc27010ba302c9e",
+                "reference": "3337c029e1bb31d9712d27437cc27010ba302c9e",
                 "shasum": ""
             },
             "require": {
@@ -1259,7 +1259,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-10-05T14:04:25+00:00"
+            "time": "2021-10-12T13:43:13+00:00"
         },
         {
             "name": "laravel/serializable-closure",

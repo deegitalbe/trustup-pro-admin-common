@@ -148,7 +148,7 @@ class ExampleTest extends TestCase
     /**
      * @test
      */
-    public function account_access_entry_accessed_at_least_at_scope_not_getting_element_accessed_after_given_date()
+    public function account_access_entry_accessed_at_least_at_scope_getting_element_accessed_after_given_date()
     {
         $access_entry = app(AccountAccessEntryContract::class)
             ->setAccessAt(now())
@@ -160,7 +160,7 @@ class ExampleTest extends TestCase
     /**
      * @test
      */
-    public function account_access_entry_accessed_at_least_at_scope_not_getting_element_accessed_at_given_date()
+    public function account_access_entry_accessed_at_least_at_scope_getting_element_accessed_at_given_date()
     {
         $now = now();
         $access_entry = app(AccountAccessEntryContract::class)
@@ -168,5 +168,22 @@ class ExampleTest extends TestCase
             ->persist();
         
         $this->assertCount(1, Package::accountAccessEntry()::accessedAtLeastAt($now)->get());
+    }
+
+    /**
+     * @test
+     */
+    public function account_accessed_at_least_at_scope_getting_element_accessed_after_given_date()
+    {
+        $account = app(AccountContract::class)
+            ->setUuid('sdlfjslfj')
+            ->persist();
+        
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now())
+            ->persist()
+            ->setAccount($account);
+        
+        $this->assertCount(1, Package::account()::accessedAtLeastAt(now()->subDays(2))->get());
     }
 }

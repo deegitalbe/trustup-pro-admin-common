@@ -275,7 +275,7 @@ class Account extends MongoModel implements AccountContract
      */
     public function scopeAccessedAtLeastAt(Builder $query, Carbon $accessed_at_least_at): Builder
     {
-        return $query->whereHas('accountAccessEntry', function(Builder $query) use ($accessed_at_least_at) {
+        return $query->whereHas('accountAccessEntries', function(Builder $query) use ($accessed_at_least_at) {
             $query->accessedAtLeastAt($accessed_at_least_at);
         });
     }

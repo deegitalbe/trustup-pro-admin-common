@@ -1,6 +1,7 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Tests;
 
+use Henrotaym\LaravelTestSuite\TestSuite;
 use Jenssegers\Mongodb\MongodbServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
 use Orchestra\Testbench\TestCase as BaseTestCase;
@@ -11,7 +12,10 @@ use Deegitalbe\TrustupProAdminCommon\Providers\TrustupProAdminCommonServiceProvi
 
 class TestCase extends BaseTestCase
 {
-    use MongoTestDatabase;
+    use
+        MongoTestDatabase,
+        TestSuite
+    ;
     
     /**
      * Providers used bu application (manual registration is compulsory)

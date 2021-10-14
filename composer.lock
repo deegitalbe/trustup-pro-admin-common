@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe85dd2b630b6bd73dc9c35d9116ef95",
+    "content-hash": "c47e35eb23d514d10cde41baed8c3291",
     "packages": [
         {
             "name": "brick/math",
@@ -907,6 +907,47 @@
                 "source": "https://github.com/henrotaym/laravel-helpers/tree/v1.0.0"
             },
             "time": "2021-09-28T11:22:21+00:00"
+        },
+        {
+            "name": "henrotaym/laravel-test-suite",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/henrotaym/laravel-test-suite.git",
+                "reference": "96b47da319f4e6b69ebe4ab285f843f8090de4e1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/henrotaym/laravel-test-suite/zipball/96b47da319f4e6b69ebe4ab285f843f8090de4e1",
+                "reference": "96b47da319f4e6b69ebe4ab285f843f8090de4e1",
+                "shasum": ""
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Henrotaym\\LaravelTestSuite\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mathieu Henrotay",
+                    "email": "mathieu.henrotay@gmail.com"
+                }
+            ],
+            "description": "Adding recurrent functionalities to laravel test suite.",
+            "support": {
+                "issues": "https://github.com/henrotaym/laravel-test-suite/issues",
+                "source": "https://github.com/henrotaym/laravel-test-suite/tree/v1.0.1"
+            },
+            "time": "2021-10-14T13:12:45+00:00"
         },
         {
             "name": "jean85/pretty-package-versions",

@@ -11,7 +11,8 @@
     ],
     "require": {
         "jenssegers/mongodb": "^3.8",
-        "henrotaym/laravel-api-client": "^1.0"
+        "henrotaym/laravel-api-client": "^1.0",
+        "henrotaym/laravel-test-suite": "^1.0"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",

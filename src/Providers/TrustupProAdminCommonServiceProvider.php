@@ -2,12 +2,14 @@
 namespace Deegitalbe\TrustupProAdminCommon\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Deegitalbe\TrustupProAdminCommon\App\AppClient;
 use Deegitalbe\TrustupProAdminCommon\Models\Account;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntry;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Package as UnderlyingPackage;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntryUser;
+use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;

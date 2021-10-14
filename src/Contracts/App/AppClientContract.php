@@ -55,5 +55,13 @@ interface AppClientContract
      * 
      * @param AppContract $app
      */
-    public static function forApp(AppContract $app);
+    public static function forApp(AppContract $app): AppClientContract;
+
+    /**
+     * Linking app to client.
+     * 
+     * @param AppContract $app
+     * @return self
+     */
+    public function setApp(AppContract $app);
 }

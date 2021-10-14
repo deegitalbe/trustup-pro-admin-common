@@ -150,7 +150,7 @@ class AppClient implements AppClientContract
      * @param AppContract $app
      * @return self
      */
-    protected function setApp(AppContract $app): self
+    public function setApp(AppContract $app): self
     {
         $this->app = $app;
 
@@ -176,12 +176,12 @@ class AppClient implements AppClientContract
      * @param AppContract $app
      * @return self
      */
-    public static function forApp(AppContract $app): self
+    public static function forApp(AppContract $app): AppClientContract
     {
         $client = app()->make(ClientContract::class)
             ->setCredential(AppCredential::forApp($app));
         
-        return app()->make(self::class, ['client' => $client])
+        return app()->make(AppClientContract::class, ['client' => $client])
             ->setApp($app);
     }
 }

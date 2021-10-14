@@ -23,7 +23,7 @@ class TestCase extends BaseTestCase
      * @param Application $app
      * @return array
      */
-    protected function getPackageProviders(Application $app)
+    protected function getPackageProviders($app)
     {
         return [
             TrustupProAdminCommonServiceProvider::class,

@@ -280,4 +280,19 @@ class Account extends MongoModel implements AccountContract
         });
     }
 
+    /**
+     * Scope limiting accounts to those having last access strictly before specified date.
+     * 
+     * @param Builder $query
+     * @param Carbon $accessed_at_least_at.
+     * @return Builder
+     * 
+     */
+    public function scopeLastAccessBefore(Builder $query, Carbon $accessed_before): Builder
+    {
+        return $query->whereHas('lastAccountAccessEntry', function(Builder $query) use ($accessed_before) {
+            $query->accessedBefore($accessed_before);
+        });
+    }
+
 }

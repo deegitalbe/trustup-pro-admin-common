@@ -5,6 +5,7 @@ use Deegitalbe\TrustupProAdminCommon\Models\Account;
 use Deegitalbe\TrustupProAdminCommon\Tests\TestCase;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
@@ -15,7 +16,7 @@ class ExampleTest extends TestCase
     /**
      * @test
      */
-    public function returning_true()
+    public function saving_all_models()
     {
         $app = app(AppContract::class)
             ->setKey('agenda')
@@ -59,11 +60,8 @@ class ExampleTest extends TestCase
     /**
      * @test
      */
-    public function getting_app_accounts()
+    public function app_client_getting_app_accounts()
     {
-        // Override authorization key before making this test.
-        // config ([ Package::prefix() . '.authorization' => '']);
-        
         $app = app(AppContract::class)
             ->setKey('agenda')
             ->setUrl('https://agenda.trustup.pro')
@@ -74,6 +72,101 @@ class ExampleTest extends TestCase
             ->setTranslated(true)
             ->persist();
 
-        $this->assertNotNull($app->getClient()->getAllAccounts());
+        $this->mock(AppClientContract::class)
+            ->shouldReceive('getAllAccounts')
+                ->with()
+                ->andReturn(collect())
+            ->shouldReceive('setApp')
+                ->withArgs(function($arg1) use ($app) {
+                    return $arg1->id === $app->id;
+                })
+                ->andReturnSelf();
+
+        $this->assertCount(0, $app->getClient()->getAllAccounts());
+    }
+
+    /**
+     * @test
+     */
+    public function account_getting_last_access_entry()
+    {
+        $account = app(AccountContract::class)
+            ->setUuid('sdlfjslfj')
+            ->persist();
+
+        $access_entry_user = app(AccountAccessEntryUserContract::class)
+            ->setFirstName('Florian')
+            ->setLastName('Husquinet')
+            ->setId(12)
+            ->setAvatar('https://picsum.photos/200/300');
+            
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now())
+            ->persist()
+            ->setAccount($account)
+            ->setUser($access_entry_user);
+        
+        $this->assertEquals(Package::account()::first()->getLastAccountAccessEntry()->id, $access_entry->id);
+    }
+
+    /**
+     * @test
+     */
+    public function account_getting_last_access_at()
+    {
+        $account = app(AccountContract::class)
+            ->setUuid('sdlfjslfj')
+            ->persist();
+
+        $access_entry_user = app(AccountAccessEntryUserContract::class)
+            ->setFirstName('Florian')
+            ->setLastName('Husuinet')
+            ->setId(12)
+            ->setAvatar('https://picsum.photos/200/300');
+        
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now())
+            ->persist()
+            ->setAccount($account)
+            ->setUser($access_entry_user);
+        
+        $this->assertTrue($account->fresh()->getLastAccessAt()->eq($access_entry->getAccessAt()));
+    }
+
+    /**
+     * @test
+     */
+    public function account_access_entry_accessed_at_least_at_scope_not_getting_element_accessed_before_given_date()
+    {
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now()->subDays(2))
+            ->persist();
+        
+        $this->assertCount(0, Package::accountAccessEntry()::accessedAtLeastAt(now())->get());
+    }
+
+    /**
+     * @test
+     */
+    public function account_access_entry_accessed_at_least_at_scope_not_getting_element_accessed_after_given_date()
+    {
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now())
+            ->persist();
+        
+        $this->assertCount(1, Package::accountAccessEntry()::accessedAtLeastAt(now()->subDays(2))->get());
+    }
+
+    /**
+     * @test
+     */
+    public function account_access_entry_accessed_at_least_at_scope_not_getting_element_accessed_at_given_date()
+    {
+        $now = now();
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt($now)
+            ->persist();
+        
+        $this->assertCount(1, Package::accountAccessEntry()::accessedAtLeastAt($now)->get());
     }
 }

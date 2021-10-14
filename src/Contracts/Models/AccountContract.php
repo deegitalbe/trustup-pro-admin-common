@@ -33,6 +33,13 @@ interface AccountContract extends PersistableContract
     public function addAccountAccessEntry(AccountAccessEntryContract $access_entry);
 
     /**
+     * Get last account access entry.
+     * 
+     * @return AccountAccessEntryContract|null null if not accessed yet.
+     */
+    public function getLastAccountAccessEntry(): ?AccountAccessEntryContract;
+
+    /**
      * Updating application account using API.
      * 
      * @return bool success status.
@@ -57,6 +64,13 @@ interface AccountContract extends PersistableContract
      * @return Carbon|null null if not deleted.
      */
     public function getDeletedAt(): ?Carbon;
+
+    /**
+     * Get last time account was accessed.
+     * 
+     * @return Carbon|null null if not accessed yet.
+     */
+    public function getLastAccessAt(): ?Carbon;
     
     /**
      * Set delete date.

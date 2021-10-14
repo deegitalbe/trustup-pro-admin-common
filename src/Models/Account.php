@@ -55,6 +55,11 @@ class Account extends MongoModel implements AccountContract
         return $this->hasMany(Package::accountAccessEntry());
     }
 
+    public function lastAccountAccessEntry()
+    {
+        return $this->hasOne(Package::accountAccessEntry())->latest();
+    }
+
     public function chargebee(): EmbedsOne
     {
         return $this->embedsOne(Package::accountChargebee());
@@ -202,6 +207,26 @@ class Account extends MongoModel implements AccountContract
         return $this->persist();
     }
 
+    /**
+     * Get last time account was accessed.
+     * 
+     * @return Carbon|null null if not accessed yet.
+     */
+    public function getLastAccessAt(): ?Carbon
+    {
+        return optional($this->lastAccountAccessEntry)->getAccessAt();
+    }
+
+    /**
+     * Get last account access entry.
+     * 
+     * @return AccountAccessEntryContract|null null if not accessed yet.
+     */
+    public function getLastAccountAccessEntry(): ?AccountAccessEntryContract
+    {
+        return $this->lastAccountAccessEntry;
+    }
+
     public function isActive(): bool
     {
         return !!$this->uuid;
@@ -238,6 +263,21 @@ class Account extends MongoModel implements AccountContract
     public function scopeWhereProfessional(Builder $query, $professional): Builder
     {
         return $query->where('professional_id', $professional->id);
+    }
+
+    /**
+     * Scope limiting accounts to those accessed strictly before specified date.
+     * 
+     * @param Builder $query
+     * @param Carbon $accessed_at_least_at.
+     * @return Builder
+     * 
+     */
+    public function scopeAccessedAtLeastAt(Builder $query, Carbon $accessed_at_least_at): Builder
+    {
+        return $query->whereHas('accountAccessEntry', function(Builder $query) use ($accessed_at_least_at) {
+            $query->accessedAtLeastAt($accessed_at_least_at);
+        });
     }
 
 }

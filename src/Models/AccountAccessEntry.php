@@ -2,6 +2,7 @@
 namespace Deegitalbe\TrustupProAdminCommon\Models;
 
 use Carbon\Carbon;
+use Jenssegers\Mongodb\Eloquent\Builder;
 use Jenssegers\Mongodb\Relations\BelongsTo;
 use Jenssegers\Mongodb\Relations\EmbedsOne;
 use Deegitalbe\TrustupProAdminCommon\Models\Account;
@@ -94,5 +95,18 @@ class AccountAccessEntry extends MongoModel implements AccountAccessEntryContrac
     public function getUser(): AccountAccessEntryUserContract
     {
         return $this->user;
+    }
+
+    /**
+     * Scope limiting accounts access entries to those accessed strictly before specified date.
+     * 
+     * @param Builder $query
+     * @param Carbon $accessed_at_least_at.
+     * @return Builder
+     * 
+     */
+    public function scopeAccessedAtLeastAt(Builder $query, Carbon $accessed_at_least_at): Builder
+    {
+        return $query->where('access_at', '>=', $accessed_at_least_at);
     }
 }

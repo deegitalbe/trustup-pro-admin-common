@@ -266,7 +266,7 @@ class Account extends MongoModel implements AccountContract
     }
 
     /**
-     * Scope limiting accounts to those accessed strictly before specified date.
+     * Scope limiting accounts to those accessed at least at specified date.
      * 
      * @param Builder $query
      * @param Carbon $accessed_at_least_at.

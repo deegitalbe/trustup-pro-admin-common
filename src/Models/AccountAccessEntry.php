@@ -98,7 +98,7 @@ class AccountAccessEntry extends MongoModel implements AccountAccessEntryContrac
     }
 
     /**
-     * Scope limiting accounts access entries to those accessed strictly before specified date.
+     * Scope limiting accounts access entries to those accessed at least at specified date.
      * 
      * @param Builder $query
      * @param Carbon $accessed_at_least_at.

@@ -1,7 +1,7 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Models;
 
-use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\MongoModel;
+use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\EmbeddableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
 
@@ -9,12 +9,12 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserCont
  * User who successfully accessed to account.
  * 
  */
-class AccountAccessEntryUser extends MongoModel implements AccountAccessEntryUserContract
+class AccountAccessEntryUser extends EmbeddableMongoModel implements AccountAccessEntryUserContract
 {
     protected $fillable = [
         'first_name',
         'last_name',
-        'id',
+        'user_id',
         'avatar'
     ];
 
@@ -55,7 +55,7 @@ class AccountAccessEntryUser extends MongoModel implements AccountAccessEntryUse
      */
     public function getId(): int
     {
-        return $this->id;
+        return $this->user_id;
     }
 
      /**
@@ -102,7 +102,7 @@ class AccountAccessEntryUser extends MongoModel implements AccountAccessEntryUse
      */
     public function setId(int $id): self
     {
-        $this->id = $id;
+        $this->user_id = $id;
 
         return $this;
     }

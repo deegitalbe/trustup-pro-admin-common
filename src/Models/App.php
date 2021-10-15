@@ -7,11 +7,11 @@ use Jenssegers\Mongodb\Relations\HasMany;
 use Deegitalbe\TrustupProAdminCommon\App\AppClient;
 use Deegitalbe\TrustupProAdminCommon\Models\Account;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
-use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\MongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
+use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 
-class App extends MongoModel implements AppContract
+class App extends PersistableMongoModel implements AppContract
 {
     /**
      * Dashboard key (trustup.pro)

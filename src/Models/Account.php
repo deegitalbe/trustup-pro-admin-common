@@ -12,9 +12,9 @@ use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountChargebee;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntry;
-use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\MongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
+use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 
@@ -22,7 +22,7 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract
  * Professional app account.
  * 
  */
-class Account extends MongoModel implements AccountContract
+class Account extends PersistableMongoModel implements AccountContract
 {
     use SoftDeletes;
 

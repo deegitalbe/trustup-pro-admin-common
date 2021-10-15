@@ -1,14 +1,14 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Contracts\Models;
 
-use Deegitalbe\TrustupProAdminCommon\Contracts\PersistableContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\EmbeddableContract;
 
 /**
  * User who successfully accessed to account.
  * 
  */
-interface AccountAccessEntryUserContract extends PersistableContract
+interface AccountAccessEntryUserContract extends EmbeddableContract
 {
     /**
      * Access entry linked to this user.

@@ -7,13 +7,13 @@ use Jenssegers\Mongodb\Relations\BelongsTo;
 use Jenssegers\Mongodb\Relations\EmbedsOne;
 use Deegitalbe\TrustupProAdminCommon\Models\Account;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
-use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\MongoModel;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntryUser;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
+use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
 
-class AccountAccessEntry extends MongoModel implements AccountAccessEntryContract
+class AccountAccessEntry extends PersistableMongoModel implements AccountAccessEntryContract
 {
     protected $fillable = ['access_at'];
 
@@ -82,9 +82,7 @@ class AccountAccessEntry extends MongoModel implements AccountAccessEntryContrac
      */
     public function setUser(AccountAccessEntryUserContract $user): self
     {
-        $this->user()->save($user);
-
-        return $this;
+        return $this->embedsOneThis($user, 'user');
     }
 
     /**

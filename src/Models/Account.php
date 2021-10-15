@@ -295,4 +295,73 @@ class Account extends MongoModel implements AccountContract
         });
     }
 
+    /**
+     * Scope limiting accounts to those having trial status.
+     * 
+     * @param Builder $query
+     * @return Builder
+     * 
+     */
+    public function scopeHavingTrialStatus(Builder $query): Builder
+    {
+        return $query->whereHas('chargebee', function(Builder $query) {
+            $query->inTrial();
+        });
+    }
+
+    /**
+     * Scope limiting accounts to those having active status.
+     * 
+     * @param Builder $query
+     * @return Builder
+     * 
+     */
+    public function scopeHavingActiveStatus(Builder $query): Builder
+    {
+        return $query->whereHas('chargebee', function(Builder $query) {
+            $query->active();
+        });
+    }
+
+    /**
+     * Scope limiting accounts to those having cancelled status.
+     * 
+     * @param Builder $query
+     * @return Builder
+     * 
+     */
+    public function scopeHavingCancelledStatus(Builder $query): Builder
+    {
+        return $query->whereHas('chargebee', function(Builder $query) {
+            $query->cancelled();
+        });
+    }
+
+    /**
+     * Scope limiting accounts to those having cancelled status.
+     * 
+     * @param Builder $query
+     * @return Builder
+     * 
+     */
+    public function scopeHavingNonRenewingStatus(Builder $query): Builder
+    {
+        return $query->whereHas('chargebee', function(Builder $query) {
+            $query->nonRenewing();
+        });
+    }
+
+    /**
+     * Scope limiting accounts to those having cancelled status.
+     * 
+     * @param Builder $query
+     * @param status $status account status key
+     * @return Builder
+     */
+    public function scopeHavingStatus(Builder $query, string $status): Builder
+    {
+        return $query->whereHas('chargebee', function(Builder $query) use ($status) {
+            $query->whereStatus($status);
+        });
+    }
 }

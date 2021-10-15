@@ -12,6 +12,11 @@ class AccountChargebee extends MongoModel implements AccountChargebeeContract
         'status'
     ];
 
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(Package::account());
+    }
+
     public function getStatus(): string
     {
         return $this->status;

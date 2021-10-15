@@ -2,6 +2,7 @@
 namespace Deegitalbe\TrustupProAdminCommon\Contracts\Models;
 
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Deegitalbe\TrustupProAdminCommon\Contracts\PersistableContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 
@@ -25,5 +26,5 @@ interface AccountChargebeeContract extends PersistableContract
     
     public function isNonRenewing(): bool;
 
-    public function getAccount(): AccountContract;
+    public function getAccounts(): Collection;
 }

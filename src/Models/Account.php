@@ -60,9 +60,9 @@ class Account extends MongoModel implements AccountContract
         return $this->hasOne(Package::accountAccessEntry())->latest();
     }
 
-    public function chargebee(): EmbedsOne
+    public function chargebee(): BelongsTo
     {
-        return $this->embedsOne(Package::accountChargebee());
+        return $this->belongsTo(Package::accountChargebee(), 'account_chargebee_id');
     }
 
     public function getChargebee(): ?AccountChargebeeContract
@@ -73,12 +73,12 @@ class Account extends MongoModel implements AccountContract
     public function setChargebee(?AccountChargebeeContract $chargebee): self
     {
         if ( ! $chargebee ) {
-            $this->chargebee()->delete();
-            return $this;
+            $this->chargebee()->dissociate();
+            return $this->persist();
         }
 
-        $this->chargebee()->save($chargebee);
-        return $this;
+        $this->chargebee()->associate($chargebee->persist());
+        return $this->persist();
     }
 
     /**

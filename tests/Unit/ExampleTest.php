@@ -4,6 +4,7 @@ namespace Deegitalbe\TrustupProAdminCommon\Tests\Unit;
 use Deegitalbe\TrustupProAdminCommon\Models\Account;
 use Deegitalbe\TrustupProAdminCommon\Tests\TestCase;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
+use Deegitalbe\TrustupProAdminCommon\Models\AccountChargebee;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
@@ -13,6 +14,127 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserCont
 
 class ExampleTest extends TestCase
 {
+    /**
+     * @test
+     */
+    public function account_chargebee_status_where_status_scope()
+    {
+        $chargebee = app(AccountChargebeeContract::class)
+            ->setStatus(Package::accountChargebee()::TRIAL)
+            ->setId('dlfkjqlsfjlsdkjfql')
+            ->persist();
+        
+        $this->assertCount(1, Package::accountChargebee()::whereStatus(Package::accountChargebee()::TRIAL)->get());
+    }
+
+    /**
+     * @test
+     */
+    public function account_chargebee_status_in_trial_scope()
+    {
+        $chargebee = app(AccountChargebeeContract::class)
+            ->setStatus(Package::accountChargebee()::TRIAL)
+            ->setId('dlfkjqlsfjlsdkjfql')
+            ->persist();
+        
+        $this->assertCount(1, Package::accountChargebee()::inTrial()->get());
+    }
+
+    /**
+     * @test
+     */
+    public function account_chargebee_status_active_scope()
+    {
+        $chargebee = app(AccountChargebeeContract::class)
+            ->setStatus(Package::accountChargebee()::ACTIVE)
+            ->setId('dlfkjqlsfjlsdkjfql')
+            ->persist();
+        
+        $this->assertCount(1, Package::accountChargebee()::active()->get());
+    }
+
+    /**
+     * @test
+     */
+    public function account_chargebee_status_cancelled_scope()
+    {
+        $chargebee = app(AccountChargebeeContract::class)
+            ->setStatus(Package::accountChargebee()::CANCELLED)
+            ->setId('dlfkjqlsfjlsdkjfql')
+            ->persist();
+        
+        $this->assertCount(1, Package::accountChargebee()::cancelled()->get());
+    }
+
+    /**
+     * @test
+     */
+    public function account_chargebee_status_non_renewing_scope()
+    {
+        $chargebee = app(AccountChargebeeContract::class)
+            ->setStatus(Package::accountChargebee()::NON_RENEWING)
+            ->setId('dlfkjqlsfjlsdkjfql')
+            ->persist();
+        
+        $this->assertCount(1, Package::accountChargebee()::nonRenewing()->get());
+    }
+
+    /**
+     * @test
+     */
+    public function account_having_in_trial_status_scope()
+    {
+        $chargebee = app(AccountChargebeeContract::class)
+            ->setStatus(Package::accountChargebee()::TRIAL)
+            ->setId('dlfkjqlsfjlsdkjfql')
+            ->persist();
+
+        $account = app(AccountContract::class)
+            ->setUuid('sdlfjslfj')
+            ->persist()
+            ->setChargebee($chargebee);
+        
+        $this->assertCount(1, Package::account()::havingTrialStatus()->get());
+    }
+
+    /**
+     * @test
+     */
+    public function account_chargebee_status_getting_accounts()
+    {
+        $chargebee = app(AccountChargebeeContract::class)
+            ->setStatus(Package::accountChargebee()::NON_RENEWING)
+            ->setId('dlfkjqlsfjlsdkjfql')
+            ->persist();
+        
+        $account = app(AccountContract::class)
+            ->setUuid('sdlfjslfj')
+            ->persist()
+            ->setChargebee($chargebee);
+        
+        $this->assertCount(1, $chargebee->fresh()->getAccounts());
+    }
+
+    /**
+     * @test
+     */
+    public function account_access_entry_user_getting_account_access_entry()
+    {
+        $access_entry_user = app(AccountAccessEntryUserContract::class)
+            ->setFirstName('Florian')
+            ->setLastName('Husquinet')
+            ->setId(12)
+            ->setAvatar('https://picsum.photos/200/300');
+            
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now())
+            ->persist()
+            ->setUser($access_entry_user);
+        
+        $this->assertEquals($access_entry->fresh()->id, $access_entry->fresh()->getUser()->getAccountAccessEntry()->id);
+        $this->assertNull($access_entry_user->fresh());
+    }
+
     /**
      * @test
      */

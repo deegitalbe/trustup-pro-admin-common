@@ -312,6 +312,20 @@ class Account extends PersistableMongoModel implements AccountContract
         });
     }
 
+
+    /**
+     * Scope limiting accounts to those not concerning dashboard.
+     * 
+     * @param Builder $query
+     * @return Builder
+     * 
+     */
+    public function scopeNotDashboard(Builder $query): Builder
+    {
+        return $query->whereHas('app', function($query) {
+            $query->notDashboard();
+        });
+    }
     /**
      * Scope limiting accounts to those having trial status.
      * 

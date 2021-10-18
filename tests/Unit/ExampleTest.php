@@ -34,6 +34,39 @@ class ExampleTest extends TestCase
     /**
      * @test
      */
+    public function account_scope_not_dashboard_excluding()
+    {
+        $app_dashboard = app(AppContract::class)
+            ->setKey(Package::app()::DASHBOARD)
+            ->persist();
+
+        $account = app()->make(AccountContract::class)
+            ->persist()
+            ->setApp($app_dashboard);
+        
+        $this->assertEquals(0, Package::account()::notDashboard()->count());
+    }
+
+    /**
+     * @test
+     */
+    public function account_scope_not_dashboard_including()
+    {
+        $app_not_dashboard = app(AppContract::class)
+            ->setKey(':salam')
+            ->persist();
+
+        $account = app()->make(AccountContract::class)
+            ->persist()
+            ->setApp($app_not_dashboard);
+        
+        $this->assertEquals(1, Package::account()::notDashboard()->count());
+        $this->assertEquals($account->id, Package::account()::notDashboard()->first()->id);
+    }
+
+    /**
+     * @test
+     */
     public function account_chargebee_status_where_status_scope()
     {
         $chargebee = app(AccountChargebeeContract::class)

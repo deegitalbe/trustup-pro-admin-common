@@ -100,7 +100,7 @@ class ExampleTest extends TestCase
     /**
      * @test
      */
-    public function account_chargebee_status_getting_accounts()
+    public function account_chargebee_status_getting_account()
     {
         $chargebee = app(AccountChargebeeContract::class)
             ->setStatus(Package::accountChargebee()::NON_RENEWING)
@@ -112,7 +112,26 @@ class ExampleTest extends TestCase
             ->persist()
             ->setChargebee($chargebee);
         
-        $this->assertCount(1, $chargebee->fresh()->getAccounts());
+        $this->assertEquals($account->id, $chargebee->fresh()->getAccount()->id);
+    }
+
+    /**
+     * @test
+     */
+    public function account_deleting_status_when_setting_account_status_to_null()
+    {
+        $chargebee = app(AccountChargebeeContract::class)
+            ->setStatus(Package::accountChargebee()::NON_RENEWING)
+            ->setId('dlfkjqlsfjlsdkjfql');
+        
+        $account = app(AccountContract::class)
+            ->setUuid('sdlfjslfj')
+            ->persist()
+            ->setChargebee($chargebee)
+            ->setChargebee(null);
+        
+        $this->assertNull($account->fresh()->getChargebee());
+        $this->assertEquals(0, Package::accountChargebee()::count());
     }
 
     /**

@@ -294,6 +294,35 @@ class ExampleTest extends TestCase
     /**
      * @test
      */
+    public function account_not_accessed_scope_excluding()
+    {
+        $account = app(AccountContract::class)
+            ->setUuid('sdlfjslfj')
+            ->persist();
+        
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now())
+            ->persist()
+            ->setAccount($account);
+        
+        $this->assertEquals(0, $account->notAccessed()->count());
+    }
+
+    /**
+     * @test
+     */
+    public function account_not_accessed_scope_including()
+    {
+        $account = app(AccountContract::class)
+            ->setUuid('sdlfjslfj')
+            ->persist();
+        
+        $this->assertEquals(1, $account->notAccessed()->count());
+    }
+
+    /**
+     * @test
+     */
     public function account_access_entry_accessed_at_least_at_scope_not_getting_element_accessed_before_given_date()
     {
         $access_entry = app(AccountAccessEntryContract::class)

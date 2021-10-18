@@ -299,6 +299,20 @@ class Account extends PersistableMongoModel implements AccountContract
     }
 
     /**
+     * Scope limiting accounts to those not having last access.
+     * 
+     * @param Builder $query
+     * @return Builder
+     * 
+     */
+    public function scopeNotAccessed(Builder $query): Builder
+    {
+        return $query->where(function($query) {
+            $query->doesntHave('lastAccountAccessEntry');
+        });
+    }
+
+    /**
      * Scope limiting accounts to those having trial status.
      * 
      * @param Builder $query

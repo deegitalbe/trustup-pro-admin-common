@@ -367,6 +367,19 @@ class App extends PersistableMongoModel implements AppContract
     }
 
     /**
+     * Scope limiting application to those not being dashboard.
+     * 
+     * @param Builder $query
+     * @param string $key
+     * @return Builder
+     * 
+     */
+    public function scopeNotDashboard(Builder $query): Builder
+    {
+        return $query->where('key', "!=", self::DASHBOARD);
+    }
+
+    /**
      * Scope ordering applications by order attribute.
      * 
      * @param Builder $query

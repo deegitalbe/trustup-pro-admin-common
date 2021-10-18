@@ -17,6 +17,23 @@ class ExampleTest extends TestCase
     /**
      * @test
      */
+    public function app_scope_not_dashboard()
+    {
+        $app_not_dashboard = app(AppContract::class)
+            ->setKey('agenda')
+            ->persist();
+        
+        $app_dashboard = app(AppContract::class)
+            ->setKey(Package::app()::DASHBOARD)
+            ->persist();
+        
+        $this->assertEquals(1, Package::app()::notDashboard()->count());
+        $this->assertEquals("agenda", Package::app()::notDashboard()->first()->getKey());
+    }
+
+    /**
+     * @test
+     */
     public function account_chargebee_status_where_status_scope()
     {
         $chargebee = app(AccountChargebeeContract::class)

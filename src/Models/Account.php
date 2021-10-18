@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Jenssegers\Mongodb\Eloquent\Builder;
+use Jenssegers\Mongodb\Relations\HasOne;
 use Jenssegers\Mongodb\Relations\HasMany;
 use Jenssegers\Mongodb\Relations\EmbedsOne;
 use Jenssegers\Mongodb\Eloquent\SoftDeletes;
@@ -55,14 +56,14 @@ class Account extends PersistableMongoModel implements AccountContract
         return $this->hasMany(Package::accountAccessEntry());
     }
 
-    public function lastAccountAccessEntry()
+    public function lastAccountAccessEntry(): HasOne
     {
         return $this->hasOne(Package::accountAccessEntry())->latest();
     }
 
-    public function chargebee(): BelongsTo
+    public function chargebee(): HasOne
     {
-        return $this->belongsTo(Package::accountChargebee(), 'account_chargebee_id');
+        return $this->hasOne(Package::accountChargebee());
     }
 
     public function getChargebee(): ?AccountChargebeeContract
@@ -72,13 +73,15 @@ class Account extends PersistableMongoModel implements AccountContract
 
     public function setChargebee(?AccountChargebeeContract $chargebee): self
     {
+        // Deleting status from database
         if ( ! $chargebee ) {
-            $this->chargebee()->dissociate();
-            return $this->persist();
+            $this->chargebee()->delete();
+            return $this->refresh();
         }
 
-        $this->chargebee()->associate($chargebee->persist());
-        return $this->persist();
+        // Saving relationship
+        $this->chargebee()->save($chargebee);
+        return $this->refresh();
     }
 
     /**

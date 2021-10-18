@@ -3,8 +3,7 @@ namespace Deegitalbe\TrustupProAdminCommon\Models;
 
 use Carbon\Carbon;
 use Jenssegers\Mongodb\Eloquent\Builder;
-use Jenssegers\Mongodb\Relations\HasMany;
-use Illuminate\Database\Eloquent\Collection;
+use Jenssegers\Mongodb\Relations\BelongsTo;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
@@ -45,9 +44,9 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
         'subscription_id'
     ];
 
-    public function accounts(): HasMany
+    public function account(): BelongsTo
     {
-        return $this->hasMany(Package::account());
+        return $this->belongsTo(Package::account());
     }
 
     public function getStatus(): string
@@ -115,9 +114,9 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
         return $this->status === self::NON_RENEWING;
     }
 
-    public function getAccounts(): Collection
+    public function getAccount(): AccountContract
     {
-        return $this->accounts;
+        return $this->account;
     }
 
     /**

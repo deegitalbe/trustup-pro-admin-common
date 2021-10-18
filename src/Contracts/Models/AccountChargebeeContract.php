@@ -26,5 +26,5 @@ interface AccountChargebeeContract extends PersistableContract
     
     public function isNonRenewing(): bool;
 
-    public function getAccounts(): Collection;
+    public function getAccount(): AccountContract;
 }

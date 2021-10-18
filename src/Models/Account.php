@@ -312,6 +312,23 @@ class Account extends PersistableMongoModel implements AccountContract
         });
     }
 
+    /**
+     * Scope limiting accounts to those not having last access or having access before given date.
+     * 
+     * @param Builder $query
+     * @param Carbon $accessed_at_least_at.
+     * @return Builder
+     * 
+     */
+    public function scopeNotAccessedOrLastAccessBefore(Builder $query, Carbon $accessed_before): Builder
+    {
+        return $query->where(function($query) use ($accessed_before) {
+            $query->lastAccessBefore($accessed_before)
+                ->orWhere(function($query) { 
+                    $query->notAccessed();
+                 });
+        });
+    }
 
     /**
      * Scope limiting accounts to those not concerning dashboard.
@@ -326,6 +343,7 @@ class Account extends PersistableMongoModel implements AccountContract
             $query->notDashboard();
         });
     }
+
     /**
      * Scope limiting accounts to those having trial status.
      * 

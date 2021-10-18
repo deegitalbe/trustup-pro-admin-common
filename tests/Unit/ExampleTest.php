@@ -344,6 +344,52 @@ class ExampleTest extends TestCase
     /**
      * @test
      */
+    public function account_not_accessed_or_access_before_including_respecting_date()
+    {
+        $account = app(AccountContract::class)
+            ->setUuid('sdlfjslfj')
+            ->persist();
+        
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now()->subDays(2))
+            ->persist()
+            ->setAccount($account);
+        
+        $this->assertEquals(1, Package::account()::notAccessedOrLastAccessBefore(now())->count());
+    }
+
+    /**
+     * @test
+     */
+    public function account_not_accessed_or_access_before_excluding_not_respecting_date()
+    {
+        $account = app(AccountContract::class)
+            ->setUuid('sdlfjslfj')
+            ->persist();
+        
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now())
+            ->persist()
+            ->setAccount($account);
+        
+        $this->assertEquals(0, Package::account()::notAccessedOrLastAccessBefore(now()->subDays(2))->count());
+    }
+
+    /**
+     * @test
+     */
+    public function account_not_accessed_or_access_before_including_respecting_not_accessed()
+    {
+        $account = app(AccountContract::class)
+            ->setUuid('sdlfjslfj')
+            ->persist();
+        
+        $this->assertEquals(1, Package::account()::notAccessedOrLastAccessBefore(now())->count());
+    }
+
+    /**
+     * @test
+     */
     public function account_not_accessed_scope_including()
     {
         $account = app(AccountContract::class)

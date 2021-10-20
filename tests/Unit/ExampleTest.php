@@ -1,6 +1,7 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Tests\Unit;
 
+use Carbon\Carbon;
 use Deegitalbe\TrustupProAdminCommon\Models\Account;
 use Deegitalbe\TrustupProAdminCommon\Tests\TestCase;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
@@ -14,6 +15,20 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserCont
 
 class ExampleTest extends TestCase
 {
+    /**
+     * @test
+     */
+    public function account_setting_and_getting_synchronization_date()
+    {
+        $now = new Carbon('2020-10-10 10:00:00');
+        $this->travelTo($now);
+        $account = app(AccountContract::class)
+            ->setSynchronizedAt(now());
+        $this->travelBack();
+        
+        $this->assertTrue($account->fresh()->getSynchronizedAt()->eq($now));
+    }
+
     /**
      * @test
      */

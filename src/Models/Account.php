@@ -31,10 +31,11 @@ class Account extends PersistableMongoModel implements AccountContract
         'uuid',
         'professional_id',
         'app_id',
-        'deleted_at'
+        'deleted_at',
+        'synchronized_at'
     ];
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'synchronized_at'];
 
     /**
      * App relation.
@@ -207,6 +208,27 @@ class Account extends PersistableMongoModel implements AccountContract
         endif;
         
         $this->deleted_at = null;
+        return $this->persist();
+    }
+
+    /**
+     * Get synchronization date.
+     * 
+     * @return Carbon|null null if not synchronized yet.
+     */
+    public function getSynchronizedAt(): ?Carbon
+    {
+        return $this->synchronized_at;
+    }
+    
+    /**
+     * Set synchronization date.
+     * @param Carbon $synchronized_at
+     */
+    public function setSynchronizedAt(Carbon $synchronized_at): AccountContract
+    {
+        $this->synchronized_at = $synchronized_at;
+
         return $this->persist();
     }
 

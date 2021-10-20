@@ -78,6 +78,19 @@ interface AccountContract extends PersistableContract
      */
     public function setDeletedAt(?Carbon $deleted_at);
 
+    /**
+     * Get synchronization date.
+     * 
+     * @return Carbon|null null if not synchronized yet.
+     */
+    public function getSynchronizedAt(): ?Carbon;
+    
+    /**
+     * Set synchronization date.
+     * @param Carbon $synchronized_at
+     */
+    public function setSynchronizedAt(Carbon $synchronized_at): AccountContract;
+
     public function setRaw(array $data);
 
     public function getRaw(): ?array;

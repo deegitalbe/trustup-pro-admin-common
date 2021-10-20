@@ -32,10 +32,14 @@ class Account extends PersistableMongoModel implements AccountContract
         'professional_id',
         'app_id',
         'deleted_at',
-        'synchronized_at'
+        'synchronized_at',
+        'initial_created_at',
+        'raw'
     ];
 
-    protected $dates = ['deleted_at', 'synchronized_at'];
+    protected $dates = ['deleted_at', 'synchronized_at', 'initial_created_at'];
+
+    protected $casts = ['raw' => 'array'];
 
     /**
      * App relation.

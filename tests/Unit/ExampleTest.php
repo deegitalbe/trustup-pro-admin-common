@@ -32,6 +32,32 @@ class ExampleTest extends TestCase
     /**
      * @test
      */
+    public function account_setting_and_getting_initial_created_at_date()
+    {
+        $now = new Carbon('2020-10-10 10:00:00');
+        $this->travelTo($now);
+        $account = app(AccountContract::class)
+            ->setInitialCreatedAt(now());
+        $this->travelBack();
+        
+        $this->assertTrue($account->fresh()->getInitialCreatedAt()->eq($now));
+    }
+
+    /**
+     * @test
+     */
+    public function account_setting_and_getting_raw()
+    {
+        $raw = ['name' => "Francis"];
+        $account = app(AccountContract::class)
+            ->setRaw($raw);
+        
+        $this->assertEquals($account->fresh()->getRaw(), $raw);
+    }
+
+    /**
+     * @test
+     */
     public function app_scope_not_dashboard()
     {
         $app_not_dashboard = app(AppContract::class)

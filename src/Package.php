@@ -4,6 +4,16 @@ namespace Deegitalbe\TrustupProAdminCommon;
 class Package
 {
     /**
+     * Getting package version (useful to make sure projetcs use same version).
+     * 
+     * @return string
+     */
+    public function version(): string
+    {
+        return "2.3.0";
+    }
+
+    /**
      * Getting account class name.
      * 
      * @return string

@@ -79,13 +79,13 @@ class Account extends PersistableMongoModel implements AccountContract
     public function setChargebee(?AccountChargebeeContract $chargebee): self
     {
         // Deleting status from database
-        if ( ! $chargebee ) {
-            $this->chargebee()->delete();
-            return $this->refresh();
+        $this->chargebee()->delete();
+        
+        if ( $chargebee ) {
+            // Saving relationship
+            $this->chargebee()->save($chargebee);
         }
-
-        // Saving relationship
-        $this->chargebee()->save($chargebee);
+        
         return $this->refresh();
     }
 

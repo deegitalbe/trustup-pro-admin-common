@@ -40,5 +40,12 @@ return [
     /**
      * Authorizations
      */
-    'authorization' => env('TRUSTUP_SERVER_AUTHORIZATION')
+    'authorization' => env('TRUSTUP_SERVER_AUTHORIZATION'),
+    /**
+     * Projects using this package (only their url).
+     */
+    'projects' => [
+        env('TRUSTUP_ADMIN_PACKAGE_ADMIN_URL'),
+        env('TRUSTUP_ADMIN_PACKAGE_TRUSTUP_PRO_URL'),
+    ]
 ];

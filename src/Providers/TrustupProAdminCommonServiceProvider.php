@@ -1,16 +1,22 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Providers;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Deegitalbe\TrustupProAdminCommon\App\AppClient;
 use Deegitalbe\TrustupProAdminCommon\Models\Account;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
+use Deegitalbe\TrustupProAdminCommon\Project\Project;
+use Deegitalbe\TrustupProAdminCommon\Project\ProjectClient;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntry;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Package as UnderlyingPackage;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntryUser;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
+use Deegitalbe\TrustupProAdminCommon\Http\Middleware\AuthorizedServer;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
@@ -21,14 +27,29 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
     {
         $this->registerConfig()
             ->bindFacade()
-            ->bindModels();
+            ->bindModels()
+            ->bindProjects();
         
         $this->app->bind(AppClientContract::class, AppClient::class);
     }
 
     public function boot()
     {
-        $this->makeConfigPublishable();
+        $this->makeConfigPublishable()
+            ->loadRoutes();
+    }
+
+    protected function loadRoutes(): self
+    {
+        Route::group([
+            'prefix' => 'admin-package',
+            'name' => "admin-package.",
+            'middleware' => AuthorizedServer::class
+        ], function () {
+            $this->loadRoutesFrom(__DIR__.'/../routes/routes.php');
+        });
+
+        return $this;
     }
 
     protected function registerConfig(): self
@@ -55,6 +76,14 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
         $this->app->bind(AppContract::class, Package::app());
         $this->app->bind(AccountChargebeeContract::class, Package::accountChargebee());
 
+        return $this;
+    }
+
+    protected function bindProjects(): self
+    {
+        $this->app->bind(ProjectContract::class, Project::class);
+        $this->app->bind(ProjectClientContract::class, ProjectClient::class);
+        
         return $this;
     }
 

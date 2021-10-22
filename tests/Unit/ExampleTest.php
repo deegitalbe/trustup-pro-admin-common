@@ -402,6 +402,74 @@ class ExampleTest extends TestCase
     /**
      * @test
      */
+    public function account_scope_not_accessed_or_last_access_before_including_last_access_only()
+    {
+        $account = app(AccountContract::class)
+            ->setUuid('sdlfjslfj')
+            ->persist();
+        
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now()->subDays(2))
+            ->persist()
+            ->setAccount($account);
+        
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now()->addDays(2))
+            ->persist()
+            ->setAccount($account);
+        
+        $this->assertEquals(0, Package::account()::notAccessedOrLastAccessBefore(now())->count());
+    }
+
+    /**
+     * @test
+     */
+    public function account_access_entries_scope_last_access_entry_getting_last_entry_by_account()
+    {
+        $account = app(AccountContract::class)
+            ->setUuid('account_1')
+            ->persist();
+        
+        $account_2 = app(AccountContract::class)
+            ->setUuid('account_2')
+            ->persist();
+        
+        $access_entry = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now()->subDays(2))
+            ->persist()
+            ->setAccount($account);
+
+        $access_entry_2 = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now()->subDays(1))
+            ->persist()
+            ->setAccount($account);
+        
+        $access_entry_3 = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now()->addDays(1))
+            ->persist()
+            ->setAccount($account_2);
+
+        $access_entry_4 = app(AccountAccessEntryContract::class)
+            ->setAccessAt(now()->addDays(3))
+            ->persist()
+            ->setAccount($account_2);
+
+        $entry_by_accounts = Package::accountAccessEntry()::lastAccessEntryByAccount()->get();
+        
+        $this->assertEquals(2, $entry_by_accounts->count());
+        $this->assertEquals(
+            $access_entry_2->getAccessAt(),
+            $entry_by_accounts->first()->getAccessAt()
+        );
+        $this->assertEquals(
+            $access_entry_4->getAccessAt(),
+            $entry_by_accounts[1]->getAccessAt()
+        );
+    }
+
+    /**
+     * @test
+     */
     public function account_not_accessed_or_access_before_excluding_not_respecting_date()
     {
         $account = app(AccountContract::class)

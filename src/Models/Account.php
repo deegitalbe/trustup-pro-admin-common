@@ -319,8 +319,9 @@ class Account extends PersistableMongoModel implements AccountContract
      */
     public function scopeLastAccessBefore(Builder $query, Carbon $accessed_before): Builder
     {
-        return $query->whereHas('lastAccountAccessEntry', function(Builder $query) use ($accessed_before) {
-            $query->accessedBefore($accessed_before);
+        return $query->whereHas('accountAccessEntries', function(Builder $query) use ($accessed_before) {
+            $query->accessedBefore($accessed_before)
+                ->lastAccessEntryByAccount();
         });
     }
 

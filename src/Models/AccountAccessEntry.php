@@ -120,4 +120,21 @@ class AccountAccessEntry extends PersistableMongoModel implements AccountAccessE
     {
         return $query->where('access_at', '<', $accessed_before);
     }
+
+    /**
+     * Scope limiting account access entries to last one by account.
+     * 
+     * @param Builder $query
+     * @return Builder
+     * 
+     */
+    public function scopeLastAccessEntryByAccount(Builder $query): Builder
+    {
+        return $query->whereIn(
+            'created_at', 
+            self::groupBy('account_id')
+                ->get(['created_at'])
+                ->pluck('created_at')
+        );
+    }
 }

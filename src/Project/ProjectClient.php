@@ -59,7 +59,7 @@ class ProjectClient implements ProjectClientContract
             return null;
         }
 
-        return collect($response->get()->data);
+        return $response->get()->data;
     }
 
     /**

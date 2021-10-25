@@ -23,11 +23,11 @@ interface ProjectClientContract
     public function setProject(ProjectContract $project): ProjectClientContract;
 
     /**
-     * Getting package version used by this project.
+     * Checking package version for this project.
      * 
-     * @return string|null null if error occurs.
+     * @return bool telling is package is outdated.
      */
-    public function getPackageVersion(): ?string;
+    public function checkPackageVersion(): bool;
 
     /**
      * Construct project client based on given project.

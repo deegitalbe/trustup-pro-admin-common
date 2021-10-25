@@ -1,6 +1,7 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Project;
 
+use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Henrotaym\LaravelApiClient\Contracts\ClientContract;
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;
 use Deegitalbe\TrustupProAdminCommon\Project\ProjectCredential;
@@ -37,29 +38,21 @@ class ProjectClient implements ProjectClientContract
     }
 
     /**
-     * Getting package version used for this project.
+     * Checking package version for this project.
      * 
-     * @return string|null null if error occurs.
+     * @return bool telling is package is outdated.
      */
-    public function getPackageVersion(): ?string
+    public function checkPackageVersion(): bool
     {
         $request = app()->make(RequestContract::class)
             ->setVerb('GET')
+            ->addQuery([
+                'version' => Package::version()
+            ])
             ->setUrl('admin-package/version');
         $response = $this->client->start($request);
-        
-        // Request failed
-        if (!$response->ok()) {
-            $error = new NoPackageVersionFound;
-            report(
-                $error
-                    ->setRequest($request)
-                    ->setResponse($response)
-            );
-            return null;
-        }
 
-        return $response->get()->data;
+        return $response->get()->data->is_outdated;
     }
 
     /**

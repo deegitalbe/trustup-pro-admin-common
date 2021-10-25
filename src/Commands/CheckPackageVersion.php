@@ -13,9 +13,15 @@ class CheckPackageVersion extends Command
 
     public function handle()
     {
+        $this->line("Checking projects...");
         Package::projects()->each(function(ProjectContract $project) {
-            $project->getProjectClient()
+            $this->line("Checking {$project->getUrl()}..." . PHP_EOL);
+            $is_outdated = $project->getProjectClient()
                 ->checkPackageVersion();
+            if ($is_outdated):
+                $this->error("[{$project->getUrl()}] is outdated. Please update to version [" . Package::version() . "]" . PHP_EOL);
+            endif;
+            $this->info("[{$project->getUrl()}] is up-to-date." . PHP_EOL);
         });
     }
 }

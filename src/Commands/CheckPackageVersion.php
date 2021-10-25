@@ -1,6 +1,7 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Commands;
 
+use Illuminate\Console\Command;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectContract;
 

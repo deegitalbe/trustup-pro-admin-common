@@ -13,7 +13,7 @@ class Package
      */
     public function version(): string
     {
-        return "2.5.2";
+        return "2.5.3";
     }
 
     /**

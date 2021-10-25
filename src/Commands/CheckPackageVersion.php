@@ -23,7 +23,7 @@ class CheckPackageVersion extends Command
      * @param ProjectContract $project
      * @return void
      */
-    protected function checkProject(ProjectContract $project)
+    public function checkProject(ProjectContract $project)
     {
         $this->line("Checking {$project->getUrl()}..." . PHP_EOL);
         $is_outdated = $project->getProjectClient()->checkPackageVersion();

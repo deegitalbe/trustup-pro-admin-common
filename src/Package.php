@@ -2,9 +2,10 @@
 namespace Deegitalbe\TrustupProAdminCommon;
 
 use Illuminate\Support\Collection;
-use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectContract;
+use Deegitalbe\TrustupVersionedPackage\Contracts\Project\ProjectContract;
+use Deegitalbe\TrustupVersionedPackage\Contracts\VersionedPackageContract;
 
-class Package
+class Package implements VersionedPackageContract
 {
     /**
      * Getting package version (useful to make sure projetcs use same version).
@@ -24,16 +25,6 @@ class Package
     public function prefix(): string
     {
         return "trustup-pro-admin-common";
-    }
-
-    /**
-     * Getting projects linked to this package.
-     */
-    public function projects(): Collection
-    {
-        return collect($this->config('projects'))
-            ->filter()
-            ->map(function($url) { return app()->make(ProjectContract::class)->setUrl($url); });
     }
 
     /**
@@ -116,5 +107,39 @@ class Package
     public function authorization(): string
     {
         return $this->config('authorization') ?? "";
+    }
+
+    /**
+     * Getting projects using this package.
+     * 
+     * @return Collection
+     */
+    public function getProjects(): Collection
+    {
+        return collect($this->config('projects'))
+            ->filter()
+            ->map(function($url) { 
+                return app()->make(ProjectContract::class)
+                    ->setUrl($url)
+                    ->setVersionedPackage($this);
+            });
+    }
+
+    /**
+     * Getting package version.
+     */
+    public function getVersion(): string
+    {
+        return $this->version();
+    }
+
+    /**
+     *  Getting package name
+     * 
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->prefix();
     }
 }

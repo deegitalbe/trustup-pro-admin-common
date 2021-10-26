@@ -20,6 +20,7 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
+use Deegitalbe\TrustupVersionedPackage\Contracts\VersionedPackageCheckerContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
 
 class TrustupProAdminCommonServiceProvider extends ServiceProvider
@@ -28,8 +29,8 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
     {
         $this->registerConfig()
             ->bindFacade()
-            ->bindModels()
-            ->bindProjects();
+            ->bindModels();
+            // ->bindProjects();
         
         $this->app->bind(AppClientContract::class, AppClient::class);
     }
@@ -37,22 +38,29 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->makeConfigPublishable()
-            ->registerPackageCommands()
-            ->loadRoutes();
+            // ->registerPackageCommands()
+            // ->loadRoutes();
+            ->registerPackage();
     }
 
-    protected function loadRoutes(): self
+    protected function registerPackage(): self
     {
-        Route::group([
-            'prefix' => 'admin-package',
-            'name' => "admin-package.",
-            'middleware' => AuthorizedServer::class
-        ], function () {
-            $this->loadRoutesFrom(__DIR__.'/../routes/routes.php');
-        });
+        app()->make(VersionedPackageCheckerContract::class)
+            ->addPackage(Package::getFacadeRoot());
 
         return $this;
     }
+
+    // protected function loadRoutes(): self
+    // {
+    //     Route::group([
+    //         //
+    //     ], function () {
+    //         $this->loadRoutesFrom(__DIR__.'/../routes/routes.php');
+    //     });
+
+    //     return $this;
+    // }
 
     protected function registerConfig(): self
     {
@@ -61,16 +69,16 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
         return $this;
     }
 
-    protected function registerPackageCommands(): self
-    {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                CheckPackageVersion::class,
-            ]);
-        }
+    // protected function registerPackageCommands(): self
+    // {
+    //     if ($this->app->runningInConsole()) {
+    //         $this->commands([
+    //             //
+    //         ]);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     protected function bindFacade(): self
     {
@@ -89,14 +97,6 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
         $this->app->bind(AppContract::class, Package::app());
         $this->app->bind(AccountChargebeeContract::class, Package::accountChargebee());
 
-        return $this;
-    }
-
-    protected function bindProjects(): self
-    {
-        $this->app->bind(ProjectContract::class, Project::class);
-        $this->app->bind(ProjectClientContract::class, ProjectClient::class);
-        
         return $this;
     }
 

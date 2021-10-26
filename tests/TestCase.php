@@ -9,6 +9,7 @@ use Deegitalbe\TrustupProAdminCommon\Tests\MongoTestDatabase;
 use Henrotaym\LaravelHelpers\Providers\HelperServiceProvider;
 use Henrotaym\LaravelApiClient\Providers\ClientServiceProvider;
 use Deegitalbe\TrustupProAdminCommon\Providers\TrustupProAdminCommonServiceProvider;
+use Deegitalbe\TrustupVersionedPackage\Providers\TrustupVersionedPackageServiceProvider;
 
 class TestCase extends BaseTestCase
 {
@@ -26,6 +27,7 @@ class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
+            TrustupVersionedPackageServiceProvider::class,
             TrustupProAdminCommonServiceProvider::class,
             MongodbServiceProvider::class,
             ClientServiceProvider::class,

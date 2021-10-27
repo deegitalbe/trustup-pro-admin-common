@@ -367,6 +367,19 @@ class App extends PersistableMongoModel implements AppContract
     }
 
     /**
+     * Scope limiting application to those not matching given key.
+     * 
+     * @param Builder $query
+     * @param string $key
+     * @return Builder
+     * 
+     */
+    public function scopeWhereKeyIsNot(Builder $query, string $key): Builder
+    {
+        return $query->where("key", $key);
+    }
+
+    /**
      * Scope limiting application to those not being dashboard.
      * 
      * @param Builder $query
@@ -376,7 +389,7 @@ class App extends PersistableMongoModel implements AppContract
      */
     public function scopeNotDashboard(Builder $query): Builder
     {
-        return $query->where('key', "!=", self::DASHBOARD);
+        return $query->whereKeyIsNot(self::DASHBOARD);
     }
 
     /**
@@ -401,6 +414,18 @@ class App extends PersistableMongoModel implements AppContract
     public function scopeWhereAvailable(Builder $query): Builder
     {
         return $query->where("available", true);
+    }
+
+    /**
+     * Scope limiting to not available applications only.
+     * 
+     * @param Builder $query
+     * @return Builder
+     * 
+     */
+    public function scopeWhereNotAvailable(Builder $query): Builder
+    {
+        return $query->where("available", false);
     }
 
 }

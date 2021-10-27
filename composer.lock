@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "638b59b685acd1f89e5c00796f1450cd",
+    "content-hash": "5fafcde36a8cbd5b6f6d6bd1d6510df3",
     "packages": [
         {
             "name": "brick/math",
@@ -67,20 +67,73 @@
             "time": "2021-08-15T20:50:18+00:00"
         },
         {
-            "name": "deegitalbe/trustup-versioned-package",
-            "version": "v1.0.1",
+            "name": "deegitalbe/server-authorization",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/deegitalbe/trustup-versioned-package.git",
-                "reference": "877a3e0d26845612640f3f5c3b347b76ad0fc1a6"
+                "url": "https://github.com/deegitalbe/server-authorization.git",
+                "reference": "b03af82bc72bccc0ab84a09dfe1589ba99e168d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/deegitalbe/trustup-versioned-package/zipball/877a3e0d26845612640f3f5c3b347b76ad0fc1a6",
-                "reference": "877a3e0d26845612640f3f5c3b347b76ad0fc1a6",
+                "url": "https://api.github.com/repos/deegitalbe/server-authorization/zipball/b03af82bc72bccc0ab84a09dfe1589ba99e168d7",
+                "reference": "b03af82bc72bccc0ab84a09dfe1589ba99e168d7",
                 "shasum": ""
             },
             "require": {
+                "henrotaym/laravel-api-client": "^1.0",
+                "henrotaym/laravel-test-suite": "^2.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Deegitalbe\\ServerAuthorization\\Providers\\ServerAuthorizationServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Deegitalbe\\ServerAuthorization\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mathieu Henrotay",
+                    "email": "mathieu.henrotay@gmail.com"
+                }
+            ],
+            "description": "Simple server authorization for communicating between our projects.",
+            "support": {
+                "issues": "https://github.com/deegitalbe/server-authorization/issues",
+                "source": "https://github.com/deegitalbe/server-authorization/tree/v1.1.1"
+            },
+            "time": "2021-10-26T11:50:07+00:00"
+        },
+        {
+            "name": "deegitalbe/trustup-versioned-package",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/deegitalbe/trustup-versioned-package.git",
+                "reference": "007d458f5fa2bbdfa6a0c18256975b76f55237de"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/deegitalbe/trustup-versioned-package/zipball/007d458f5fa2bbdfa6a0c18256975b76f55237de",
+                "reference": "007d458f5fa2bbdfa6a0c18256975b76f55237de",
+                "shasum": ""
+            },
+            "require": {
+                "deegitalbe/server-authorization": "^1.1",
                 "henrotaym/laravel-api-client": "^1.0",
                 "henrotaym/laravel-test-suite": "^2.0"
             },
@@ -114,9 +167,9 @@
             "description": "Synchronization package checking that our packages are using same version everywhere.",
             "support": {
                 "issues": "https://github.com/deegitalbe/trustup-versioned-package/issues",
-                "source": "https://github.com/deegitalbe/trustup-versioned-package/tree/v1.0.1"
+                "source": "https://github.com/deegitalbe/trustup-versioned-package/tree/v1.0.2"
             },
-            "time": "2021-10-25T15:12:05+00:00"
+            "time": "2021-10-27T08:49:33+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -1161,16 +1214,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.67.0",
+            "version": "v8.68.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "fc52acafd069aedc079bf8f17d1a4af4ef489b1e"
+                "reference": "08781be9c1e3f83b0c38ce9539e1dc4664e33a14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/fc52acafd069aedc079bf8f17d1a4af4ef489b1e",
-                "reference": "fc52acafd069aedc079bf8f17d1a4af4ef489b1e",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/08781be9c1e3f83b0c38ce9539e1dc4664e33a14",
+                "reference": "08781be9c1e3f83b0c38ce9539e1dc4664e33a14",
                 "shasum": ""
             },
             "require": {
@@ -1262,6 +1315,7 @@
                 "aws/aws-sdk-php": "Required to use the SQS queue driver, DynamoDb failed job storage and SES mail driver (^3.198.1).",
                 "brianium/paratest": "Required to run tests in parallel (^6.0).",
                 "doctrine/dbal": "Required to rename columns and drop SQLite columns (^2.13.3|^3.1.2).",
+                "ext-bcmath": "Required to use the multiple_of validation rule.",
                 "ext-ftp": "Required to use the Flysystem FTP driver.",
                 "ext-gd": "Required to use Illuminate\\Http\\Testing\\FileFactory::image().",
                 "ext-memcached": "Required to use the memcache cache driver.",
@@ -1328,7 +1382,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-10-22T13:27:12+00:00"
+            "time": "2021-10-26T12:52:38+00:00"
         },
         {
             "name": "laravel/serializable-closure",

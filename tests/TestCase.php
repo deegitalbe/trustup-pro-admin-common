@@ -8,6 +8,7 @@ use Orchestra\Testbench\TestCase as BaseTestCase;
 use Deegitalbe\TrustupProAdminCommon\Tests\MongoTestDatabase;
 use Henrotaym\LaravelHelpers\Providers\HelperServiceProvider;
 use Henrotaym\LaravelApiClient\Providers\ClientServiceProvider;
+use Deegitalbe\ServerAuthorization\Providers\ServerAuthorizationServiceProvider;
 use Deegitalbe\TrustupProAdminCommon\Providers\TrustupProAdminCommonServiceProvider;
 use Deegitalbe\TrustupVersionedPackage\Providers\TrustupVersionedPackageServiceProvider;
 
@@ -28,6 +29,7 @@ class TestCase extends BaseTestCase
     {
         return [
             TrustupVersionedPackageServiceProvider::class,
+            ServerAuthorizationServiceProvider::class,
             TrustupProAdminCommonServiceProvider::class,
             MongodbServiceProvider::class,
             ClientServiceProvider::class,

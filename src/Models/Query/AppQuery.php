@@ -72,6 +72,19 @@ class AppQuery implements AppQueryContract
 
         return $this;
     }
+
+    /**
+     * Ordering apps respecting order column.
+     * 
+     * @param string $app_key
+     * @return AppQueryContract
+     */
+    public function ordered(): AppQueryContract
+    {
+        $this->getQuery()->byOrder();
+
+        return $this;
+    }
     
     /**
      * Getting apps.

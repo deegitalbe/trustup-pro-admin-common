@@ -155,7 +155,7 @@ class AppQuery implements AppQueryContract
         endif;
 
         // if there is an available parameter set to false
-        if (!$available):
+        if ($available === false):
             $this->notAvailable();
         endif;
 

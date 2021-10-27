@@ -38,10 +38,6 @@ return [
 
     ],
     /**
-     * Authorizations
-     */
-    'authorization' => env('TRUSTUP_SERVER_AUTHORIZATION'),
-    /**
      * Projects using this package (only their url).
      */
     'projects' => [

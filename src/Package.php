@@ -98,17 +98,7 @@ class Package implements VersionedPackageContract
     {
         return config($this->prefix(). ($key ? ".$key" : ''));
     }
-
-    /**
-     * Getting server authorization allowing to make requests to applications.
-     * 
-     * @return string
-     */
-    public function authorization(): string
-    {
-        return $this->config('authorization') ?? "";
-    }
-
+    
     /**
      * Getting projects using this package.
      * 

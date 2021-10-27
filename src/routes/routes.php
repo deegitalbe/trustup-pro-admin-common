@@ -9,6 +9,3 @@ use Deegitalbe\TrustupProAdminCommon\Http\Controllers\PackageController;
 |--------------------------------------------------------------------------
 |
 */
-
-// Project package version
-Route::get('version', [PackageController::class, 'version'])->name('version');

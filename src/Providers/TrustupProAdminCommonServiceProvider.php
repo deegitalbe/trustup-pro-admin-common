@@ -7,6 +7,7 @@ use Deegitalbe\TrustupProAdminCommon\App\AppClient;
 use Deegitalbe\TrustupProAdminCommon\Models\Account;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Deegitalbe\TrustupProAdminCommon\Project\Project;
+use Deegitalbe\TrustupProAdminCommon\Models\Query\AppQuery;
 use Deegitalbe\TrustupProAdminCommon\Project\ProjectClient;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntry;
 use Deegitalbe\TrustupProAdminCommon\Commands\CheckPackageVersion;
@@ -16,6 +17,7 @@ use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntryUser;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\AppQueryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
@@ -32,6 +34,7 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
             // ->bindProjects();
         
         $this->app->bind(AppClientContract::class, AppClient::class);
+        $this->app->bind(AppQueryContract::class, AppQuery::class);
     }
 
     public function boot()

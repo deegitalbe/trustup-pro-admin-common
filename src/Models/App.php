@@ -376,7 +376,7 @@ class App extends PersistableMongoModel implements AppContract
      */
     public function scopeWhereKeyIsNot(Builder $query, string $key): Builder
     {
-        return $query->where("key", $key);
+        return $query->where("key", '!=', $key);
     }
 
     /**

@@ -5,8 +5,9 @@ use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;
 use Henrotaym\LaravelApiClient\Contracts\CredentialContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
+use Deegitalbe\ServerAuthorization\Credential\AuthorizedServerCredential;
 
-class AppCredential implements CredentialContract
+class AppCredential extends AuthorizedServerCredential
 {
     /**
      * Application linked to credential.
@@ -39,11 +40,7 @@ class AppCredential implements CredentialContract
      */
     public function prepare(RequestContract &$request)
     {
-        $request->addHeaders([
-            'X-Server-Authorization' => Package::authorization(),
-            'X-Requested-With' => "XMLHttpRequest",
-            'Content-Type' => "application/json"
-        ])
-            ->setBaseUrl($this->app->getUrl());
+        parent::prepare($request);
+        $request->setBaseUrl($this->app->getUrl());
     }
 }

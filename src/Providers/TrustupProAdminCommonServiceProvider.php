@@ -15,7 +15,6 @@ use Deegitalbe\TrustupProAdminCommon\Package as UnderlyingPackage;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntryUser;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
-use Deegitalbe\TrustupProAdminCommon\Http\Middleware\AuthorizedServer;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;

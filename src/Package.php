@@ -14,7 +14,7 @@ class Package implements VersionedPackageContract
      */
     public function version(): string
     {
-        return "2.5.3";
+        return "2.6.0";
     }
 
     /**
@@ -98,7 +98,7 @@ class Package implements VersionedPackageContract
     {
         return config($this->prefix(). ($key ? ".$key" : ''));
     }
-    
+
     /**
      * Getting projects using this package.
      * 

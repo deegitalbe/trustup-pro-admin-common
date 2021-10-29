@@ -82,7 +82,7 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
         return $this;
     }
 
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->subscription_id;
     }

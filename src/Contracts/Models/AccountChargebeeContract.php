@@ -12,7 +12,7 @@ interface AccountChargebeeContract extends PersistableContract
 
     public function setStatus(string $status);
 
-    public function getId(): string;
+    public function getId(): ?string;
 
     public function setId(string $id);
 

@@ -26,7 +26,7 @@ interface AppClientContract
      * @param Professional $professional
      * @return Collection|null
      */
-    public function getRawAccounts($professional): ?Collection;
+    public function getProfessionalAccounts($professional): ?Collection;
 
     /**
      * Getting raw professional account matching given uuid.
@@ -34,7 +34,7 @@ interface AppClientContract
      * @param Professional $professional
      * @return stdClass|null
      */
-    public function getRawAccount($professional, string $account_uuid): ?stdClass;
+    public function getProfessionalAccount($professional, string $account_uuid): ?stdClass;
 
     /**
      * Getting all accounts.

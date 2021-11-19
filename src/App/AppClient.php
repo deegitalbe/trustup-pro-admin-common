@@ -71,11 +71,9 @@ class AppClient implements AppClientContract
      * @param Professional $professional
      * @return Collection|null
      */
-    public function getRawAccounts($professional): ?Collection
+    public function getProfessionalAccounts($professional): ?Collection
     {
-        $request = app()->make(RequestContract::class)
-            ->setVerb('GET')
-            ->setUrl("api/accounts/key/$professional->authorization_key");
+        $request = $this->newAccountsRequest()->addQuery(["authorization_key" => $professional->authorization_key]);
 
         $response = $this->client->start($request);
 
@@ -101,9 +99,9 @@ class AppClient implements AppClientContract
      * @param Professional $professional
      * @return stdClass|null
      */
-    public function getRawAccount($professional, string $account_uuid): ?stdClass
+    public function getProfessionalAccount($professional, string $account_uuid): ?stdClass
     {
-        return optional($this->getRawAccounts())->first(function($account) use ($account_uuid) {
+        return optional($this->getProfessionalAccounts())->first(function($account) use ($account_uuid) {
             return $account->uuid === $account_uuid;
         });
     }
@@ -115,9 +113,7 @@ class AppClient implements AppClientContract
      */
     public function getAllAccounts(): ?Collection
     {
-        $request = app()->make(RequestContract::class)
-            ->setVerb('GET')
-            ->setUrl("common-package/webhooks/accounts");
+        $request = $this->newAccountsRequest();
         $response = $this->client->start($request);
 
         // Request failed
@@ -132,6 +128,18 @@ class AppClient implements AppClientContract
         }
 
         return collect($response->get()->data);
+    }
+
+    /**
+     * Creating a new account index request.
+     * 
+     * @return RequestContract
+     */
+    protected function newAccountsRequest(): RequestContract
+    {
+        return app()->make(RequestContract::class)
+            ->setVerb('GET')
+            ->setUrl('common-package/accounts');
     }
 
     /**

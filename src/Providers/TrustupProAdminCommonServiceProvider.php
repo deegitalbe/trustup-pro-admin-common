@@ -29,8 +29,8 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->registerConfig()
-            ->bindFacade()
+        $this->bindFacade()
+            ->registerConfig()
             ->bindModels();
             // ->bindProjects();
         
@@ -67,7 +67,7 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
 
     protected function registerConfig(): self
     {
-        $this->mergeConfigFrom($this->getConfigPath(), 'trustup-pro-admin-common');
+        $this->mergeConfigFrom($this->getConfigPath(), Package::prefix());
 
         return $this;
     }
@@ -85,7 +85,7 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
 
     protected function bindFacade(): self
     {
-        $this->app->bind('trustup_pro_admin_common', function($app) {
+        $this->app->bind(UnderlyingPackage::$prefix, function($app) {
             return new UnderlyingPackage();
         });
 
@@ -108,7 +108,7 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()):
             $this->publishes([
-              $this->getConfigPath() => config_path('trustup-pro-admin-common.php'),
+              $this->getConfigPath() => config_path(Package::prefix() . '.php'),
             ], 'config');
         endif;
 

@@ -8,13 +8,20 @@ use Deegitalbe\TrustupVersionedPackage\Contracts\VersionedPackageContract;
 class Package implements VersionedPackageContract
 {
     /**
+     * Package prefix.
+     * 
+     * @var string
+     */
+    public static $prefix = "trustup_pro_admin_common";
+
+    /**
      * Getting package version (useful to make sure projetcs use same version).
      * 
      * @return string
      */
     public function version(): string
     {
-        return "3.1.0";
+        return "3.1.1";
     }
 
     /**
@@ -24,7 +31,7 @@ class Package implements VersionedPackageContract
      */
     public function prefix(): string
     {
-        return "trustup-pro-admin-common";
+        return self::$prefix;
     }
 
     /**

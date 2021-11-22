@@ -10,7 +10,7 @@
 
 You have to publish configuration
 
-    php artisan vendor:publish --provider="Deegitalbe\\TrustupProAdminCommon\\Providers\\TrustupProAdminCommonServiceProvider" --tag="config"
+    php artisan vendor:publish --provider="Deegitalbe\TrustupProAdminCommon\Providers\TrustupProAdminCommonServiceProvider" --tag="config"
 
 You will then have access to `config/trustup_pro_admin_common.php` that you have to configure properly.
 

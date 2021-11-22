@@ -92,6 +92,17 @@ class App extends PersistableMongoModel implements AppContract
     }
 
     /**
+     * Telling if app is having at least one account matching given professional.
+     * 
+     * @param ProfessionalContract $professional
+     * @return bool
+     */
+    public function isHavingProfessionalAccount(ProfessionalContract $professional): bool
+    {
+        return $this->accounts()->whereProfessional($professional)->exists();
+    }
+
+    /**
      * Getting all accounts linked to app.
      * 
      * @return Collection
@@ -427,6 +438,20 @@ class App extends PersistableMongoModel implements AppContract
     public function scopeWhereNotAvailable(Builder $query): Builder
     {
         return $query->where("available", false);
+    }
+
+    /**
+     * Scope limiting application to those having given professional account.
+     * 
+     * @param Builder $query
+     * @param ProfessionalContract $professional
+     * @return Builder
+     */
+    public function scopeHavingProfessionalAccount(Builder $query, ProfessionalContract $professional): Builder
+    {
+        return $query->whereHas('accounts', function ($query) use ($professional) {
+            return $query->whereProfessional($professional);
+        });
     }
 
 }

@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\PersistableContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 
@@ -50,7 +51,7 @@ interface AccountContract extends PersistableContract
 
     public function setApp(AppContract $app);
 
-    public function setProfessional($professional);
+    public function setProfessional(ProfessionalContract $professional);
 
     public function getProfessional();
 

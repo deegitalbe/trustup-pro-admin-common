@@ -5,6 +5,7 @@ use stdClass;
 use Illuminate\Support\Collection;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 
 /**
  * API client able to communicate with application
@@ -23,18 +24,18 @@ interface AppClientContract
     /**
      * Getting raw professional accounts.
      * 
-     * @param Professional $professional
+     * @param ProfessionalContract $professional
      * @return Collection|null
      */
-    public function getProfessionalAccounts($professional): ?Collection;
+    public function getProfessionalAccounts(ProfessionalContract $professional): ?Collection;
 
     /**
      * Getting raw professional account matching given uuid.
      * 
-     * @param Professional $professional
+     * @param ProfessionalContract $professional
      * @return stdClass|null
      */
-    public function getProfessionalAccount($professional, string $account_uuid): ?stdClass;
+    public function getProfessionalAccount(ProfessionalContract $professional, string $account_uuid): ?stdClass;
 
     /**
      * Getting all accounts.

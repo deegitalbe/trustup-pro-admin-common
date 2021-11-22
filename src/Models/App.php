@@ -9,6 +9,7 @@ use Deegitalbe\TrustupProAdminCommon\Models\Account;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 
 class App extends PersistableMongoModel implements AppContract
@@ -79,11 +80,11 @@ class App extends PersistableMongoModel implements AppContract
     /**
      * Getting all accounts linked to app and given professional.
      * 
-     * @param Professional $professsional
+     * @param ProfessionalContract $professsional
      * @return Collection
      * 
      */
-    public function getProfessionalAccounts($professional): Collection
+    public function getProfessionalAccounts(ProfessionalContract $professional): Collection
     {
         return $this->accounts()
             ->whereProfessional($professional)

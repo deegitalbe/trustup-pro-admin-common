@@ -10,6 +10,7 @@ use Henrotaym\LaravelApiClient\Contracts\RequestContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 use Deegitalbe\TrustupProAdminCommon\Exceptions\AppClient\GetAccountsException;
 use Deegitalbe\TrustupProAdminCommon\Exceptions\AppClient\UpdateAccountException;
 use Deegitalbe\TrustupProAdminCommon\Exceptions\AppClient\GetAllAccountsException;
@@ -68,12 +69,12 @@ class AppClient implements AppClientContract
     /**
      * Getting raw professional accounts.
      * 
-     * @param Professional $professional
+     * @param ProfessionalContract $professional
      * @return Collection|null
      */
-    public function getProfessionalAccounts($professional): ?Collection
+    public function getProfessionalAccounts(ProfessionalContract $professional): ?Collection
     {
-        $request = $this->newAccountsRequest()->addQuery(["authorization_key" => $professional->authorization_key]);
+        $request = $this->newAccountsRequest()->addQuery(["authorization_key" => $professional->getAuthorizationKey()]);
 
         $response = $this->client->start($request);
 
@@ -96,12 +97,12 @@ class AppClient implements AppClientContract
     /**
      * Getting raw professional account matching given uuid.
      * 
-     * @param Professional $professional
+     * @param ProfessionalContract $professional
      * @return stdClass|null
      */
-    public function getProfessionalAccount($professional, string $account_uuid): ?stdClass
+    public function getProfessionalAccount(ProfessionalContract $professional, string $account_uuid): ?stdClass
     {
-        return optional($this->getProfessionalAccounts())->first(function($account) use ($account_uuid) {
+        return optional($this->getProfessionalAccounts($professional))->first(function($account) use ($account_uuid) {
             return $account->uuid === $account_uuid;
         });
     }

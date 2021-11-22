@@ -5,6 +5,7 @@ use Illuminate\Support\Collection;
 use Henrotaym\LaravelApiClient\Contracts\ClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\PersistableContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 
 interface AppContract extends PersistableContract
 {
@@ -18,11 +19,19 @@ interface AppContract extends PersistableContract
     /**
      * Getting all accounts linked to app and given professional.
      * 
-     * @param Professional $professsional
+     * @param ProfessionalContract $professsional
      * @return Collection
      * 
      */
-    public function getProfessionalAccounts($professional): Collection;
+    public function getProfessionalAccounts(ProfessionalContract $professional): Collection;
+
+    /**
+     * Telling if app is having at least one account matching given professional.
+     * 
+     * @param ProfessionalContract $professional
+     * @return bool
+     */
+    public function isHavingProfessionalAccount(ProfessionalContract $professional): bool;
 
     /**
      * Getting all accounts linked to app.

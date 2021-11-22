@@ -4,6 +4,7 @@ namespace Deegitalbe\TrustupProAdminCommon\Exceptions\AppClient;
 use Illuminate\Contracts\Support\Arrayable;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Henrotaym\LaravelApiClient\Exceptions\RequestRelatedException;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 
 class GetAccountsException extends RequestRelatedException
 {
@@ -17,6 +18,7 @@ class GetAccountsException extends RequestRelatedException
     /**
      * Professional linked to request..
      * 
+     * @var ProfessionalContract
      */
     protected $professional;
 
@@ -33,7 +35,7 @@ class GetAccountsException extends RequestRelatedException
      * @param RequestContract $request
      * @return self
      */
-    public function setProfessional(Arrayable $professional): self
+    public function setProfessional(ProfessionalContract $professional): self
     {
         $this->professional = $professional;
 

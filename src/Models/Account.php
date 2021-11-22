@@ -15,6 +15,7 @@ use Deegitalbe\TrustupProAdminCommon\Models\AccountChargebee;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntry;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
@@ -158,7 +159,7 @@ class Account extends PersistableMongoModel implements AccountContract
         return $this->professional;
     }
 
-    public function setProfessional($professional): self
+    public function setProfessional(ProfessionalContract $professional): self
     {
         $this->professional()->associate($professional);
 
@@ -285,13 +286,13 @@ class Account extends PersistableMongoModel implements AccountContract
      * Scope limiting accounts to given professional only.
      * 
      * @param Builder $query
-     * @param mixed $professional Professional to limit for.
+     * @param ProfessionalContract $professional Professional to limit for.
      * @return Builder
      * 
      */
-    public function scopeWhereProfessional(Builder $query, $professional): Builder
+    public function scopeWhereProfessional(Builder $query, ProfessionalContract $professional): Builder
     {
-        return $query->where('professional_id', $professional->id);
+        return $query->where('professional_id', $professional->getId());
     }
 
     /**

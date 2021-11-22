@@ -17,6 +17,7 @@ use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntryUser;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\AppQueryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
@@ -93,6 +94,7 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
 
     protected function bindModels(): self
     {
+        $this->app->bind(ProfessionalContract::class, Package::professional());
         $this->app->bind(AccountContract::class, Package::account());
         $this->app->bind(AccountAccessEntryContract::class, Package::accountAccessEntry());
         $this->app->bind(AccountAccessEntryUserContract::class, Package::accountAccessEntryUser());

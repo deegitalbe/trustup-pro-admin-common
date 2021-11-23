@@ -12,27 +12,27 @@ return [
         'professional' => \App\Models\Professional::class,
 
         /**
-         * account model.
+         * Account model.
          */
         'account' => \Deegitalbe\TrustupProAdminCommon\Models\Account::class,
 
         /**
-         * account model.
+         * App model.
          */
         'app' => \Deegitalbe\TrustupProAdminCommon\Models\App::class,
 
         /**
-         * account access entry model.
+         * Account access entry model.
          */
         'account_access_entry' => \Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntry::class,
 
         /**
-         * account access entry user model.
+         * Account access entry user model.
          */
         'account_access_entry_user' => \Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntryUser::class,
 
         /**
-         * account chargebee status.
+         * Account chargebee status.
          */
         'account_chargebee' => \Deegitalbe\TrustupProAdminCommon\Models\AccountChargebee::class,
 

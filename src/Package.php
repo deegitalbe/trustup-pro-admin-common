@@ -21,7 +21,7 @@ class Package implements VersionedPackageContract
      */
     public function version(): string
     {
-        return "3.1.2";
+        return "3.1.3";
     }
 
     /**

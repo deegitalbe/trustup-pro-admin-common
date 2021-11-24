@@ -74,6 +74,19 @@ class AppQuery implements AppQueryContract
     }
 
     /**
+     * Limiting app to those having given key.
+     * 
+     * @param string $app_key
+     * @return AppQueryContract
+     */
+    public function whereKeyIs(string $app_key): AppQueryContract
+    {
+        $this->getQuery()->whereAppKey($app_key);
+
+        return $this;
+    }
+
+    /**
      * Ordering apps respecting order column.
      * 
      * @param string $app_key
@@ -115,6 +128,7 @@ class AppQuery implements AppQueryContract
     protected function getRequestValidator(Request $request): ValidatorContract
     {
         return Validator::make($request->all(), [
+            'is' => 'nullable|string',
             'not' => 'nullable|string',
             'available' => 'nullable|boolean'
         ]);
@@ -137,6 +151,7 @@ class AppQuery implements AppQueryContract
 
         $data = $validator->validated();
         $not_key = $data['not'] ?? null;
+        $is_key = $data['is'] ?? null;
         $available = $data['available'] ?? null;
 
         // transforming available to boolean if not null
@@ -147,6 +162,11 @@ class AppQuery implements AppQueryContract
         // if there is a not parameter
         if ($not_key):
             $this->whereKeyIsNot($not_key);
+        endif;
+
+        // if there is a "is" parameter
+        if ($is_key):
+            $this->whereKeyIs($not_key);
         endif;
 
         // if there is an available parameter set to true

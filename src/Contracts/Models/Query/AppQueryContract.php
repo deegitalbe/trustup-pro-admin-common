@@ -33,6 +33,14 @@ interface AppQueryContract
     public function whereKeyIsNot(string $app_key): AppQueryContract;
 
     /**
+     * Limiting app to those having given key.
+     * 
+     * @param string $app_key
+     * @return AppQueryContract
+     */
+    public function whereKeyIs(string $app_key): AppQueryContract;
+
+    /**
      * Ordering apps respecting order column.
      * 
      * @param string $app_key

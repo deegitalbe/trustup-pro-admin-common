@@ -11,6 +11,17 @@ use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\EmbeddableMongoModel;
 class Plan extends EmbeddableMongoModel implements PlanContract
 {
     /**
+     * Fillable attributes.
+     * 
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'trial_duration',
+        'is_default_plan'
+    ];
+    
+    /**
      * Casting attributes.
      * 
      * @var array

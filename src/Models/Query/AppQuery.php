@@ -166,7 +166,7 @@ class AppQuery implements AppQueryContract
 
         // if there is a "is" parameter
         if ($is_key):
-            $this->whereKeyIs($not_key);
+            $this->whereKeyIs($is_key);
         endif;
 
         // if there is an available parameter set to true

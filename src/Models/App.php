@@ -4,10 +4,13 @@ namespace Deegitalbe\TrustupProAdminCommon\Models;
 use Illuminate\Support\Collection;
 use Jenssegers\Mongodb\Eloquent\Builder;
 use Jenssegers\Mongodb\Relations\HasMany;
+use Jenssegers\Mongodb\Relations\EmbedsMany;
+use Deegitalbe\TrustupProAdminCommon\Models\Plan;
 use Deegitalbe\TrustupProAdminCommon\App\AppClient;
 use Deegitalbe\TrustupProAdminCommon\Models\Account;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
@@ -77,6 +80,23 @@ class App extends PersistableMongoModel implements AppContract
         return $this->hasMany(Package::account());
     }
 
+    public function plans(): EmbedsMany
+    {
+        return $this->embedsMany(Package::plan());
+    }
+
+    /**
+     * Adding given plan to app plans.
+     * 
+     * @return AppContract
+     */
+    public function addPlan(PlanContract $plan): AppContract
+    {
+        $this->plans()->associate($plan);
+
+        return $this;
+    }
+
     /**
      * Getting all accounts linked to app and given professional.
      * 
@@ -111,6 +131,17 @@ class App extends PersistableMongoModel implements AppContract
     public function getAccounts(): Collection
     {
         return $this->accounts()->get();
+    }
+
+    /**
+     * Getting all plans linked to app.
+     * 
+     * @return Collection
+     * 
+     */
+    public function getPlans(): Collection
+    {
+        return $this->plans;
     }
 
     /**

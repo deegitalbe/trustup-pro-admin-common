@@ -3,6 +3,7 @@ namespace Deegitalbe\TrustupProAdminCommon\Contracts\Models;
 
 use Illuminate\Support\Collection;
 use Henrotaym\LaravelApiClient\Contracts\ClientContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\PersistableContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
@@ -40,6 +41,21 @@ interface AppContract extends PersistableContract
      * 
      */
     public function getAccounts(): Collection;
+
+    /**
+     * Getting all plans linked to app.
+     * 
+     * @return Collection
+     * 
+     */
+    public function getPlans(): Collection;
+
+    /**
+     * Adding given plan to app plans.
+     * 
+     * @return AppContract
+     */
+    public function addPlan(PlanContract $plan): AppContract;
 
     /**
      * Getting application id (database purpose)

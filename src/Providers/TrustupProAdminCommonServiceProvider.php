@@ -3,6 +3,7 @@ namespace Deegitalbe\TrustupProAdminCommon\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Deegitalbe\TrustupProAdminCommon\Models\Plan;
 use Deegitalbe\TrustupProAdminCommon\App\AppClient;
 use Deegitalbe\TrustupProAdminCommon\Models\Account;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
@@ -13,6 +14,7 @@ use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntry;
 use Deegitalbe\TrustupProAdminCommon\Commands\CheckPackageVersion;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Package as UnderlyingPackage;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntryUser;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
@@ -99,6 +101,7 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
         $this->app->bind(AccountAccessEntryContract::class, Package::accountAccessEntry());
         $this->app->bind(AccountAccessEntryUserContract::class, Package::accountAccessEntryUser());
         $this->app->bind(AppContract::class, Package::app());
+        $this->app->bind(PlanContract::class, Package::plan());
         $this->app->bind(AccountChargebeeContract::class, Package::accountChargebee());
 
         return $this;

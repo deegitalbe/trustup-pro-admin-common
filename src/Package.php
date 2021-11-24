@@ -85,6 +85,16 @@ class Package implements VersionedPackageContract
     }
 
     /**
+     * Getting plan model class name.
+     * 
+     * @return string
+     */
+    public function plan(): string
+    {
+        return $this->config('models.plan');
+    }
+
+    /**
      * Getting professional class name.
      * 
      * @return string

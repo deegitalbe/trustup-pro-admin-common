@@ -22,6 +22,11 @@ return [
         'app' => \Deegitalbe\TrustupProAdminCommon\Models\App::class,
 
         /**
+         * Plan model.
+         */
+        'plan' => \Deegitalbe\TrustupProAdminCommon\Models\Plan::class,
+
+        /**
          * Account access entry model.
          */
         'account_access_entry' => \Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntry::class,

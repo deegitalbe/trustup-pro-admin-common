@@ -21,6 +21,7 @@ class App extends JsonResource
             "description" => $this->getDescription(),
             "available" => $this->getAvailable(),
             "translated" => $this->getTranslated(),
+            "plans" => Plan::collection($this->getPlans()),
             "paid" => $this->getPaid()
         ];
     }

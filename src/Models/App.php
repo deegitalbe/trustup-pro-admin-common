@@ -119,7 +119,7 @@ class App extends PersistableMongoModel implements AppContract
      */
     public function isHavingProfessionalAccount(ProfessionalContract $professional): bool
     {
-        return $this->accounts()->whereProfessional($professional)->exists();
+        return $this->accounts()->active()->whereProfessional($professional)->exists();
     }
 
     /**
@@ -235,7 +235,7 @@ class App extends PersistableMongoModel implements AppContract
      */
     public function getUrl(): string
     {
-        return $this->url . (config('app.env') === 'local' ? ".test" : "");
+        return $this->url . (config('app.env') !== 'production' ? ".test" : "");
     }
 
     /**
@@ -481,7 +481,7 @@ class App extends PersistableMongoModel implements AppContract
     public function scopeHavingProfessionalAccount(Builder $query, ProfessionalContract $professional): Builder
     {
         return $query->whereHas('accounts', function ($query) use ($professional) {
-            return $query->whereProfessional($professional);
+            return $query->active()->whereProfessional($professional);
         });
     }
 

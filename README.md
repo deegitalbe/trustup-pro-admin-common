@@ -6,11 +6,11 @@
 
 # Configuration
 
-## Publish configuration
+## Install command
 
-You have to publish configuration
+Execute this command to install package and publish configuration.
 
-    php artisan vendor:publish --provider="Deegitalbe\TrustupProAdminCommon\Providers\TrustupProAdminCommonServiceProvider" --tag="config"
+    php artisan trustup_pro_admin_common:install
 
 You will then have access to `config/trustup_pro_admin_common.php` that you have to configure properly.
 

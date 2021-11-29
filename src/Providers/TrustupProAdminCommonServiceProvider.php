@@ -10,6 +10,7 @@ use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Deegitalbe\TrustupProAdminCommon\Project\Project;
 use Deegitalbe\TrustupProAdminCommon\Models\Query\AppQuery;
 use Deegitalbe\TrustupProAdminCommon\Project\ProjectClient;
+use Deegitalbe\TrustupProAdminCommon\Commands\InstallPackage;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntry;
 use Deegitalbe\TrustupProAdminCommon\Commands\CheckPackageVersion;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
@@ -43,7 +44,7 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->makeConfigPublishable()
-            // ->registerPackageCommands()
+            ->registerPackageCommands()
             // ->loadRoutes();
             ->registerPackage();
     }
@@ -74,16 +75,16 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
         return $this;
     }
 
-    // protected function registerPackageCommands(): self
-    // {
-    //     if ($this->app->runningInConsole()) {
-    //         $this->commands([
-    //             //
-    //         ]);
-    //     }
+    protected function registerPackageCommands(): self
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InstallPackage::class
+            ]);
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     protected function bindFacade(): self
     {

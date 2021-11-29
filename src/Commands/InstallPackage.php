@@ -33,7 +33,7 @@ class InstallPackage extends Command
      */
     public function handle()
     {
-        $this->info('Installing'. Package::prefix() .'...');
+        $this->info('Installing '. Package::prefix() .'...');
         $this->info('Publishing config...');
         $this->handlePublishing();
         $this->info('Installation completed.');

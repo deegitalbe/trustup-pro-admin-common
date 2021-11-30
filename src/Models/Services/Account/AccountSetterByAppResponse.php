@@ -93,23 +93,25 @@ class AccountSetterByAppResponse implements AccountSetterByAppResponseContract
         
         // every account that is not concerning a paid application should have active status
         if (!$app->getPaid()):
-            return $model->setChargebee(
-                app()->make(AccountChargebeeContract::class)
-                    ->setStatus('active')
-            );
+            app()->make(AccountChargebeeContract::class)
+                ->setStatus('active')
+                ->setAccount($model)
+                ->persist();
+
+            return $model;
         endif;
 
+        $subscription_status = $app_account->chargebee_subscription_status ?? null;
+        $subscription_id = $app_account->chargebee_subscription_id ?? null;
 
-        $status = $app_account->chargebee_subscription_status ?? null;
-        $subscriptionId = $app_account->chargebee_subscription_id ?? null;
-        if ( $status && $subscriptionId ) {
-            $model->setChargebee(
-                app()->make(AccountChargebeeContract::class)
-                    ->setStatus($status)
-                    ->setId($subscriptionId)
-            );
-        }
-
+        if ($subscription_status && $subscription_id):
+            app()->make(AccountChargebeeContract::class)
+                ->setStatus($subscription_status)
+                ->setId($subscription_id)
+                ->setAccount($model)
+                ->persist();
+        endif;
+        
         return $model;
     }
 

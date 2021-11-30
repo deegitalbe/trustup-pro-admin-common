@@ -27,4 +27,12 @@ interface AccountChargebeeContract extends PersistableContract
     public function isNonRenewing(): bool;
 
     public function getAccount(): AccountContract;
+
+    /**
+     * Linking chargebee status to given account.
+     * 
+     * @param AccountContract $account
+     * @return AccountChargebeeContract
+     */
+    public function setAccount(AccountContract $account): AccountChargebeeContract;
 }

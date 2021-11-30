@@ -49,6 +49,19 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
         return $this->belongsTo(Package::account());
     }
 
+    /**
+     * Linking chargebee status to given account.
+     * 
+     * @param AccountContract $account
+     * @return AccountChargebeeContract
+     */
+    public function setAccount(AccountContract $account): AccountChargebeeContract
+    {
+        $this->account()->associate($account);
+        
+        return $this;
+    }
+
     public function getStatus(): string
     {
         return $this->status;

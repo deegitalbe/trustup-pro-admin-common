@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\AppQueryContract;
 
@@ -107,6 +108,16 @@ class AppQuery implements AppQueryContract
     public function get(): Collection
     {
         return $this->getQuery()->get();
+    }
+
+    /**
+     * Getting first app matching.
+     * 
+     * @return AppContract|null
+     */
+    public function first(): ?AppContract
+    {
+        return $this->getQuery()->first();
     }
 
     /**

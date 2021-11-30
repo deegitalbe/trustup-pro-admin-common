@@ -4,6 +4,7 @@ namespace Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query;
 use Illuminate\Http\Request;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 
 /**
  * Query used to retrieve apps.
@@ -62,6 +63,13 @@ interface AppQueryContract
      * @return Collection
      */
     public function get(): Collection;
+
+    /**
+     * Getting first app matching.
+     * 
+     * @return AppContract|null
+     */
+    public function first(): ?AppContract;
 
     /**
      * Getting number of apps matching this query.

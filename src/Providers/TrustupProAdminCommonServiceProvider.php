@@ -27,6 +27,8 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 use Deegitalbe\TrustupVersionedPackage\Contracts\VersionedPackageCheckerContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
+use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountSetterByAppResponse;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Services\Account\AccountSetterByAppResponseContract;
 
 class TrustupProAdminCommonServiceProvider extends ServiceProvider
 {
@@ -34,7 +36,8 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
     {
         $this->bindFacade()
             ->registerConfig()
-            ->bindModels();
+            ->bindModels()
+            ->bindServices();
             // ->bindProjects();
         
         $this->app->bind(AppClientContract::class, AppClient::class);
@@ -104,6 +107,18 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
         $this->app->bind(AppContract::class, Package::app());
         $this->app->bind(PlanContract::class, Package::plan());
         $this->app->bind(AccountChargebeeContract::class, Package::accountChargebee());
+
+        return $this;
+    }
+
+    /**
+     * Binding services.
+     * 
+     * @return self
+     */
+    protected function bindServices(): self
+    {
+        $this->app->bind(AccountSetterByAppResponseContract::class, AccountSetterByAppResponse::class);
 
         return $this;
     }

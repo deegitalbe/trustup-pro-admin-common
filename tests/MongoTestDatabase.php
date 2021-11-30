@@ -3,6 +3,7 @@ namespace Deegitalbe\TrustupProAdminCommon\Tests;
 
 use Illuminate\Support\Facades\Schema;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
+use Deegitalbe\TrustupProAdminCommon\Tests\Models\ProfessionalTestModel;
 use Illuminate\Foundation\Testing\DatabaseMigrations as LaravelDatabaseMigrations;
 
 trait MongoTestDatabase
@@ -25,13 +26,18 @@ trait MongoTestDatabase
      */
     protected function dropMongoCollections(): self
     {
-        foreach(Package::config('models') as $model => $class):
+        // Linking fake professional model
+        config([Package::prefix(). '.models.professional' => ProfessionalTestModel::class]);
+
+        foreach($this->getMongoCollections() as $model => $class):
             // Avoid excluded models
             if (in_array($model, $this->getExcludedModels())):
                 continue;
             endif;
             Schema::connection('mongodb')->dropIfExists($class::getModel()->getTable());
         endforeach;
+
+        Schema::connection('mongodb')->dropIfExists(ProfessionalTestModel::getModel()->getTable());
 
         return $this;
     }
@@ -43,7 +49,27 @@ trait MongoTestDatabase
      */
     protected function getExcludedModels(): array
     {
-        return ['professional'];
+        return [];
+    }
+
+    /**
+     * Additional models being refreshed.
+     * 
+     * @return array Should contains model keys defined in package config.
+     */
+    protected function additionalModels(): array
+    {
+        return [];
+    }
+
+    /**
+     * Getting all mongo collections that should be refreshed
+     * 
+     * @return array
+     */
+    protected function getMongoCollections(): array
+    {
+        return array_merge(Package::config('models'), $this->additionalModels());
     }
 
     /**

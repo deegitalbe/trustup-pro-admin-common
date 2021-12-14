@@ -116,6 +116,16 @@ class Plan extends EmbeddableMongoModel implements PlanContract
         return $this->trial_duration;
     }
 
+    /** 
+     * Telling if plan is having a trial period.
+     * 
+     * @return bool
+     */
+    public function hasTrialDuration(): bool
+    {
+        return $this->getTrialDuration() > 0;
+    }
+
     /**
      * Telling if plan is default one.
      * 

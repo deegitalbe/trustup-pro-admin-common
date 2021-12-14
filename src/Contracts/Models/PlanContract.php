@@ -69,6 +69,13 @@ interface PlanContract extends EmbeddableContract
      * @return string
      */
     public function getName(): string;
+
+    /** 
+     * Telling if plan is having a trial period.
+     * 
+     * @return bool
+     */
+    public function hasTrialDuration(): bool;
     
     /**
      * Getting plan duration in days.

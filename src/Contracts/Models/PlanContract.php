@@ -32,6 +32,36 @@ interface PlanContract extends EmbeddableContract
      * @return PlanContract
      */
     public function setIsDefault(bool $is_default): PlanContract;
+
+    /**
+     * Setting plan price (in cent) from cent value given.
+     * 
+     * @param int $cent_price
+     * @return PlanContract
+     */
+    public function setPriceInCent(int $cent_price): PlanContract;
+    
+    /**
+     * Setting plan price (in cent) from euro value given.
+     * 
+     * @param float $euro_price
+     * @return PlanContract
+     */
+    public function setPriceInEuro(float $euro_price): PlanContract;
+
+    /**
+     * Getting plan price in cent.
+     * 
+     * @return int
+     */
+    public function getPriceInCent(): int;
+    
+    /**
+     * Getting plan price in euro.
+     * 
+     * @return float
+     */
+    public function getPriceInEuro(): float;
     
     /**
      * Getting plan name.

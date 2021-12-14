@@ -18,7 +18,8 @@ class Plan extends EmbeddableMongoModel implements PlanContract
     protected $fillable = [
         'name',
         'trial_duration',
-        'is_default_plan'
+        'is_default_plan',
+        'price'
     ];
     
     /**
@@ -68,6 +69,32 @@ class Plan extends EmbeddableMongoModel implements PlanContract
 
         return $this;
     }
+
+    /**
+     * Setting plan price (in cent) from cent value given.
+     * 
+     * @param int $cent_price
+     * @return PlanContract
+     */
+    public function setPriceInCent(int $cent_price): PlanContract
+    {
+        $this->price = $cent_price;
+
+        return $this;
+    }
+    
+    /**
+     * Setting plan price (in cent) from euro value given.
+     * 
+     * @param float $euro_price
+     * @return PlanContract
+     */
+    public function setPriceInEuro(float $euro_price): PlanContract
+    {
+        $this->price = bcmul($euro_price, 100, 0);
+
+        return $this;
+    }
     
     /**
      * Getting plan id.
@@ -97,6 +124,26 @@ class Plan extends EmbeddableMongoModel implements PlanContract
     public function isDefault(): bool
     {
         return $this->is_default_plan ?? false;
+    }
+
+    /**
+     * Getting plan price in cent.
+     * 
+     * @return int
+     */
+    public function getPriceInCent(): int
+    {
+        return $this->price;
+    }
+    
+    /**
+     * Getting plan price in euro.
+     * 
+     * @return float
+     */
+    public function getPriceInEuro(): float
+    {
+        return bcdiv($this->price, 100, 2);
     }
 
     /**

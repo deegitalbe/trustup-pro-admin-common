@@ -58,6 +58,13 @@ interface AppContract extends PersistableContract
     public function addPlan(PlanContract $plan): AppContract;
 
     /**
+     * Removing given plan from app plans.
+     * 
+     * @return AppContract
+     */
+    public function removePlan(PlanContract $plan): AppContract;
+
+    /**
      * Getting application id (database purpose)
      * 
      * @return bool

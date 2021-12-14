@@ -98,6 +98,18 @@ class App extends PersistableMongoModel implements AppContract
     }
 
     /**
+     * Removing given plan from app plans.
+     * 
+     * @return AppContract
+     */
+    public function removePlan(PlanContract $plan): AppContract
+    {
+        $this->plans()->dissociate($plan);
+
+        return $this;
+    }
+
+    /**
      * Getting all accounts linked to app and given professional.
      * 
      * @param ProfessionalContract $professsional

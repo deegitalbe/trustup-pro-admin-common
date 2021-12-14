@@ -51,6 +51,13 @@ interface AppContract extends PersistableContract
     public function getPlans(): Collection;
 
     /**
+     * Getting default plan linked to app.
+     * 
+     * @return PlanContract|null
+     */
+    public function getDefaultPlan(): ?PlanContract;
+
+    /**
      * Adding given plan to app plans.
      * 
      * @return AppContract

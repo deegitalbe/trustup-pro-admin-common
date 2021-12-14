@@ -157,6 +157,18 @@ class App extends PersistableMongoModel implements AppContract
     }
 
     /**
+     * Getting default plan linked to app.
+     * 
+     * @return PlanContract|null
+     */
+    public function getDefaultPlan(): ?PlanContract
+    {
+        return $this->getPlans()->first(function(PlanContract $plan) {
+            return $plan->isDefault();
+        }) ?? $this->plans->first();
+    }
+
+    /**
      * Getting application id (database purpose).
      * 
      * @return bool

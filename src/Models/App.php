@@ -142,7 +142,7 @@ class App extends PersistableMongoModel implements AppContract
      */
     public function getAccounts(): Collection
     {
-        return $this->accounts()->get();
+        return $this->accounts;
     }
 
     /**

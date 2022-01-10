@@ -19,6 +19,7 @@ class Plan extends EmbeddableMongoModel implements PlanContract
         'name',
         'trial_duration',
         'is_default_plan',
+        'is_default_yearly_plan',
         'price'
     ];
     
@@ -28,7 +29,8 @@ class Plan extends EmbeddableMongoModel implements PlanContract
      * @var array
      */
     protected $casts = [
-        'is_default_plan' => "boolean"
+        'is_default_plan' => "boolean",
+        'is_default_yearly_plan' => "boolean"
     ];
 
     /**

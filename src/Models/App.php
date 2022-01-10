@@ -42,10 +42,10 @@ class App extends PersistableMongoModel implements AppContract
     const TASKS = 'tasks';
     
     /**
-     * Construction key (construction.trustup.pro?)
+     * Worksite key (worksite.trustup.pro?)
      * 
      */
-    const CONSTRUCTION = 'construction';
+    const WORKSITE = 'worksite';
     
     /**
      * Timetracker key (timetracker.trustup.pro)

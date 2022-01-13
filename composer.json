@@ -14,7 +14,8 @@
         "henrotaym/laravel-api-client": "^1.0",
         "henrotaym/laravel-test-suite": "^2.0",
         "deegitalbe/trustup-versioned-package": "^1.0",
-        "deegitalbe/server-authorization": "^1.1"
+        "deegitalbe/server-authorization": "^1.1",
+        "deegitalbe/chargebee-client": "^1.1"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",

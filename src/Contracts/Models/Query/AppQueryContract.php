@@ -5,11 +5,12 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
+use Henrotaym\LaravelModelQueries\Queries\Contracts\QueryContract;
 
 /**
  * Query used to retrieve apps.
  */
-interface AppQueryContract
+interface AppQueryContract extends QueryContract
 {
     /**
      * Limiting app to those available.
@@ -56,25 +57,4 @@ interface AppQueryContract
      * @return AppQueryContract
      */
     public function matchingRequest(Request $request): AppQueryContract;
-    
-    /**
-     * Getting apps.
-     * 
-     * @return Collection
-     */
-    public function get(): Collection;
-
-    /**
-     * Getting first app matching.
-     * 
-     * @return AppContract|null
-     */
-    public function first(): ?AppContract;
-
-    /**
-     * Getting number of apps matching this query.
-     * 
-     * @return int
-     */
-    public function count(): int;
 }

@@ -1,13 +1,15 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Contracts\Models;
 
-use Deegitalbe\TrustupProAdminCommon\Contracts\EmbeddableContract;
+use Illuminate\Database\Eloquent\Collection;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\PersistableContract;
+use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionPlanContract;
 
 /**
  * Representing app plan.
  */
-interface PlanContract extends EmbeddableContract
+interface PlanContract extends PersistableContract
 {
     /**
      * Setting plan name.
@@ -95,4 +97,28 @@ interface PlanContract extends EmbeddableContract
      * Getting app linked to this plan.
      */
     public function getApp(): AppContract;
+
+    /**
+     * Getting linked account chargebees.
+     * 
+     * @return Collection
+     */
+    public function getAccountChargebees(): Collection;
+
+    /**
+     * Refreshing its own attributes from chargebee api directly.
+     * 
+     * This does persist data.
+     * 
+     * @return PlanContract
+     */
+    public function refreshFromApi(): PlanContract;
+
+    /**
+     * Setting attributes based on given subscription plan.
+     * 
+     * @param SubscriptionPlanContract $subscription
+     * @return PlanContract
+     */
+    public function fromSubscriptionPlan(SubscriptionPlanContract $subscription_plan): PlanContract;
 }

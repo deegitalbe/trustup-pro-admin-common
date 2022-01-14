@@ -5,8 +5,12 @@ use Carbon\Carbon;
 use Jenssegers\Mongodb\Eloquent\Builder;
 use Jenssegers\Mongodb\Relations\BelongsTo;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
+use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionApiContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\PlanQueryContract;
+use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 
 class AccountChargebee extends PersistableMongoModel implements AccountChargebeeContract
@@ -47,6 +51,16 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
     public function account(): BelongsTo
     {
         return $this->belongsTo(Package::account());
+    }
+
+    /**
+     * Linked plan relation.
+     * 
+     * @return BelongsTo
+     */
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(Package::plan());
     }
 
     /**
@@ -107,6 +121,30 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
         return $this;
     }
 
+    /**
+     * Refreshing its own attributes from chargebee api directly.
+     * 
+     * This does persist data.
+     * 
+     * @return AccountChargebeeContract
+     */
+    public function refreshFromApi(): AccountChargebeeContract
+    {
+        $subscription = app()->make(SubscriptionApiContract::class)->find($this->getId());
+        
+        if (!$subscription):
+            return $this;
+        endif;
+
+        $this->fromSubscription($subscription)
+            ->persist();
+        
+        $this->getAccount()
+                ->updateInApp();
+
+        return $this;
+    }
+
     public function isTrial(): bool
     {
         return $this->status === self::TRIAL;
@@ -130,6 +168,62 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
     public function getAccount(): AccountContract
     {
         return $this->account;
+    }
+
+    /**
+     * Getting linked plan.
+     * 
+     * @return PlanContract|null
+     */
+    public function getPlan(): ?PlanContract
+    {
+        return $this->plan;
+    }
+
+    /**
+     * Telling if account chargebee has a plan.
+     * 
+     * @return bool
+     */
+    public function hasPlan(): bool
+    {
+        return !!$this->plan;
+    }
+
+    /**
+     * Setting linked plan.
+     * 
+     * @param PlanContract|null $plan
+     * @return AccountChargebeeContract
+     */
+    public function setPlan(?PlanContract $plan): AccountChargebeeContract
+    {
+        $this->plan()->associate(optional($plan)->persist());
+
+        return $this;
+    }
+
+    /**
+     * Setting attributes based on given subscription.
+     * 
+     * @param SubscriptionContract $subscription
+     * @return AccountChargebeeContract
+     */
+    public function fromSubscription(SubscriptionContract $subscription): AccountChargebeeContract
+    {
+        $this->setStatus($subscription->getStatus())
+            ->setId($subscription->getId());
+
+        $plan = app()->make(PlanQueryContract::class)
+            ->whereName($subscription->getPlan()->getId())
+            ->whereApp($this->getAccount()->getApp())
+            ->first();
+
+        if (!$plan):
+            return $this;
+        endif;
+
+        return $this->setPlan($plan);
     }
 
     /**

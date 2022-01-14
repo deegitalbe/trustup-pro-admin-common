@@ -14,6 +14,7 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\PlanQueryContract;
 
 class App extends PersistableMongoModel implements AppContract
 {
@@ -80,19 +81,26 @@ class App extends PersistableMongoModel implements AppContract
         return $this->hasMany(Package::account());
     }
 
-    public function plans(): EmbedsMany
+    /**
+     * Plans relation.
+     * 
+     * @return HasMany
+     */
+    public function plans(): HasMany
     {
-        return $this->embedsMany(Package::plan());
+        return $this->hasMany(Package::plan());
     }
 
     /**
      * Adding given plan to app plans.
      * 
+     * This does persist app at first.
+     * 
      * @return AppContract
      */
     public function addPlan(PlanContract $plan): AppContract
     {
-        $this->plans()->associate($plan);
+        $this->persist()->plans()->save($plan);
 
         return $this;
     }
@@ -104,7 +112,16 @@ class App extends PersistableMongoModel implements AppContract
      */
     public function removePlan(PlanContract $plan): AppContract
     {
-        $this->plans()->dissociate($plan);
+        $plan = $this->getPlans()->first(function(PlanContract $app_plan) use ($plan) {
+            return $app_plan->getName() === $plan->getName();
+        });
+
+        if (!$plan):
+            return $this;
+        endif;
+
+        $plan->app()->dissociate();
+        $plan->persist();
 
         return $this;
     }

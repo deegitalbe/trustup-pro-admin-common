@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "30830e2ccf9b46fcd7057a892d943875",
+    "content-hash": "ebd66e3cd11834b7b684127effbcf405",
     "packages": [
         {
             "name": "brick/math",
@@ -1033,6 +1033,58 @@
             "time": "2022-01-11T10:38:39+00:00"
         },
         {
+            "name": "henrotaym/laravel-container-auto-register",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/henrotaym/laravel-container-auto-register.git",
+                "reference": "ff1c64cea6db8532ba84bbeb83f0e941ddffb4a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/henrotaym/laravel-container-auto-register/zipball/ff1c64cea6db8532ba84bbeb83f0e941ddffb4a6",
+                "reference": "ff1c64cea6db8532ba84bbeb83f0e941ddffb4a6",
+                "shasum": ""
+            },
+            "require": {
+                "henrotaym/laravel-helpers": "^1.3",
+                "henrotaym/laravel-test-suite": "^2.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Henrotaym\\LaravelContainerAutoRegister\\Providers\\LaravelContainerAutoRegisterServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Henrotaym\\LaravelContainerAutoRegister\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mathieu Henrotay",
+                    "email": "mathieu.henrotay@gmail.com"
+                }
+            ],
+            "description": "Auto registering classes into laravel container.",
+            "support": {
+                "issues": "https://github.com/henrotaym/laravel-container-auto-register/issues",
+                "source": "https://github.com/henrotaym/laravel-container-auto-register/tree/v1.1.0"
+            },
+            "time": "2022-01-14T14:11:27+00:00"
+        },
+        {
             "name": "henrotaym/laravel-helpers",
             "version": "v1.3.0",
             "source": {
@@ -1079,6 +1131,58 @@
                 "source": "https://github.com/henrotaym/laravel-helpers/tree/v1.3.0"
             },
             "time": "2021-11-17T09:33:22+00:00"
+        },
+        {
+            "name": "henrotaym/laravel-model-queries",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/henrotaym/laravel-model-queries.git",
+                "reference": "8ba427ed5aefea017b461af35d1e825b8b5248c5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/henrotaym/laravel-model-queries/zipball/8ba427ed5aefea017b461af35d1e825b8b5248c5",
+                "reference": "8ba427ed5aefea017b461af35d1e825b8b5248c5",
+                "shasum": ""
+            },
+            "require": {
+                "henrotaym/laravel-container-auto-register": "^1.1",
+                "henrotaym/laravel-test-suite": "^2.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Henrotaym\\LaravelModelQueries\\Providers\\LaravelModelQueriesServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Henrotaym\\LaravelModelQueries\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mathieu Henrotay",
+                    "email": "mathieu.henrotay@gmail.com"
+                }
+            ],
+            "description": "Move your queries from your models.",
+            "support": {
+                "issues": "https://github.com/henrotaym/laravel-model-queries/issues",
+                "source": "https://github.com/henrotaym/laravel-model-queries/tree/v1.0.1"
+            },
+            "time": "2022-01-14T14:55:41+00:00"
         },
         {
             "name": "henrotaym/laravel-test-suite",

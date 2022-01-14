@@ -8,35 +8,25 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
+use Henrotaym\LaravelModelQueries\Queries\Abstracts\AbstractQuery;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\AppQueryContract;
 
 /**
  * Query used to retrieve apps.
  */
-class AppQuery implements AppQueryContract
+class AppQuery extends AbstractQuery implements AppQueryContract
 {
     /**
-     * Underlying query
+     * Model linked to this query.
      * 
-     * @var Builder
+     * @return string
      */
-    private $query;
-
-    /**
-     * Getting underlying query.
-     * 
-     * @return Builder
-     */
-    private function getQuery(): Builder
+    public function getModel(): string
     {
-        if (!$this->query):
-            return $this->query = Package::app()::query();
-        endif;
-
-        return $this->query;
+        return Package::app();
     }
-    
+
     /**
      * Limiting app to those available.
      * 
@@ -98,36 +88,6 @@ class AppQuery implements AppQueryContract
         $this->getQuery()->byOrder();
 
         return $this;
-    }
-    
-    /**
-     * Getting apps.
-     * 
-     * @return Collection
-     */
-    public function get(): Collection
-    {
-        return $this->getQuery()->get();
-    }
-
-    /**
-     * Getting first app matching.
-     * 
-     * @return AppContract|null
-     */
-    public function first(): ?AppContract
-    {
-        return $this->getQuery()->first();
-    }
-
-    /**
-     * Getting number of apps matching this query.
-     * 
-     * @return int
-     */
-    public function count(): int
-    {
-        return $this->getQuery()->count();
     }
 
     /**

@@ -91,6 +91,22 @@ class Account extends PersistableMongoModel implements AccountContract
     }
 
     /**
+     * Refreshing account status directly from chargebee API.
+     * 
+     * @return AccountContract
+     */
+    public function refreshChargebee(): AccountContract
+    {
+        if (!$this->hasChargebee()):
+            return $this;
+        endif;
+
+        $this->getChargebee()->refreshFromApi();
+
+        return $this->refresh();
+    }
+
+    /**
      * Get account access entries
      * 
      * @return Collection Collection[App\Apps\Contracts\AccountAccessEntryContract]

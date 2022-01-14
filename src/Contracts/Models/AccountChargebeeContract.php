@@ -3,8 +3,10 @@ namespace Deegitalbe\TrustupProAdminCommon\Contracts\Models;
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\PersistableContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
+use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionContract;
 
 interface AccountChargebeeContract extends PersistableContract
 {
@@ -27,6 +29,45 @@ interface AccountChargebeeContract extends PersistableContract
     public function isNonRenewing(): bool;
 
     public function getAccount(): AccountContract;
+
+    /**
+     * Getting linked plan.
+     * 
+     * @return PlanContract|null
+     */
+    public function getPlan(): ?PlanContract;
+
+    /**
+     * Setting linked plan.
+     * 
+     * @param PlanContract|null $plan
+     * @return AccountChargebeeContract
+     */
+    public function setPlan(?PlanContract $plan): AccountChargebeeContract;
+
+    /**
+     * Telling if account chargebee has a plan.
+     * 
+     * @return bool
+     */
+    public function hasPlan(): bool;
+
+    /**
+     * Refreshing its own attributes from chargebee api directly.
+     * 
+     * This does persist data.
+     * 
+     * @return AccountChargebeeContract
+     */
+    public function refreshFromApi(): AccountChargebeeContract;
+
+    /**
+     * Setting attributes based on given subscription.
+     * 
+     * @param SubscriptionContract $subscription
+     * @return AccountChargebeeContract
+     */
+    public function fromSubscription(SubscriptionContract $subscription): AccountChargebeeContract;
 
     /**
      * Linking chargebee status to given account.

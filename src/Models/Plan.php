@@ -1,14 +1,20 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Models;
 
+use Jenssegers\Mongodb\Relations\HasMany;
+use Jenssegers\Mongodb\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Collection;
+use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
-use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\EmbeddableMongoModel;
+use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
+use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionPlanApiContract;
+use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionPlanContract;
 
 /**
  * Representing app plan.
  */
-class Plan extends EmbeddableMongoModel implements PlanContract
+class Plan extends PersistableMongoModel implements PlanContract
 {
     /**
      * Fillable attributes.
@@ -32,6 +38,26 @@ class Plan extends EmbeddableMongoModel implements PlanContract
         'is_default_plan' => "boolean",
         'is_default_yearly_plan' => "boolean"
     ];
+
+    /**
+     * Linked app.
+     * 
+     * @return BelongsTo
+     */
+    public function app(): BelongsTo
+    {
+        return $this->belongsTo(Package::app());
+    }
+
+    /**
+     * Linked account chargebees relation.
+     * 
+     * @return HasMany
+     */
+    public function accountChargebees(): HasMany
+    {
+        return $this->HasMany(Package::accountChargebee());
+    }
 
     /**
      * Setting plan name.
@@ -164,5 +190,51 @@ class Plan extends EmbeddableMongoModel implements PlanContract
     public function getApp(): AppContract
     {
         return $this->app;
+    }
+
+    /**
+     * Getting linked account chargebees.
+     * 
+     * @return Collection
+     */
+    public function getAccountChargebees(): Collection
+    {
+        return $this->accountChargebees;
+    }
+
+    /**
+     * Refreshing its own attributes from chargebee api directly.
+     * 
+     * This does persist data.
+     * 
+     * @return PlanContract
+     */
+    public function refreshFromApi(): PlanContract
+    {
+        $subscription_plan = app()->make(SubscriptionPlanApiContract::class)->find($this->getName());
+
+        if (!$subscription_plan) {
+            return $this;
+        }
+
+        $this->fromSubscriptionPlan($subscription_plan)
+            ->persist();
+
+        return $this;
+    }
+
+    /**
+     * Setting attributes based on given subscription plan.
+     * 
+     * @param SubscriptionPlanContract $subscription
+     * @return PlanContract
+     */
+    public function fromSubscriptionPlan(SubscriptionPlanContract $subscription_plan): PlanContract
+    {
+        $this->setName($subscription_plan->getId())
+            ->setPriceInCent($subscription_plan->getPriceInCent())
+            ->setTrialDuration($subscription_plan->getTrialDuration());
+
+        return $this;
     }
 }

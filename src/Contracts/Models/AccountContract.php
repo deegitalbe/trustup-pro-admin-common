@@ -20,6 +20,13 @@ interface AccountContract extends PersistableContract
     public function setChargebee(?AccountChargebeeContract $chargebee);
 
     /**
+     * Refreshing account status directly from chargebee API.
+     * 
+     * @return AccountContract
+     */
+    public function refreshChargebee(): AccountContract;
+
+    /**
      * Get account access entries
      * 
      * @return Collection Collection[App\Apps\Contracts\AccountAccessEntryContract]

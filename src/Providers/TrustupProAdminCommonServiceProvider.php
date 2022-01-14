@@ -28,6 +28,7 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract
 use Deegitalbe\TrustupVersionedPackage\Contracts\VersionedPackageCheckerContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountSetterByAppResponse;
+use Henrotaym\LaravelContainerAutoRegister\Services\AutoRegister\Contracts\AutoRegisterContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Services\Account\AccountSetterByAppResponseContract;
 
 class TrustupProAdminCommonServiceProvider extends ServiceProvider
@@ -41,7 +42,6 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
             // ->bindProjects();
         
         $this->app->bind(AppClientContract::class, AppClient::class);
-        $this->app->bind(AppQueryContract::class, AppQuery::class);
     }
 
     public function boot()
@@ -49,6 +49,7 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
         $this->makeConfigPublishable()
             ->registerPackageCommands()
             // ->loadRoutes();
+            ->bindQueries()
             ->registerPackage();
     }
 
@@ -107,6 +108,19 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
         $this->app->bind(AppContract::class, Package::app());
         $this->app->bind(PlanContract::class, Package::plan());
         $this->app->bind(AccountChargebeeContract::class, Package::accountChargebee());
+
+        return $this;
+    }
+
+    /**
+     * Binding queries.
+     * 
+     * @return self
+     */
+    protected function bindQueries(): self
+    {
+        app()->make(AutoRegisterContract::class)
+            ->scanWhere(AppQuery::class);
 
         return $this;
     }

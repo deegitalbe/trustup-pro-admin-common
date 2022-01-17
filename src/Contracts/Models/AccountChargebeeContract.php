@@ -46,6 +46,36 @@ interface AccountChargebeeContract extends PersistableContract
     public function setPlan(?PlanContract $plan): AccountChargebeeContract;
 
     /**
+     * Getting ending trial date.
+     * 
+     * @return Carbon|null
+     */
+    public function getTrialEndingAt(): ?Carbon;
+
+    /**
+     * Setting ending trial date.
+     * 
+     * @param Carbon|null $ending_at
+     * @return AccountChargebeeContract
+     */
+    public function setTrialEndingAt(?Carbon $ending_at): AccountChargebeeContract;
+
+    /**
+     * Setting account status chargeability.
+     * 
+     * @param bool $is_chargeable
+     * @return AccountChargebeeContract
+     */
+    public function setIsChargeable(bool $is_chargeable): AccountChargebeeContract;
+
+    /**
+     * Getting account status chargeability.
+     * 
+     * @return bool
+     */
+    public function getIsChargeable(): bool;
+
+    /**
      * Telling if account chargebee has a plan.
      * 
      * @return bool

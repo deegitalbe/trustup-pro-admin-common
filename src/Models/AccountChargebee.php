@@ -45,7 +45,17 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
 
     protected $fillable = [
         'status',
-        'subscription_id'
+        'subscription_id',
+        'trial_ending_at',
+        'is_chargeable'
+    ];
+
+    protected $dates = [
+        'trial_ending_at'
+    ];
+
+    protected $casts = [
+        'is_chargeable' => 'boolean'
     ];
 
     public function account(): BelongsTo
@@ -73,6 +83,29 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
     {
         $this->account()->associate($account);
         
+        return $this;
+    }
+
+    /**
+     * Getting ending trial date.
+     * 
+     * @return Carbon|null
+     */
+    public function getTrialEndingAt(): ?Carbon
+    {
+        return $this->trial_ending_at;
+    }
+
+    /**
+     * Setting ending trial date.
+     * 
+     * @param Carbon|null $ending_at
+     * @return AccountChargebeeContract
+     */
+    public function setTrialEndingAt(?Carbon $ending_at): AccountChargebeeContract
+    {
+        $this->trial_ending_at = $ending_at;
+
         return $this;
     }
 
@@ -120,6 +153,30 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
 
         return $this;
     }
+
+    /**
+     * Setting account status chargeability.
+     * 
+     * @param bool $is_chargeable
+     * @return AccountChargebeeContract
+     */
+    public function setIsChargeable(bool $is_chargeable): AccountChargebeeContract
+    {
+        $this->is_chargeable = $is_chargeable;
+
+        return $this;
+    }
+
+    /**
+     * Getting account status chargeability.
+     * 
+     * @return bool
+     */
+    public function getIsChargeable(): bool
+    {
+        return !!$this->is_chargeable;
+    }
+
 
     /**
      * Refreshing its own attributes from chargebee api directly.
@@ -211,8 +268,12 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
      */
     public function fromSubscription(SubscriptionContract $subscription): AccountChargebeeContract
     {
+        $is_chargeable = optional($subscription->getCustomer())->isChargeable() ?? false;
+
         $this->setStatus($subscription->getStatus())
-            ->setId($subscription->getId());
+            ->setTrialEndingAt($subscription->getTrialEndingAt())
+            ->setId($subscription->getId())
+            ->setIsChargeable($is_chargeable);
 
         $plan = app()->make(PlanQueryContract::class)
             ->whereName($subscription->getPlan()->getId())

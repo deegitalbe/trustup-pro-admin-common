@@ -9,8 +9,11 @@ use Deegitalbe\ChargebeeClient\Chargebee\SubscriptionApi;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountChargebee;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
+use Deegitalbe\TrustupProAdminCommon\Tests\Unit\_TestModels\Professional;
 use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionApiContract;
+use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\CustomerContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\PlanQueryContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
@@ -24,6 +27,9 @@ class AccountChargebeeTest extends TestCase
 
     /** @var MockInterface */
     protected $account;
+
+    /** @var MockInterface */
+    protected $customer;
 
     /** @var MockInterface */
     protected $app_model;
@@ -80,31 +86,9 @@ class AccountChargebeeTest extends TestCase
     /** @test */
     public function account_chargebee_from_subscription_not_finding_plan()
     {
-        // SETUP
-        $this->mockSubscriptionPlan()
-            ->mockSubscription()
-            ->mockPlanQuery()
-            ->mockAccountChargebee()
-            ->mockAccount()
-            ->mockApp();
-        
+        $this->setupFromSubscriptionTest();
         // EXPECTATIONS
-        $this->subscription_plan->expects()->getId()->andReturn('plan_id');
-
-        $this->subscription->expects()->getStatus()->andReturn('subscription_status');
-        $this->subscription->expects()->getId()->andReturn('subscription_id');
-        $this->subscription->expects()->getPlan()->andReturn($this->subscription_plan);
-
-        $this->plan_query->expects()->whereName('plan_id')->andReturnSelf();
-        $this->plan_query->expects()->whereApp($this->app_model)->andReturnSelf();
         $this->plan_query->expects()->first()->andReturnNull();
-
-        $this->account->expects()->getApp()->andReturn($this->app_model);
-
-        $this->account_chargebee->expects()->fromSubscription($this->subscription)->passthru();
-        $this->account_chargebee->expects()->getAccount()->andReturn($this->account);
-        $this->account_chargebee->expects()->setStatus('subscription_status')->andReturnSelf();
-        $this->account_chargebee->expects()->setId('subscription_id')->andReturnSelf();
 
         // START
         $this->account_chargebee->fromSubscription($this->subscription);
@@ -113,6 +97,25 @@ class AccountChargebeeTest extends TestCase
     /** @test */
     public function account_chargebee_from_subscription_finding_plan()
     {
+        // 
+        $this->setupFromSubscriptionTest()
+            ->mockPlan();
+
+        // EXPECTATIONS
+        $this->plan_query->expects()->first()->andReturn($this->plan);
+        $this->account_chargebee->expects()->setPlan($this->plan)->andReturnSelf();
+
+        // START
+        $this->account_chargebee->fromSubscription($this->subscription);
+    }
+
+    /**
+     * Method setting up commmon actions for from subscription related tests.
+     * 
+     * @return self
+     */
+    protected function setupFromSubscriptionTest()
+    {
         // SETUP
         $this->mockSubscriptionPlan()
             ->mockSubscription()
@@ -120,18 +123,21 @@ class AccountChargebeeTest extends TestCase
             ->mockAccountChargebee()
             ->mockAccount()
             ->mockApp()
-            ->mockPlan();
-        
+            ->mockCustomer();
+
         // EXPECTATIONS
         $this->subscription_plan->expects()->getId()->andReturn('plan_id');
+        
+        $this->customer->expects()->isChargeable()->andReturnFalse();
 
         $this->subscription->expects()->getStatus()->andReturn('subscription_status');
         $this->subscription->expects()->getId()->andReturn('subscription_id');
+        $this->subscription->expects()->getTrialEndingAt()->andReturnNull();
+        $this->subscription->expects()->getCustomer()->andReturn($this->customer);
         $this->subscription->expects()->getPlan()->andReturn($this->subscription_plan);
 
         $this->plan_query->expects()->whereName('plan_id')->andReturnSelf();
         $this->plan_query->expects()->whereApp($this->app_model)->andReturnSelf();
-        $this->plan_query->expects()->first()->andReturn($this->plan);
 
         $this->account->expects()->getApp()->andReturn($this->app_model);
 
@@ -139,10 +145,10 @@ class AccountChargebeeTest extends TestCase
         $this->account_chargebee->expects()->getAccount()->andReturn($this->account);
         $this->account_chargebee->expects()->setStatus('subscription_status')->andReturnSelf();
         $this->account_chargebee->expects()->setId('subscription_id')->andReturnSelf();
-        $this->account_chargebee->expects()->setPlan($this->plan)->andReturnSelf();
+        $this->account_chargebee->expects()->setTrialEndingAt(null)->andReturnSelf();
+        $this->account_chargebee->expects()->setIsChargeable(false)->andReturnSelf();
 
-        // START
-        $this->account_chargebee->fromSubscription($this->subscription);
+        return $this;
     }
 
     /** @test */
@@ -179,6 +185,48 @@ class AccountChargebeeTest extends TestCase
         $account->expects()->updateInApp();
 
         $account_chargebee->refreshFromApi();
+    }
+
+    /** @test */
+    public function account_chargebee_refresh_from_api_real_chargebee_call()
+    {
+        $account_chargebee = $this->app->make(AccountChargebeeContract::class)
+            ->setStatus('active')
+            ->setId('AzyuGGSrasBzJnDM')
+            ->persist();
+
+        $plan = $this->app->make(PlanContract::class)
+            ->setName('trustup-pro-todo')
+            ->setTrialDuration(14)
+            ->setIsDefault(true)
+            ->setPriceInCent(4000)
+            ->persist();
+
+        $app = $this->app->make(AppContract::class)
+            ->setKey('todo')
+            ->persist()
+            ->addPlan($plan)
+            ->persist();
+
+        $account = $this->app->make(AccountContract::class)
+            ->persist()
+            ->setChargebee($account_chargebee)
+            ->setApp($app);
+
+        $mocked_app_client = $this->mockThis(AppClientContract::class);
+
+        $mocked_app_client->expects()
+            ->updateAccount()
+            ->withArgs(function($real_account) use ($account) { return $real_account->_id === $account->_id; })
+            ->andReturnNull();
+        $mocked_app_client->expects()->setApp()
+            ->withArgs(function($real_app) use ($app) { return $real_app->getKey() === $app->getKey(); })
+            ->andReturnSelf();
+
+        $refreshed = $account_chargebee->refreshFromApi();
+
+        $this->assertTrue($refreshed->isTrial());
+        $this->assertNotNull($refreshed->getTrialEndingAt());
     }
 
     /**
@@ -252,6 +300,19 @@ class AccountChargebeeTest extends TestCase
 
         return $this;
     }
+
+    /**
+     * Mocking customer.
+     * 
+     * @return self
+     */
+    protected function mockCustomer(): self
+    {
+        $this->customer = $this->mockThis(CustomerContract::class);
+
+        return $this;
+    }
+
 
     /**
      * Mocking account.

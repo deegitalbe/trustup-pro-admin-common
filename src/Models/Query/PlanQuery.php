@@ -1,7 +1,8 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Models\Query;
 
-use Jenssegers\Mongodb\Query\Builder;
+use Jenssegers\Mongodb\Eloquent\Builder;
+use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Henrotaym\LaravelModelQueries\Queries\Abstracts\AbstractQuery;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\AppQueryContract;

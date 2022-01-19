@@ -6,9 +6,11 @@ use Deegitalbe\TrustupProAdminCommon\Models\App;
 use Deegitalbe\TrustupProAdminCommon\Models\Plan;
 use Deegitalbe\TrustupProAdminCommon\Models\Account;
 use Deegitalbe\TrustupProAdminCommon\Tests\TestCase;
+use Deegitalbe\TrustupProAdminCommon\Models\AccountChargebee;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\SubscriptionPlan;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionPlanApiContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionPlanContract;
@@ -42,6 +44,64 @@ class AccountTest extends TestCase
         $this->account_chargebee->expects()->refreshFromApi();
 
         $this->account->refreshChargebee();
+    }
+
+    /** @test */
+    public function account_model_setting_chargebee()
+    {
+        // Creating two statuses.
+        $account_chargebee_first = $this->app->make(AccountChargebeeContract::class)
+            ->setId('first')
+            ->persist();
+
+        $account_chargebee_second = $this->app->make(AccountChargebeeContract::class)
+            ->setId('second')
+            ->persist();
+
+        // Making sure two statuses were persisted.
+        $this->assertEquals(2, $this->countAccountChargebee());
+
+        // Linking account to first status
+        $account = $this->app->make(AccountContract::class)
+            ->persist()
+            ->setChargebee($account_chargebee_first);
+
+        // Making sure account is related to first status
+        $this->assertAccountIsRelatedToAccountChargebee($account, $account_chargebee_first);
+        // Making sure no status were deleted.
+        $this->assertEquals(2, $this->countAccountChargebee());
+
+        // Linking account to second status.
+        $account->setChargebee($account_chargebee_second);
+        
+        // Making sure account is linked to second status
+        $this->assertAccountIsRelatedToAccountChargebee($account, $account_chargebee_second);
+        // Making sure first status was deleted
+        $this->assertEquals(1, $this->countAccountChargebee());
+    }
+
+    /**
+     * Making sure given account is linked to given account status.
+     * 
+     * @param AccountContract $account
+     * @param AccountChargebeeContract $account_chargebee
+     * @return self
+     */
+    protected function assertAccountIsRelatedToAccountChargebee(AccountContract $account, AccountChargebeeContract $account_chargebee): self
+    {
+        $this->assertEquals($account_chargebee->getId(), $account->fresh()->getChargebee()->getId());
+
+        return $this;
+    }
+
+    /**
+     * Counting account chargebee models.
+     * 
+     * @return int
+     */
+    protected function countAccountChargebee(): int
+    {
+        return AccountChargebee::count();
     }
 
     /**

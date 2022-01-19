@@ -69,7 +69,7 @@ class Account extends PersistableMongoModel implements AccountContract
 
     public function chargebee(): HasOne
     {
-        return $this->hasOne(Package::accountChargebee());
+        return $this->hasOne(Package::accountChargebee())->latest();
     }
 
     public function getChargebee(): ?AccountChargebeeContract

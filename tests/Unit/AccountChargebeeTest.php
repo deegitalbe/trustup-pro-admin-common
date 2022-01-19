@@ -229,6 +229,18 @@ class AccountChargebeeTest extends TestCase
         $this->assertNotNull($refreshed->getTrialEndingAt());
     }
 
+    /** @test */
+    public function account_chargebee_setting_account()
+    {
+        $this->mockAccount()
+            ->mockAccountChargebee();
+
+        $this->account_chargebee->expects()->setAccount($this->account)->passthru();
+        $this->account->expects()->setChargebee($this->account_chargebee);
+
+        $this->assertInstanceOf(AccountChargebeeContract::class, $this->account_chargebee->setAccount($this->account));
+    }
+
     /**
      * Mocking subscription.
      * 

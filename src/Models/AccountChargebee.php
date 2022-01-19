@@ -81,7 +81,7 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
      */
     public function setAccount(AccountContract $account): AccountChargebeeContract
     {
-        $this->account()->associate($account);
+        $account->setChargebee($this);
         
         return $this;
     }

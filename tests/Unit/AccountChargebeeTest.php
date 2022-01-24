@@ -160,8 +160,6 @@ class AccountChargebeeTest extends TestCase
         $subscription_api->expects()->find("test")->andReturnNull();
         $account_chargebee->expects()->refreshFromApi()->passthru();
         $account_chargebee->expects()->getId()->andReturn("test");
-        $account_chargebee->expects()->fromSubscription()->times(0);
-        $account_chargebee->expects()->getAccount()->times(0);
 
         $account_chargebee->refreshFromApi();
     }
@@ -178,13 +176,107 @@ class AccountChargebeeTest extends TestCase
         
         $account_chargebee->expects()->refreshFromApi()->passthru();
         $account_chargebee->expects()->getId()->andReturn("test");
-        $account_chargebee->expects()->fromSubscription($subscription)->andReturnSelf();
-        $account_chargebee->expects()->persist()->andReturnSelf();
-        $account_chargebee->expects()->getAccount()->andReturn($account);
-        
-        $account->expects()->updateInApp();
+        $account_chargebee->expects()->refreshFromSubscription($subscription);
 
         $account_chargebee->refreshFromApi();
+    }
+
+    /** @test */
+    public function account_chargebee_refresh_from_subscription_but_not_updating_app_database()
+    {
+        $subscription = $this->mockThis(SubscriptionContract::class);
+        $account_chargebee = $this->mockThis(AccountChargebee::class);
+        
+        $account_chargebee->expects()->refreshFromSubscription($subscription)->passthru();
+        $account_chargebee->expects()->fromSubscription($subscription);
+        $account_chargebee->expects()->shouldBeUpdatedInApp()->andReturn(false);
+        $account_chargebee->expects()->persist()->andReturnSelf();
+
+        $account_chargebee->refreshFromSubscription($subscription);
+    }
+
+    /** @test */
+    public function account_chargebee_refresh_from_subscription_but_updating_app_database()
+    {
+        $subscription = $this->mockThis(SubscriptionContract::class);
+        $account_chargebee = $this->mockThis(AccountChargebee::class);
+        $account = $this->mockThis(AccountContract::class);
+        
+        $account_chargebee->expects()->refreshFromSubscription($subscription)->passthru();
+        $account_chargebee->expects()->fromSubscription($subscription);
+        $account_chargebee->expects()->shouldBeUpdatedInApp()->andReturn(true);
+        $account_chargebee->expects()->getAccount()->andReturn($account);
+        $account_chargebee->expects()->persist()->andReturnSelf();
+
+        $account->expects()->updateInApp();
+
+        $account_chargebee->refreshFromSubscription($subscription);
+    }
+
+    /** @test */
+    public function account_chargebee_should_be_updated_in_app()
+    {
+        $account_chargebee = $this->mockThis(AccountChargebee::class);
+        
+        $account_chargebee->expects()->shouldBeUpdatedInApp()->passthru();
+        $account_chargebee->expects()->isDifferentConcerningAppDatabase($account_chargebee);
+        $account_chargebee->expects()->fresh()->andReturn($account_chargebee);
+
+        $account_chargebee->shouldBeUpdatedInApp();
+    }
+
+    /** @test */
+    public function account_chargebee_is_different_concerning_app_database_returning_false_if_both_same()
+    {
+        $account_chargebee = $this->mockThis(AccountChargebee::class);
+        $account_chargebee_2 = $this->mockThis(AccountChargebee::class);
+        
+        $account_chargebee->expects()->isDifferentConcerningAppDatabase($account_chargebee_2)->passthru();
+        
+        $account_chargebee->expects()->getStatus()->andReturn("status");
+        $account_chargebee->expects()->getId()->andReturn("id");
+
+        $account_chargebee_2->expects()->getStatus()->andReturn("status");
+        $account_chargebee_2->expects()->getId()->andReturn("id");
+
+
+        $this->assertFalse($account_chargebee->isDifferentConcerningAppDatabase($account_chargebee_2));
+    }
+
+    /** @test */
+    public function account_chargebee_is_different_concerning_app_database_returning_true_if_ids_different()
+    {
+        $account_chargebee = $this->mockThis(AccountChargebee::class);
+        $account_chargebee_2 = $this->mockThis(AccountChargebee::class);
+        
+        $account_chargebee->expects()->isDifferentConcerningAppDatabase($account_chargebee_2)->passthru();
+        
+        // $account_chargebee->expects()->getStatus()->andReturn("status");
+        $account_chargebee->expects()->getId()->andReturn("id");
+
+        // $account_chargebee_2->expects()->getStatus()->andReturn("status");
+        $account_chargebee_2->expects()->getId()->andReturn("id_2");
+
+
+        $this->assertTrue($account_chargebee->isDifferentConcerningAppDatabase($account_chargebee_2));
+    }
+
+    /** @test */
+    public function account_chargebee_is_different_concerning_app_database_returning_true_if_statuses_different()
+    {
+        $account_chargebee = $this->mockThis(AccountChargebee::class);
+        $account_chargebee_2 = $this->mockThis(AccountChargebee::class);
+        
+        $account_chargebee->expects()->isDifferentConcerningAppDatabase($account_chargebee_2)->passthru();
+        
+        $account_chargebee->expects()->getStatus()->andReturn("status");
+        $account_chargebee->expects()->getId()->andReturn("id");
+
+        $account_chargebee_2->expects()->getStatus()->andReturn("status_2");
+        $account_chargebee_2->expects()->getId()->andReturn("id");
+
+
+        $this->assertTrue($account_chargebee->isDifferentConcerningAppDatabase($account_chargebee_2));
     }
 
     /** @test */

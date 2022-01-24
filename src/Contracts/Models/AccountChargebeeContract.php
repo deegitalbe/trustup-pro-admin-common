@@ -92,6 +92,33 @@ interface AccountChargebeeContract extends PersistableContract
     public function refreshFromApi(): AccountChargebeeContract;
 
     /**
+     * Refreshing its own attributes from given subscription.
+     * 
+     * This does persist data.
+     * 
+     * @param SubscriptionContract $subscription
+     * @return AccountChargebeeContract
+     */
+    public function refreshFromSubscription(SubscriptionContract $subscription): AccountChargebeeContract;
+
+    /**
+     * Telling if this account chargebee is different than stored one concerning app database.
+     * 
+     * This method is used to determine if a webhook should be sent to the application to update its accounts.
+     * 
+     * @return bool
+     */
+    public function shouldBeUpdatedInApp(): bool;
+
+    /**
+     * Telling if this account chargebee is different than given one concerning app database.
+     * 
+     * @param AccountChargebeeContract $chargebee
+     * @return bool
+     */
+    public function isDifferentConcerningAppDatabase(AccountChargebeeContract $chargebee): bool;
+
+    /**
      * Setting attributes based on given subscription.
      * 
      * @param SubscriptionContract $subscription

@@ -109,7 +109,8 @@ class AccountSetterByAppResponse implements AccountSetterByAppResponseContract
                 ->setStatus($subscription_status)
                 ->setId($subscription_id)
                 ->setAccount($model)
-                ->persist();
+                ->persist()
+                ->refreshFromApi();
         endif;
         
         return $model;

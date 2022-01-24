@@ -87,9 +87,10 @@ interface AccountChargebeeContract extends PersistableContract
      * 
      * This does persist data.
      * 
+     * @param bool $force Forcing update in app database.
      * @return AccountChargebeeContract
      */
-    public function refreshFromApi(): AccountChargebeeContract;
+    public function refreshFromApi(bool $force = false): AccountChargebeeContract;
 
     /**
      * Refreshing its own attributes from given subscription.
@@ -97,9 +98,10 @@ interface AccountChargebeeContract extends PersistableContract
      * This does persist data.
      * 
      * @param SubscriptionContract $subscription
+     * @param bool $force Forcing update in app database.
      * @return AccountChargebeeContract
      */
-    public function refreshFromSubscription(SubscriptionContract $subscription): AccountChargebeeContract;
+    public function refreshFromSubscription(SubscriptionContract $subscription, bool $force = false): AccountChargebeeContract;
 
     /**
      * Telling if this account chargebee is different than stored one concerning app database.

@@ -22,9 +22,10 @@ interface AccountContract extends PersistableContract
     /**
      * Refreshing account status directly from chargebee API.
      * 
+     * @param bool $force Forcing update in app database.
      * @return AccountContract
      */
-    public function refreshChargebee(): AccountContract;
+    public function refreshChargebee(bool $force = false): AccountContract;
 
     /**
      * Get account access entries

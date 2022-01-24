@@ -183,9 +183,10 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
      * 
      * This does persist data.
      * 
+     * @param bool $force Forcing update in app database.
      * @return AccountChargebeeContract
      */
-    public function refreshFromApi(): AccountChargebeeContract
+    public function refreshFromApi(bool $force = false): AccountChargebeeContract
     {
         $subscription = app()->make(SubscriptionApiContract::class)->find($this->getId());
         
@@ -193,7 +194,7 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
             return $this;
         endif;
 
-        return $this->refreshFromSubscription($subscription);
+        return $this->refreshFromSubscription($subscription, $force);
     }
 
     /**
@@ -202,14 +203,15 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
      * This does persist data.
      * 
      * @param SubscriptionContract $subscription
+     * @param bool $force Forcing update in app database.
      * @return AccountChargebeeContract
      */
-    public function refreshFromSubscription(SubscriptionContract $subscription): AccountChargebeeContract
+    public function refreshFromSubscription(SubscriptionContract $subscription, bool $force = false): AccountChargebeeContract
     {
         $this->fromSubscription($subscription);
 
         // Updating app database if needed.
-        if ($this->shouldBeUpdatedInApp()):
+        if ($force || $this->shouldBeUpdatedInApp()):
             $this->getAccount()
                     ->updateInApp();
         endif;

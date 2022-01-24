@@ -93,15 +93,16 @@ class Account extends PersistableMongoModel implements AccountContract
     /**
      * Refreshing account status directly from chargebee API.
      * 
+     * @param bool $force Forcing update in app database.
      * @return AccountContract
      */
-    public function refreshChargebee(): AccountContract
+    public function refreshChargebee(bool $force = false): AccountContract
     {
         if (!$this->hasChargebee()):
             return $this;
         endif;
 
-        $this->getChargebee()->refreshFromApi();
+        $this->getChargebee()->refreshFromApi($force);
 
         return $this->refresh();
     }

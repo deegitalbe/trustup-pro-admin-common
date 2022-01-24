@@ -41,7 +41,7 @@ class AccountTest extends TestCase
         $this->account->expects()->getChargebee()->andReturn($this->account_chargebee);
         $this->account->expects()->refresh()->andReturnSelf();
 
-        $this->account_chargebee->expects()->refreshFromApi();
+        $this->account_chargebee->expects()->refreshFromApi(false);
 
         $this->account->refreshChargebee();
     }

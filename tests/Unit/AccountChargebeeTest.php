@@ -176,7 +176,7 @@ class AccountChargebeeTest extends TestCase
         
         $account_chargebee->expects()->refreshFromApi()->passthru();
         $account_chargebee->expects()->getId()->andReturn("test");
-        $account_chargebee->expects()->refreshFromSubscription($subscription);
+        $account_chargebee->expects()->refreshFromSubscription($subscription, false);
 
         $account_chargebee->refreshFromApi();
     }
@@ -211,6 +211,23 @@ class AccountChargebeeTest extends TestCase
         $account->expects()->updateInApp();
 
         $account_chargebee->refreshFromSubscription($subscription);
+    }
+
+    /** @test */
+    public function account_chargebee_refresh_from_subscription_but_force_updating_app_database()
+    {
+        $subscription = $this->mockThis(SubscriptionContract::class);
+        $account_chargebee = $this->mockThis(AccountChargebee::class);
+        $account = $this->mockThis(AccountContract::class);
+        
+        $account_chargebee->expects()->refreshFromSubscription($subscription, true)->passthru();
+        $account_chargebee->expects()->fromSubscription($subscription);
+        $account_chargebee->expects()->getAccount()->andReturn($account);
+        $account_chargebee->expects()->persist()->andReturnSelf();
+
+        $account->expects()->updateInApp();
+
+        $account_chargebee->refreshFromSubscription($subscription, true);
     }
 
     /** @test */

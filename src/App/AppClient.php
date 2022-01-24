@@ -171,12 +171,18 @@ class AppClient implements AppClientContract
      */
     protected function accountToAttributes(AccountContract $account): array
     {
-        return [
+        $attributes = [
             'uuid' => $account->getUuid(),
-            'authorization_key' => $account->getProfessional()->authorization_key,
-            'chargebee_subscription_id' => optional($account->getChargebee())->getId(),
-            'chargebee_subscription_status' => optional($account->getChargebee())->getStatus()
+            'authorization_key' => $account->getProfessional()->authorization_key
         ];
+
+        // Only paid applications should have subscription related attributes.
+        if ($account->getApp()->getPaid()):
+            $attributes['chargebee_subscription_id'] = optional($account->getChargebee())->getId();
+            $attributes['chargebee_subscription_status'] = optional($account->getChargebee())->getStatus();
+        endif;
+        
+        return $attributes;
     }
 
     /**

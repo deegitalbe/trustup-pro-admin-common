@@ -100,7 +100,7 @@ interface AccountContract extends PersistableContract
      */
     public function setSynchronizedAt(Carbon $synchronized_at): AccountContract;
 
-    public function setRaw(array $data);
+    public function setRaw(?array $data = null);
 
     public function getRaw(): ?array;
 

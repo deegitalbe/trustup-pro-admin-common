@@ -200,7 +200,7 @@ class Account extends PersistableMongoModel implements AccountContract
         return $this->raw;
     }
 
-    public function setRaw(array $data = null): self
+    public function setRaw(?array $data = null): self
     {
         $this->raw = $data;
 

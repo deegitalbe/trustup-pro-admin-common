@@ -46,6 +46,7 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
     protected $fillable = [
         'status',
         'subscription_id',
+        'plan_id',
         'trial_ending_at',
         'is_chargeable'
     ];

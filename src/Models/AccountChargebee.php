@@ -322,10 +322,6 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
             ->whereApp($this->getAccount()->getApp())
             ->first();
 
-        if (!$plan):
-            return $this;
-        endif;
-
         return $this->setPlan($plan);
     }
 

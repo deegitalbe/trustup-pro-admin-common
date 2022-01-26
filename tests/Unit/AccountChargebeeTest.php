@@ -89,6 +89,7 @@ class AccountChargebeeTest extends TestCase
         $this->setupFromSubscriptionTest();
         // EXPECTATIONS
         $this->plan_query->expects()->first()->andReturnNull();
+        $this->account_chargebee->expects()->setPlan(null)->andReturnSelf();
 
         // START
         $this->account_chargebee->fromSubscription($this->subscription);

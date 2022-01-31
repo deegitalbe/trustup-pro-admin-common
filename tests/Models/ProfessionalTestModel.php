@@ -12,29 +12,9 @@ use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
  */
 class ProfessionalTestModel extends PersistableMongoModel implements ProfessionalContract
 {
+    use ProfessionalModel;
+    
     protected $primaryKey = 'id';
-
-    /**
-     * Getting professional id.
-     * 
-     * @return int
-     * 
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * Getting professional authorization key.
-     * 
-     * @return string
-     * 
-     */
-    public function getAuthorizationKey(): string
-    {
-        return $this->authorization_key;
-    }
 
     protected $fillable = ['authorization_key', 'id'];
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Contracts\Models;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
 use Deegitalbe\TrustupProAdminCommon\Contracts\PersistableContract;
 
@@ -24,4 +25,11 @@ interface ProfessionalContract extends PersistableContract, Arrayable
      * 
      */
     public function getAuthorizationKey(): string;
+
+    /**
+     * Getting professional authorization key.
+     * 
+     * @return string
+     */
+    public function getCreatedAt(): Carbon;
 }

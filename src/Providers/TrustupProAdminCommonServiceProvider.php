@@ -21,6 +21,7 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
+use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountRefresh;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\AppQueryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
@@ -28,6 +29,7 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract
 use Deegitalbe\TrustupVersionedPackage\Contracts\VersionedPackageCheckerContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountSetterByAppResponse;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Services\Account\AccountRefreshContract;
 use Henrotaym\LaravelContainerAutoRegister\Services\AutoRegister\Contracts\AutoRegisterContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Services\Account\AccountSetterByAppResponseContract;
 
@@ -133,6 +135,7 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
     protected function bindServices(): self
     {
         $this->app->bind(AccountSetterByAppResponseContract::class, AccountSetterByAppResponse::class);
+        $this->app->bind(AccountRefreshContract::class, AccountRefresh::class);
 
         return $this;
     }

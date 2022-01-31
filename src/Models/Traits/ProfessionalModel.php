@@ -1,6 +1,8 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Models\Traits;
 
+use Carbon\Carbon;
+
 /**
  * Trait implementing professional model contract.
  */
@@ -26,6 +28,16 @@ trait ProfessionalModel
     public function getAuthorizationKey(): string
     {
         return $this->authorization_key;
+    }
+
+    /**
+     * Getting professional authorization key.
+     * 
+     * @return string
+     */
+    public function getCreatedAt(): Carbon
+    {
+        return $this->created_at;
     }
 
     /**

@@ -4,13 +4,13 @@ namespace Deegitalbe\TrustupProAdminCommon\Tests\Unit\Services\Account;
 use Carbon\Carbon;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Mockery\MockInterface;
-use Deegitalbe\TrustupProAdminCommon\Tests\TestCase;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountRefresh;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Services\Account\AccountRefreshContract;
+use Deegitalbe\TrustupProAdminCommon\Tests\NotUsingDatabaseTestCase;
 
-class AccountRefreshTest extends TestCase
+class AccountRefreshTest extends NotUsingDatabaseTestCase
 {
     /** @test */
     public function account_refresh_setting_app()

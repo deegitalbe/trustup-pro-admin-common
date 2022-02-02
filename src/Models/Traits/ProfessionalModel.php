@@ -2,12 +2,17 @@
 namespace Deegitalbe\TrustupProAdminCommon\Models\Traits;
 
 use Carbon\Carbon;
+use Deegitalbe\ChargebeeClient\Chargebee\Contracts\CustomerApiContract;
+use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\CustomerContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 
 /**
  * Trait implementing professional model contract.
  */
 trait ProfessionalModel
 {
+    use BeingPersistable;
+
     /**
      * Getting professional id.
      * 
@@ -41,13 +46,38 @@ trait ProfessionalModel
     }
 
     /**
-     * Persisting instance.
-     * @param array $options
-     * @return self
+     * Getting customer id.
+     * 
+     * @return string|null
      */
-    public function persist(array $options = []): self
+    public function getCustomerId(): ?string
     {
-        $this->save($options);
+        return $this->chargebee_customer_id;
+    }
+
+    /**
+     * Getting customer.
+     * 
+     * @return CustomerContract|null
+     */
+    public function getCustomer(): ?CustomerContract
+    {
+        if (!$this->getCustomerId()):
+            return null;
+        endif;
+
+        return app()->make(CustomerApiContract::class)->find($this->getCustomerId());
+    }
+
+    /**
+     * Setting customer.
+     * 
+     * @param CustomerContract|null
+     * @return ProfessionalContract
+     */
+    public function setCustomer(?CustomerContract $customer): ProfessionalContract
+    {
+        $this->chargebee_customer_id = optional($customer)->getId();
 
         return $this;
     }

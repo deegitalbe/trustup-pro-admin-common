@@ -10,8 +10,10 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionPlanApiContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionPlanContract;
+use Deegitalbe\ChargebeeClient\Chargebee\Models\Subscription;
+use Deegitalbe\TrustupProAdminCommon\Tests\NotUsingDatabaseTestCase;
 
-class PlanTest extends TestCase
+class PlanTest extends NotUsingDatabaseTestCase
 {
     /** @test */
     public function plan_model_telling_if_having_trial_duration()
@@ -106,6 +108,28 @@ class PlanTest extends TestCase
         $this->app_plan->expects()->persist();
 
         $this->app_plan->refreshFromApi();
+    }
+
+    /** @test */
+    public function plan_transforming_to_subscription_plan()
+    {
+        $this->mockAppPlan()
+            ->mockSubscriptionPlan();
+
+        $id = ":id";
+        $trial = 20;
+        $price = 2000;
+
+        $this->subscription_plan->expects()->setId($id)->andReturnSelf();
+        $this->subscription_plan->expects()->setTrialDuration($trial)->andReturnSelf();
+        $this->subscription_plan->expects()->setPriceInCent($price)->andReturnSelf();
+
+        $this->app_plan->expects()->getName()->andReturn($id);
+        $this->app_plan->expects()->getTrialDuration()->andReturn($trial);
+        $this->app_plan->expects()->getPriceInCent()->andReturn($price);
+        $this->app_plan->expects()->toSubscriptionPlan()->passthru();
+
+        $this->assertInstanceOf(SubscriptionPlanContract::class, $this->app_plan->toSubscriptionPlan());
     }
 
     /**

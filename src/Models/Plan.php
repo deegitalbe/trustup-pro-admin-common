@@ -237,4 +237,17 @@ class Plan extends PersistableMongoModel implements PlanContract
 
         return $this;
     }
+
+    /**
+     * Transform plan to subscription plan.
+     * 
+     * @return SubscriptionPlanContract
+     */
+    public function toSubscriptionPlan(): SubscriptionPlanContract
+    {
+        return app()->make(SubscriptionPlanContract::class)
+            ->setId($this->getName())
+            ->setTrialDuration($this->getTrialDuration())
+            ->setPriceInCent($this->getPriceInCent());
+    }
 }

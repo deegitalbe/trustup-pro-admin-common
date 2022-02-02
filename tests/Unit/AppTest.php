@@ -1,7 +1,6 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Tests\Unit;
 
-use Deegitalbe\TrustupProAdminCommon\Models\App;
 use Deegitalbe\TrustupProAdminCommon\Tests\TestCase;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;

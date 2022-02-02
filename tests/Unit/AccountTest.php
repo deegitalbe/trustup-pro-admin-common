@@ -2,18 +2,11 @@
 namespace Deegitalbe\TrustupProAdminCommon\Tests\Unit;
 
 use Mockery\MockInterface;
-use Deegitalbe\TrustupProAdminCommon\Models\App;
-use Deegitalbe\TrustupProAdminCommon\Models\Plan;
 use Deegitalbe\TrustupProAdminCommon\Models\Account;
 use Deegitalbe\TrustupProAdminCommon\Tests\TestCase;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountChargebee;
-use Deegitalbe\ChargebeeClient\Chargebee\Models\SubscriptionPlan;
-use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
-use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
-use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionPlanApiContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
-use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionPlanContract;
 
 class AccountTest extends TestCase
 {

@@ -29,26 +29,31 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract
 use Deegitalbe\TrustupVersionedPackage\Contracts\VersionedPackageCheckerContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountSetterByAppResponse;
+use Henrotaym\LaravelPackageVersioning\Providers\Abstracts\VersionablePackageServiceProvider;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Services\Account\AccountRefreshContract;
 use Henrotaym\LaravelContainerAutoRegister\Services\AutoRegister\Contracts\AutoRegisterContract;
+use Henrotaym\LaravelPackageVersioning\Services\Versioning\Contracts\VersioningRepositoryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Services\Account\AccountSetterByAppResponseContract;
 
-class TrustupProAdminCommonServiceProvider extends ServiceProvider
+class TrustupProAdminCommonServiceProvider extends VersionablePackageServiceProvider
 {
-    public function register()
+    public static function getPackageClass(): string
     {
-        $this->bindFacade()
-            ->registerConfig()
+        return UnderlyingPackage::class;
+    }
+
+    protected function addToRegister(): void
+    {
+        $this
             ->bindModels()
             ->bindServices();
-            // ->bindProjects();
-        
+
         $this->app->bind(AppClientContract::class, AppClient::class);
     }
 
-    public function boot()
+    protected function addToBoot(): void
     {
-        $this->makeConfigPublishable()
+        $this
             ->registerPackageCommands()
             // ->loadRoutes();
             ->bindQueries()
@@ -74,31 +79,9 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
     //     return $this;
     // }
 
-    protected function registerConfig(): self
-    {
-        $this->mergeConfigFrom($this->getConfigPath(), Package::prefix());
-
-        return $this;
-    }
-
     protected function registerPackageCommands(): self
     {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                InstallPackage::class
-            ]);
-        }
-
-        return $this;
-    }
-
-    protected function bindFacade(): self
-    {
-        $this->app->bind(UnderlyingPackage::$prefix, function($app) {
-            return new UnderlyingPackage();
-        });
-
-        return $this;
+        return $this->registerCommand(InstallPackage::class);
     }
 
     protected function bindModels(): self
@@ -138,21 +121,5 @@ class TrustupProAdminCommonServiceProvider extends ServiceProvider
         $this->app->bind(AccountRefreshContract::class, AccountRefresh::class);
 
         return $this;
-    }
-
-    protected function makeConfigPublishable(): self
-    {
-        if ($this->app->runningInConsole()):
-            $this->publishes([
-              $this->getConfigPath() => config_path(Package::prefix() . '.php'),
-            ], 'config');
-        endif;
-
-        return $this;
-    }
-
-    protected function getConfigPath(): string
-    {
-        return __DIR__.'/../config/config.php';
     }
 }

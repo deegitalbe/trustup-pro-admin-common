@@ -33,7 +33,7 @@ class InstallPackage extends Command
      */
     public function handle()
     {
-        $this->info('Installing '. Package::prefix() .'...');
+        $this->info('Installing '. Package::getPrefix() .'...');
         $this->info('Publishing config...');
         $this->handlePublishing();
         $this->info('Installation completed.');
@@ -66,7 +66,7 @@ class InstallPackage extends Command
      */
     private function alreadyPublished(): bool
     {
-        return File::exists(config_path(Package::prefix() . '.php'));
+        return File::exists(config_path(Package::getPrefix() . '.php'));
     }
 
     /**

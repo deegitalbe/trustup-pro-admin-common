@@ -61,7 +61,7 @@ interface AccountContract extends PersistableContract
 
     public function setProfessional(ProfessionalContract $professional);
 
-    public function getProfessional();
+    public function getProfessional(): ?ProfessionalContract;
 
     public function setInitialCreatedAt($date);
 

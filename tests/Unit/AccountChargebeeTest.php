@@ -1,17 +1,14 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Tests\Unit;
 
-use Mockery;
 use Mockery\MockInterface;
 use Deegitalbe\TrustupProAdminCommon\Tests\TestCase;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
-use Deegitalbe\ChargebeeClient\Chargebee\SubscriptionApi;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountChargebee;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
-use Deegitalbe\TrustupProAdminCommon\Tests\Unit\_TestModels\Professional;
 use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionApiContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\CustomerContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\PlanQueryContract;

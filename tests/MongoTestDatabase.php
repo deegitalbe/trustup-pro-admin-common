@@ -27,7 +27,7 @@ trait MongoTestDatabase
     protected function dropMongoCollections(): self
     {
         // Linking fake professional model
-        config([Package::prefix(). '.models.professional' => ProfessionalTestModel::class]);
+        config([Package::getPrefix(). '.models.professional' => ProfessionalTestModel::class]);
 
         foreach($this->getMongoCollections() as $model => $class):
             // Avoid excluded models

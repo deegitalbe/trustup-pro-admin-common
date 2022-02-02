@@ -2,6 +2,7 @@
 namespace Deegitalbe\TrustupProAdminCommon\Contracts\Models;
 
 use Carbon\Carbon;
+use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\CustomerContract;
 use Illuminate\Contracts\Support\Arrayable;
 use Deegitalbe\TrustupProAdminCommon\Contracts\PersistableContract;
 
@@ -32,4 +33,26 @@ interface ProfessionalContract extends PersistableContract, Arrayable
      * @return string
      */
     public function getCreatedAt(): Carbon;
+
+    /**
+     * Getting customer id.
+     * 
+     * @return string|null
+     */
+    public function getCustomerId(): ?string;
+
+    /**
+     * Getting customer.
+     * 
+     * @return CustomerContract|null
+     */
+    public function getCustomer(): ?CustomerContract;
+
+    /**
+     * Setting customer.
+     * 
+     * @param CustomerContract|null
+     * @return ProfessionalContract
+     */
+    public function setCustomer(?CustomerContract $customer): ProfessionalContract;
 }

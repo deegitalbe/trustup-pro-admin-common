@@ -121,4 +121,11 @@ interface PlanContract extends PersistableContract
      * @return PlanContract
      */
     public function fromSubscriptionPlan(SubscriptionPlanContract $subscription_plan): PlanContract;
+
+    /**
+     * Transform plan to subscription plan.
+     * 
+     * @return SubscriptionPlanContract
+     */
+    public function toSubscriptionPlan(): SubscriptionPlanContract;
 }

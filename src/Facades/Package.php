@@ -1,18 +1,13 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Facades;
 
-use Illuminate\Support\Facades\Facade;
 use Deegitalbe\TrustupProAdminCommon\Package as UnderlyingPackage;
+use Henrotaym\LaravelPackageVersioning\Facades\Abstracts\VersionablePackageFacade;
 
-class Package extends Facade
+class Package extends VersionablePackageFacade
 {
-    /**
-     * Get the registered name of the component.
-     *
-     * @return string
-     */
-    protected static function getFacadeAccessor()
+    public static function getPackageClass(): string
     {
-        return UnderlyingPackage::$prefix;
+        return UnderlyingPackage::class;
     }
 }

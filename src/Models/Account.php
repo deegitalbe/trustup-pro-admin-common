@@ -171,7 +171,7 @@ class Account extends PersistableMongoModel implements AccountContract
         return $this->persist();
     }
 
-    public function getProfessional()
+    public function getProfessional(): ?ProfessionalContract
     {
         return $this->professional;
     }

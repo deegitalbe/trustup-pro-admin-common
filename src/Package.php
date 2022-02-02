@@ -4,15 +4,19 @@ namespace Deegitalbe\TrustupProAdminCommon;
 use Illuminate\Support\Collection;
 use Deegitalbe\TrustupVersionedPackage\Contracts\Project\ProjectContract;
 use Deegitalbe\TrustupVersionedPackage\Contracts\VersionedPackageContract;
+use Henrotaym\LaravelPackageVersioning\Services\Versioning\VersionablePackage;
 
-class Package implements VersionedPackageContract
+class Package extends VersionablePackage implements VersionedPackageContract
 {
     /**
      * Package prefix.
      * 
-     * @var string
+     * @return string
      */
-    public static $prefix = "trustup_pro_admin_common";
+    public static function prefix(): string
+    {
+        return "trustup_pro_admin_common";
+    }
 
     /**
      * Getting package version (useful to make sure projetcs use same version).
@@ -21,17 +25,7 @@ class Package implements VersionedPackageContract
      */
     public function version(): string
     {
-        return "4.3.4";
-    }
-
-    /**
-     * Getting package prefix.
-     * 
-     * @return string
-     */
-    public function prefix(): string
-    {
-        return self::$prefix;
+        return $this->getVersion();
     }
 
     /**
@@ -113,7 +107,7 @@ class Package implements VersionedPackageContract
      */
     public function config(string $key = null)
     {
-        return config($this->prefix(). ($key ? ".$key" : ''));
+        return $this->getConfig($key ?? "");
     }
 
     /**
@@ -133,20 +127,12 @@ class Package implements VersionedPackageContract
     }
 
     /**
-     * Getting package version.
-     */
-    public function getVersion(): string
-    {
-        return $this->version();
-    }
-
-    /**
      *  Getting package name
      * 
      * @return string
      */
     public function getName(): string
     {
-        return $this->prefix();
+        return $this->getPrefix();
     }
 }

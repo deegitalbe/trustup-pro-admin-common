@@ -16,5 +16,5 @@ class ProfessionalTestModel extends PersistableMongoModel implements Professiona
     
     protected $primaryKey = 'id';
 
-    protected $fillable = ['authorization_key', 'id'];
+    protected $fillable = ['authorization_key', 'id', 'created_at', 'chargebee_customer_id'];
 }

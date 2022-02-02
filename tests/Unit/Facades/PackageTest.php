@@ -1,18 +1,17 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Tests\Unit\Facades;
 
-use Deegitalbe\TrustupProAdminCommon\Tests\TestCase;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
+use Deegitalbe\TrustupProAdminCommon\Tests\NotUsingDatabaseTestCase;
 use Deegitalbe\TrustupVersionedPackage\Contracts\Project\ProjectContract;
-use Deegitalbe\TrustupVersionedPackage\Contracts\VersionedPackageCheckerContract;
 
-class PackageTest extends TestCase {
+class PackageTest extends NotUsingDatabaseTestCase {
     /**
      * @test
      */
     public function package_facade_getting_defined_projects_only()
     {
-        config([Package::prefix().'.projects' => ['https://localhost', null]]);
+        config([Package::getPrefix().'.projects' => ['https://localhost', null]]);
         $projects = Package::getProjects();
 
         $this->assertCount(1, $projects);

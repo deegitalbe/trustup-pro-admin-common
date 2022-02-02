@@ -1,0 +1,12 @@
+{
+    "name": "trustup-pro-admin-common",
+    "version": "4.3.4",
+    "main": "index.js",
+    "repository": "git@github.com:deegitalbe/trustup-pro-admin-common.git",
+    "author": "Mathieu Henrotay <mathieu.henrotay@gmail.com>",
+    "license": "MIT",
+    "scripts": {
+        "postversion": "git push && git push --tags",
+        "commit": "git add . && gitmoji -c"
+    }
+}

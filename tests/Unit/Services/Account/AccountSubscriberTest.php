@@ -14,6 +14,7 @@ use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountSubscriber;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionPlanContract;
+use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Contracts\AccountSubscriberContract;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Exceptions\AppBeingFree;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Exceptions\NotFindingCustomer;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Exceptions\PlanNotBelongingToApp;
@@ -24,6 +25,12 @@ use Deegitalbe\TrustupProAdminCommon\Tests\NotUsingDatabaseTestCase;
 
 class AccountSubscriberTest extends NotUsingDatabaseTestCase
 {
+    /** @test */
+    public function account_subscriber_instanciable_using_contract()
+    {
+        $this->assertInstanceOfSubscriber($this->app->make(AccountSubscriberContract::class));
+    }
+
     /** @test */
     public function account_subscriber_reporting_account_not_linked_to_any_app()
     {

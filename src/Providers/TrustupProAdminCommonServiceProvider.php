@@ -1,29 +1,17 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Providers;
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\ServiceProvider;
-use Deegitalbe\TrustupProAdminCommon\Models\Plan;
 use Deegitalbe\TrustupProAdminCommon\App\AppClient;
-use Deegitalbe\TrustupProAdminCommon\Models\Account;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
-use Deegitalbe\TrustupProAdminCommon\Project\Project;
 use Deegitalbe\TrustupProAdminCommon\Models\Query\AppQuery;
-use Deegitalbe\TrustupProAdminCommon\Project\ProjectClient;
 use Deegitalbe\TrustupProAdminCommon\Commands\InstallPackage;
-use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntry;
-use Deegitalbe\TrustupProAdminCommon\Commands\CheckPackageVersion;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Package as UnderlyingPackage;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
-use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntryUser;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
-use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountRefresh;
-use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\AppQueryContract;
-use Deegitalbe\TrustupProAdminCommon\Contracts\Project\ProjectClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 use Deegitalbe\TrustupVersionedPackage\Contracts\VersionedPackageCheckerContract;
@@ -32,8 +20,9 @@ use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountSetterByAppR
 use Henrotaym\LaravelPackageVersioning\Providers\Abstracts\VersionablePackageServiceProvider;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Services\Account\AccountRefreshContract;
 use Henrotaym\LaravelContainerAutoRegister\Services\AutoRegister\Contracts\AutoRegisterContract;
-use Henrotaym\LaravelPackageVersioning\Services\Versioning\Contracts\VersioningRepositoryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Services\Account\AccountSetterByAppResponseContract;
+use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountSubscriber;
+use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Contracts\AccountSubscriberContract;
 
 class TrustupProAdminCommonServiceProvider extends VersionablePackageServiceProvider
 {
@@ -119,6 +108,7 @@ class TrustupProAdminCommonServiceProvider extends VersionablePackageServiceProv
     {
         $this->app->bind(AccountSetterByAppResponseContract::class, AccountSetterByAppResponse::class);
         $this->app->bind(AccountRefreshContract::class, AccountRefresh::class);
+        $this->app->bind(AccountSubscriberContract::class, AccountSubscriber::class);
 
         return $this;
     }

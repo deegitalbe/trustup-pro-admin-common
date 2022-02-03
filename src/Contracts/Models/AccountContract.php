@@ -15,15 +15,26 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract
  */
 interface AccountContract extends PersistableContract
 {
+    /**
+     * Getting related chargebee status.
+     * 
+     * @return AccountChargebeeContract|null
+     */
     public function getChargebee(): ?AccountChargebeeContract;
 
-    public function setChargebee(?AccountChargebeeContract $chargebee);
+    /**
+     * Setting related chargebee status.
+     * 
+     * @param AccountChargebeeContract $chargebee Status to link to.
+     * @return static
+     */
+    public function setChargebee(?AccountChargebeeContract $chargebee): AccountContract;
 
     /**
      * Refreshing account status directly from chargebee API.
      * 
      * @param bool $force Forcing update in app database.
-     * @return AccountContract
+     * @return static
      */
     public function refreshChargebee(bool $force = false): AccountContract;
 
@@ -38,8 +49,9 @@ interface AccountContract extends PersistableContract
      * Adding an acces entry to account.
      * 
      * @param AccountAccessEntryContract $access_entry
+     * @return static
     */
-    public function addAccountAccessEntry(AccountAccessEntryContract $access_entry);
+    public function addAccountAccessEntry(AccountAccessEntryContract $access_entry): AccountContract;
 
     /**
      * Get last account access entry.
@@ -55,16 +67,49 @@ interface AccountContract extends PersistableContract
      */
     public function updateInApp(): bool;
 
+    /**
+     * Getting related app.
+     * 
+     * @return AppContract|null
+     */
     public function getApp(): ?AppContract;
 
-    public function setApp(AppContract $app);
+    /**
+     * Setting related app.
+     * 
+     * @param AppContract $app App to link to.
+     * @return static
+     */
+    public function setApp(AppContract $app): AccountContract;
 
-    public function setProfessional(ProfessionalContract $professional);
+    /**
+     * Setting related app.
+     * 
+     * @param ProfessionalContract $professional Professional to link to.
+     * @return static
+     */
+    public function setProfessional(ProfessionalContract $professional): AccountContract;
 
+    /**
+     * Getting related professional.
+     * 
+     * @return ProfessionalContract|null
+     */
     public function getProfessional(): ?ProfessionalContract;
 
-    public function setInitialCreatedAt($date);
+    /**
+     * Setting related app.
+     * 
+     * @param Carbon|null $date Creation date.
+     * @return static
+     */
+    public function setInitialCreatedAt(?Carbon $date): AccountContract;
 
+    /**
+     * Getting initial created_at.
+     * 
+     * @return Carbon|null
+     */
     public function getInitialCreatedAt(): ?Carbon;
 
     /**
@@ -84,8 +129,9 @@ interface AccountContract extends PersistableContract
     /**
      * Set delete date.
      * @param Carbon|null $deleted_at
+     * @return static
      */
-    public function setDeletedAt(?Carbon $deleted_at);
+    public function setDeletedAt(?Carbon $deleted_at): AccountContract;
 
     /**
      * Get synchronization date.
@@ -97,6 +143,7 @@ interface AccountContract extends PersistableContract
     /**
      * Set synchronization date.
      * @param Carbon $synchronized_at
+     * @return static
      */
     public function setSynchronizedAt(Carbon $synchronized_at): AccountContract;
 
@@ -107,15 +154,47 @@ interface AccountContract extends PersistableContract
      */
     public function setAsInactive(): AccountContract;
 
-    public function setRaw(?array $data = null);
+    /**
+     * Setting raw account data from app environment.
+     * 
+     * @param array|null $data Raw account data.
+     * @return static
+     */
+    public function setRaw(?array $data = null): AccountContract;
 
+    /**
+     * Getting account raw data.
+     * 
+     * @return array|null
+     */
     public function getRaw(): ?array;
 
+    /**
+     * Getting account uuid.
+     * 
+     * @return string|null
+     */
     public function getUuid(): ?string;
 
-    public function setUuid(?string $uuid);
+    /**
+     * Setting account uuid.
+     * 
+     * @param string|null $uuid Uuid to set.
+     * @return static
+     */
+    public function setUuid(?string $uuid): AccountContract;
 
+    /**
+     * Telling if account can be considered as active.
+     * 
+     * @return bool
+     */
     public function isActive(): bool;
 
+    /**
+     * Telling if account is having a valid chargebee subscription.
+     * 
+     * @return bool
+     */
     public function hasChargebee(): bool;
 }

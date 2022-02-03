@@ -61,11 +61,11 @@ class AccountRefreshTest extends NotUsingDatabaseTestCase
             ->mockNow()
             ->mockAccount();
 
-        $this->mocked_account->expects()->setDeletedAt(null);
+        $this->mocked_account->expects()->setDeletedAt(null)->andReturnSelf();
         $this->mocked_account->expects()->setSynchronizedAt()->withArgs(function($date) { return $date->eq($this->mocked_now); })->andReturnSelf();
-        $this->mocked_account->expects()->setApp($this->mocked_app);
-        $this->mocked_account->expects()->setProfessional($this->mocked_professional);
-        $this->mocked_account->expects()->setInitialCreatedAt($this->mocked_now);
+        $this->mocked_account->expects()->setApp($this->mocked_app)->andReturnSelf();
+        $this->mocked_account->expects()->setProfessional($this->mocked_professional)->andReturnSelf();
+        $this->mocked_account->expects()->setInitialCreatedAt($this->mocked_now)->andReturnSelf();
 
         $this->mocked_service->expects()->getApp()->andReturn($this->mocked_app);
         $this->mocked_service->expects()->getprofessional()->times(2)->andReturn($this->mocked_professional);

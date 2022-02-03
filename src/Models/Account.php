@@ -72,12 +72,23 @@ class Account extends PersistableMongoModel implements AccountContract
         return $this->hasOne(Package::accountChargebee())->latest();
     }
 
+    /**
+     * Getting related chargebee status.
+     * 
+     * @return AccountChargebeeContract|null
+     */
     public function getChargebee(): ?AccountChargebeeContract
     {
         return $this->chargebee;
     }
 
-    public function setChargebee(?AccountChargebeeContract $chargebee): self
+    /**
+     * Setting related chargebee status.
+     * 
+     * @param AccountChargebeeContract $chargebee Status to link to.
+     * @return static
+     */
+    public function setChargebee(?AccountChargebeeContract $chargebee): AccountContract
     {
         // Deleting status from database
         $this->chargebee()->delete();
@@ -94,7 +105,7 @@ class Account extends PersistableMongoModel implements AccountContract
      * Refreshing account status directly from chargebee API.
      * 
      * @param bool $force Forcing update in app database.
-     * @return AccountContract
+     * @return static
      */
     public function refreshChargebee(bool $force = false): AccountContract
     {
@@ -121,9 +132,9 @@ class Account extends PersistableMongoModel implements AccountContract
      * Adding an acces entry to account.
      * 
      * @param AccountAccessEntryContract $access_entry
-     * @return self
+     * @return static
     */
-    public function addAccountAccessEntry(AccountAccessEntryContract $access_entry): self
+    public function addAccountAccessEntry(AccountAccessEntryContract $access_entry): AccountContract
     {
         $this->accountAccessEntries()->save($access_entry);
 
@@ -147,7 +158,13 @@ class Account extends PersistableMongoModel implements AccountContract
         return !!$raw_account;
     }
 
-    public function setUuid(?string $uuid): self
+    /**
+     * Setting account uuid.
+     * 
+     * @param string|null $uuid Uuid to set.
+     * @return static
+     */
+    public function setUuid(?string $uuid): AccountContract
     {
         $this->uuid = $uuid;
 
@@ -164,53 +181,102 @@ class Account extends PersistableMongoModel implements AccountContract
         return $this->setUuid(null);
     }
 
+    /**
+     * Getting account uuid.
+     * 
+     * @return string|null
+     */
     public function getUuid(): ?string
     {
         return $this->uuid;
     }
 
+    /**
+     * Getting related app.
+     * 
+     * @return AppContract|null
+     */
     public function getApp(): ?AppContract
     {
         return $this->app;
     }
 
-    public function setApp(AppContract $app): self
+    /**
+     * Setting related app.
+     * 
+     * @param AppContract $app App to link to.
+     * @return static
+     */
+    public function setApp(AppContract $app): AccountContract
     {
         $this->app()->associate($app);
 
         return $this->persist();
     }
 
+    /**
+     * Getting related professional.
+     * 
+     * @return ProfessionalContract|null
+     */
     public function getProfessional(): ?ProfessionalContract
     {
         return $this->professional;
     }
 
-    public function setProfessional(ProfessionalContract $professional): self
+    /**
+     * Setting related app.
+     * 
+     * @param ProfessionalContract $professional Professional to link to.
+     * @return static
+     */
+    public function setProfessional(ProfessionalContract $professional): AccountContract
     {
         $this->professional()->associate($professional);
 
         return $this->persist();
     }
 
+    /**
+     * Getting initial created_at.
+     * 
+     * @return Carbon|null
+     */
     public function getInitialCreatedAt(): ?Carbon
     {
         return $this->initial_created_at ? new Carbon($this->initial_created_at) : null;
     }
 
-    public function setInitialCreatedAt($date): self
+    /**
+     * Setting related app.
+     * 
+     * @param Carbon|null $professional Professional to link to.
+     * @return static
+     */
+    public function setInitialCreatedAt(?Carbon $date): AccountContract
     {
         $this->initial_created_at = $date;
 
         return $this->persist();
     }
 
+    /**
+     * Getting account raw data.
+     * 
+     * @return array|null
+     */
     public function getRaw(): ?array
     {
         return $this->raw;
     }
 
-    public function setRaw(?array $data = null): self
+    /**
+     * Setting raw account data from app environment.
+     * 
+     * @param array|null $data Raw account data.
+     * @return static
+     */
+    public function setRaw(?array $data = null): AccountContract
     {
         $this->raw = $data;
 
@@ -229,11 +295,10 @@ class Account extends PersistableMongoModel implements AccountContract
     
     /**
      * Set delete date.
-     * 
      * @param Carbon|null $deleted_at
-     * @return self
+     * @return static
      */
-    public function setDeletedAt(?Carbon $deleted_at): self
+    public function setDeletedAt(?Carbon $deleted_at): AccountContract
     {
         if ($deleted_at):
             return tap($this)->delete();
@@ -256,6 +321,7 @@ class Account extends PersistableMongoModel implements AccountContract
     /**
      * Set synchronization date.
      * @param Carbon $synchronized_at
+     * @return static
      */
     public function setSynchronizedAt(Carbon $synchronized_at): AccountContract
     {
@@ -284,11 +350,21 @@ class Account extends PersistableMongoModel implements AccountContract
         return $this->lastAccountAccessEntry;
     }
 
+    /**
+     * Telling if account can be considered as active.
+     * 
+     * @return bool
+     */
     public function isActive(): bool
     {
         return !!$this->uuid;
     }
 
+    /**
+     * Telling if account is having a valid chargebee subscription.
+     * 
+     * @return bool
+     */
     public function hasChargebee(): bool
     {
         return !!optional($this->getChargebee())->getId();

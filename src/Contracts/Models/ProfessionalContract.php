@@ -28,9 +28,9 @@ interface ProfessionalContract extends PersistableContract, Arrayable
     public function getAuthorizationKey(): string;
 
     /**
-     * Getting professional authorization key.
+     * Getting professional creation date.
      * 
-     * @return string
+     * @return Carbon
      */
     public function getCreatedAt(): Carbon;
 

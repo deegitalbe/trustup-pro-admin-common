@@ -1,6 +1,7 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Models\Services\Account;
 
+use Carbon\Carbon;
 use stdClass;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
@@ -89,7 +90,7 @@ class AccountSetterByAppResponse implements AccountSetterByAppResponseContract
             ->setProfessional($professional)
             ->setApp($app)
             ->setRaw((array) $app_account)
-            ->setInitialCreatedAt($app_account->created_at);
+            ->setInitialCreatedAt(new Carbon($app_account->created_at));
         
         // every account that is not concerning a paid application should have active status
         if (!$app->getPaid()):

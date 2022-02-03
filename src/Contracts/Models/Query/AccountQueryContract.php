@@ -38,6 +38,13 @@ interface AccountQueryContract extends QueryContract
     public function active(): AccountQueryContract;
 
     /**
+     * Limiting accounts to those considered as inactive.
+     * 
+     * @return AccountQueryContract
+     */
+    public function inactive(): AccountQueryContract;
+
+    /**
      * Limiting accounts to given professional only.
      * 
      * @param ProfessionalContract $professional Professional to limit for.

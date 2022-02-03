@@ -74,6 +74,18 @@ class AccountQuery extends AbstractQuery implements AccountQueryContract
     }
 
     /**
+     * Limiting accounts to those considered as inactive.
+     * 
+     * @return AccountQueryContract
+     */
+    public function inactive(): AccountQueryContract
+    {
+        $this->getQuery()->whereNull('uuid');
+
+        return $this;
+    }
+
+    /**
      * Limiting accounts to given professional only.
      * 
      * @param ProfessionalContract $professional Professional to limit for.

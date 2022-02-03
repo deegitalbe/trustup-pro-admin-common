@@ -100,6 +100,13 @@ interface AccountContract extends PersistableContract
      */
     public function setSynchronizedAt(Carbon $synchronized_at): AccountContract;
 
+    /**
+     * Setting account as inactive one.
+     * 
+     * @return static
+     */
+    public function setAsInactive(): AccountContract;
+
     public function setRaw(?array $data = null);
 
     public function getRaw(): ?array;

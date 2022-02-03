@@ -154,6 +154,16 @@ class Account extends PersistableMongoModel implements AccountContract
         return $this->persist();
     }
 
+    /**
+     * Setting account as active one.
+     * 
+     * @return static
+     */
+    public function setAsInactive(): AccountContract
+    {
+        return $this->setUuid(null);
+    }
+
     public function getUuid(): ?string
     {
         return $this->uuid;

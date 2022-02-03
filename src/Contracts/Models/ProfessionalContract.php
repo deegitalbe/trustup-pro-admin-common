@@ -28,6 +28,22 @@ interface ProfessionalContract extends PersistableContract, Arrayable
     public function getAuthorizationKey(): string;
 
     /**
+     * Getting professional vat number.
+     * 
+     * @return string|null
+     * 
+     */
+    public function getVatNumber(): ?string;
+
+    /**
+     * Getting professional company name.
+     * 
+     * @return string|null
+     * 
+     */
+    public function getCompanyName(): ?string;
+
+    /**
      * Getting professional creation date.
      * 
      * @return Carbon

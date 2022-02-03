@@ -46,6 +46,28 @@ trait ProfessionalModel
     }
 
     /**
+     * Getting professional vat number.
+     * 
+     * @return string|null
+     * 
+     */
+    public function getVatNumber(): ?string
+    {
+        return $this->vat_number;
+    }
+
+    /**
+     * Getting professional company name.
+     * 
+     * @return string|null
+     * 
+     */
+    public function getCompanyName(): ?string
+    {
+        return $this->company;
+    }
+
+    /**
      * Getting customer id.
      * 
      * @return string|null

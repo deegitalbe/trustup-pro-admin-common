@@ -2,6 +2,7 @@
 namespace Deegitalbe\TrustupProAdminCommon\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 
 /**
  * Representing an account transformed for app environment.
@@ -18,13 +19,16 @@ class AppAccount extends JsonResource
      */
     public function toArray($request)
     {
+        /** @var AccountContract*/
+        $resource = $this->resource;
+
         return [
-            'authorization_key' => $this->getProfessional()->authorization_key,
-            'name' => $this->getProfessional()->company,
-            'vat_number' => $this->getProfessional()->vat_number,
-            'uuid' => $this->getUuid(),
-            'chargebee_subscription_id' => $this->when($this->hasChargebee(), $this->getChargebee()->getId()),
-            'chargebee_subscription_status' => $this->when($this->hasChargebee(), $this->getChargebee()->getStatus())
+            'authorization_key' => $resource->getProfessional()->getAuthorizationKey(),
+            'name' => $resource->getProfessional()->getCompanyName(),
+            'vat_number' => $resource->getProfessional()->getVatNumber(),
+            'uuid' => $resource->getUuid(),
+            'chargebee_subscription_id' => $this->when($resource->hasChargebee(), $resource->getChargebee()->getId()),
+            'chargebee_subscription_status' => $this->when($resource->hasChargebee(), $resource->getChargebee()->getStatus())
         ];
     }
 }

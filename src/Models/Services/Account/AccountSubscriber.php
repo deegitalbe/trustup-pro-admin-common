@@ -289,7 +289,7 @@ class AccountSubscriber implements AccountSubscriberContract
     {
         $this->plan = $plan;
         
-        return $this->setSubscriptionPlan($plan->toSubscriptionPlan());
+        return $this->setSubscriptionPlan(optional($plan)->toSubscriptionPlan());
     }
 
     /**

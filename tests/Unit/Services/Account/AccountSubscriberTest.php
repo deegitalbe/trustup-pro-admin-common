@@ -149,7 +149,7 @@ class AccountSubscriberTest extends NotUsingDatabaseTestCase
     }
 
     /** @test */
-    public function account_subscriber_setting_plan()
+    public function account_subscriber_setting_defined_plan()
     {
         $this->mockSubscriber()
             ->mockPlan()
@@ -163,6 +163,20 @@ class AccountSubscriberTest extends NotUsingDatabaseTestCase
         
         $this->assertInstanceOfSubscriber($response);
         $this->assertEquals($this->mocked_plan, $this->getPrivateProperty('plan', $this->mocked_subscriber));
+    }
+
+    /** @test */
+    public function account_subscriber_setting_null_plan()
+    {
+        $this->mockSubscriber();
+
+        $this->mocked_subscriber->expects()->setSubscriptionPlan(null)->andReturnSelf();
+        $this->mocked_subscriber->expects()->setPlan(null)->passthru();
+        
+        $response = $this->callPrivateMethod('setPlan', $this->mocked_subscriber, null);
+        
+        $this->assertInstanceOfSubscriber($response);
+        $this->assertNull($this->getPrivateProperty('plan', $this->mocked_subscriber));
     }
 
     /** @test */

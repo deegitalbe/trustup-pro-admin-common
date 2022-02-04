@@ -1,6 +1,7 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Contracts\Models;
 
+use Exception;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
@@ -123,8 +124,11 @@ interface AccountChargebeeContract extends PersistableContract
     /**
      * Setting attributes based on given subscription.
      * 
+     * MUST BE LINKED TO ACCOUNT !
+     * 
      * @param SubscriptionContract $subscription
      * @return AccountChargebeeContract
+     * @throws Exception If not linked to account.
      */
     public function fromSubscription(SubscriptionContract $subscription): AccountChargebeeContract;
 

@@ -305,8 +305,11 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
     /**
      * Setting attributes based on given subscription.
      * 
+     * MUST BE LINKED TO ACCOUNT !
+     * 
      * @param SubscriptionContract $subscription
      * @return AccountChargebeeContract
+     * @throws Exception If not linked to account.
      */
     public function fromSubscription(SubscriptionContract $subscription): AccountChargebeeContract
     {

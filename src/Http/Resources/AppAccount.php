@@ -27,8 +27,8 @@ class AppAccount extends JsonResource
             'name' => $resource->getProfessional()->getCompanyName(),
             'vat_number' => $resource->getProfessional()->getVatNumber(),
             'uuid' => $resource->getUuid(),
-            'chargebee_subscription_id' => $this->when($resource->hasChargebee(), $resource->getChargebee()->getId()),
-            'chargebee_subscription_status' => $this->when($resource->hasChargebee(), $resource->getChargebee()->getStatus())
+            'chargebee_subscription_id' => $this->when($resource->hasChargebee(), optional($resource->getChargebee())->getId()),
+            'chargebee_subscription_status' => $this->when($resource->hasChargebee(), optional($resource->getChargebee())->getStatus())
         ];
     }
 }

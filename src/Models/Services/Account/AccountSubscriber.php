@@ -231,14 +231,11 @@ class AccountSubscriber implements AccountSubscriberContract
      */
     protected function updateAccountStatus(): self
     {
-        /** @var AccountChargebeeContract */
-        $status = app()->make(AccountChargebeeContract::class);
-        
-        $status->setAccount($this->account)
-            ->fromSubscription($this->subscription)
-            ->persist();
-
-        $this->account->setChargebee($status);
+        $this->account
+            ->setChargebee(app()->make(AccountChargebeeContract::class))
+            ->getChargebee()
+                ->fromSubscription($this->subscription)
+                ->persist();
 
         return $this;
     }

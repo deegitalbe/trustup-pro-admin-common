@@ -223,11 +223,11 @@ class AccountSubscriberTest extends NotUsingDatabaseTestCase
             ->mockSubscriberSubscription()
             ->mockSubscriberAccount();
 
-        $this->mocked_account_chargebee->expects()->setAccount($this->mocked_account)->andReturnSelf();
         $this->mocked_account_chargebee->expects()->fromSubscription($this->mocked_subscription)->andReturnSelf();
         $this->mocked_account_chargebee->expects()->persist()->andReturnSelf();
 
-        $this->mocked_account->expects()->setChargebee($this->mocked_account_chargebee);
+        $this->mocked_account->expects()->setChargebee($this->mocked_account_chargebee)->andReturnSelf();
+        $this->mocked_account->expects()->getChargebee()->andReturn($this->mocked_account_chargebee);
 
         $this->mocked_subscriber->expects()->updateAccountStatus()->passthru();
 

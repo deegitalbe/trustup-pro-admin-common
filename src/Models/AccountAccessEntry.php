@@ -12,9 +12,12 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
+use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 
 class AccountAccessEntry extends PersistableMongoModel implements AccountAccessEntryContract
 {
+    use SoftDeletes;
+    
     protected $fillable = ['access_at'];
 
     protected $dates = ['access_at'];

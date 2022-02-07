@@ -10,12 +10,15 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionPlanApiContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionPlanContract;
+use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 
 /**
  * Representing app plan.
  */
 class Plan extends PersistableMongoModel implements PlanContract
 {
+    use SoftDeletes;
+    
     /**
      * Fillable attributes.
      * 

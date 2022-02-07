@@ -6,7 +6,9 @@
     "author": "Mathieu Henrotay <mathieu.henrotay@gmail.com>",
     "license": "MIT",
     "scripts": {
-        "postversion": "git push && git push --tags",
-        "commit": "git add . && gitmoji -c"
+        "postversion": "npm run push",
+        "commit": "gitmoji -c && npm run push",
+        "push": "git push && git push --tags",
+        "commit:all": "git add . && npm run commit"
     }
 }

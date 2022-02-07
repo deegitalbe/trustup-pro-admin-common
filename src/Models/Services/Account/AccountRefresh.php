@@ -33,8 +33,7 @@ class AccountRefresh implements AccountRefreshContract
      */
     public function refreshCommonAttributes(AccountContract $account): AccountContract
     {
-        return $account->setDeletedAt(null)
-            ->setSynchronizedAt(now())
+        return $account->setSynchronizedAt(now())
             ->setApp($this->getApp())
             ->setProfessional($this->getProfessional())
             ->setInitialCreatedAt($this->getProfessional()->getCreatedAt());

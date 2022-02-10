@@ -46,7 +46,7 @@ class App extends PersistableMongoModel implements AppContract
     const TASKS = 'tasks';
     
     /**
-     * Worksite key (worksite.trustup.pro?)
+     * Worksite key (worksite.trustup.pro)
      * 
      */
     const WORKSITE = 'worksite';
@@ -56,6 +56,12 @@ class App extends PersistableMongoModel implements AppContract
      * 
      */
     const TIMETRACKER = 'timetracker';
+
+    /**
+     * Contact key (contact.trustup.pro)
+     * 
+     */
+    const CONTACT = 'contact';
 
     protected $fillable = [
         'key',

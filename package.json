@@ -9,6 +9,7 @@
         "postversion": "npm run push",
         "commit": "gitmoji -c && npm run push",
         "push": "git push && git push --tags",
-        "commit:all": "git add . && npm run commit"
+        "commit:all": "git add . && npm run commit",
+        "version:alpha": "npm version prerelease --preid=alpha"
     }
 }

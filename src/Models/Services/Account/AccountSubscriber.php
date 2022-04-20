@@ -191,6 +191,9 @@ class AccountSubscriber implements AccountSubscriberContract
             return $this->subscriptionCreationFailed();
         endif;
 
+        // Making sure clients won't be charged after trial period.
+        $this->subscription_api->cancelAtTerms($this->subscription);
+
         return true;
     }
 

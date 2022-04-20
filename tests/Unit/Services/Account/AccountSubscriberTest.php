@@ -301,6 +301,7 @@ class AccountSubscriberTest extends NotUsingDatabaseTestCase
             $this->setPrivateProperty('subscription', $this->mocked_subscription, $this->mocked_subscriber);
             return $this->mocked_subscriber;
         });
+        $this->mocked_subscription_api->expects()->cancelAtTerms($this->mocked_subscription)->andReturn($this->mocked_subscription);
         $this->mocked_subscriber->expects()->createdASubscription()->passthru();
 
         $this->assertTrue($this->callPrivateMethod('createdASubscription', $this->mocked_subscriber));

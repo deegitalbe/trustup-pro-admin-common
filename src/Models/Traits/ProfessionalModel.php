@@ -103,4 +103,15 @@ trait ProfessionalModel
 
         return $this;
     }
+
+    /**
+     * Setting is_active and activated_at at the same time.
+     * 
+     * @param bool $value
+     */
+    public function setIsActiveAttribute($value)
+    {
+        $this->attributes['is_active'] = $value;
+        $this->activated_at = $value ? now() : null;
+    }
 }

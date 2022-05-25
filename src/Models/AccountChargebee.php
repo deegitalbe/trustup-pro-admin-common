@@ -48,11 +48,14 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
         'subscription_id',
         'plan_id',
         'trial_ending_at',
-        'is_chargeable'
+        'is_chargeable',
+        'cancel_alert_threshold',
+        'cancel_threshold',
     ];
 
     protected $dates = [
-        'trial_ending_at'
+        'trial_ending_at',
+        'last_unpaid_invoice_at'
     ];
 
     protected $casts = [
@@ -326,6 +329,163 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
             ->first();
 
         return $this->setPlan($plan);
+    }
+
+    /**
+     * Telling if this status is about to be cancelled.
+     * 
+     * It's depending on cancel alert threshold.
+     * 
+     * @return bool
+     */
+    public function isCloseToBeCancelled(): bool
+    {
+        if (!$this->havingLastUnpaidInvoiceAt() || $this->isCancelled()):
+            return false;
+        endif;
+
+        return $this->getLastUnpaidInvoiceAt()->addDays($this->getCancelAlertThreshold())->isBefore(now())
+            && !$this->shouldBeCancelled();
+    }
+
+    /**
+     * Telling if professional should be warned about cancellation.
+     * 
+     * It's depending on cancel alert threshold.
+     * 
+     * @return bool
+     */
+    public function shouldAlertAboutCancellation(): bool
+    {
+        if (!$this->havingLastUnpaidInvoiceAt() || $this->isCancelled()):
+            return false;
+        endif;
+
+        return $this->getLastUnpaidInvoiceAt()->addDays($this->getCancelAlertThreshold())->isSameDay();
+    }
+
+
+    /**
+     * Setting cancel alert threshold.
+     * 
+     * @param int $days
+     * @return static
+     */
+    public function setCancelAlertThreshold(int $days): AccountChargebeeContract
+    {
+        $this->cancel_alert_threshold = $days;
+
+        return $this;
+    }
+
+    /**
+     * Setting cancel threshold.
+     * 
+     * @return static
+     */
+    public function setDefaultCancelAlertThreshold(): AccountChargebeeContract
+    {
+        return $this->setCancelAlertThreshold(9);
+    }
+    
+    /**
+     * Getting cancel alert threshold.
+     * 
+     * @return int
+     */
+    public function getCancelAlertThreshold(): int
+    {
+        if (!$this->cancel_alert_threshold):
+            $this->setDefaultCancelAlertThreshold()->save();
+        endif;
+        
+        return $this->cancel_alert_threshold;
+    }
+
+    /**
+     * Telling if this status should be cancelled as soon as possible.
+     * 
+     * It's depending on cancel threshold.
+     * 
+     * @return bool
+     */
+    public function shouldBeCancelled(): bool
+    {
+        if (!$this->havingLastUnpaidInvoiceAt() || $this->isCancelled()):
+            return false;
+        endif;
+
+        return $this->getLastUnpaidInvoiceAt()->addDays($this->getCancelThreshold())->isBefore(now());
+    }
+
+    /**
+     * Setting cancel threshold.
+     * 
+     * @param int $days
+     * @return static
+     */
+    public function setCancelThreshold(int $days): AccountChargebeeContract
+    {
+        $this->cancel_threshold = $days;
+
+        return $this;
+    }
+
+    /**
+     * Setting cancel threshold.
+     * 
+     * @return static
+     */
+    public function setDefaultCancelThreshold(): AccountChargebeeContract
+    {
+        return $this->setCancelThreshold(14);
+    }
+
+    /**
+     * Getting cancel threshold.
+     * 
+     * @return int
+     */
+    public function getCancelThreshold(): int
+    {
+        if (!$this->cancel_threshold):
+            $this->setDefaultCancelThreshold()->save();
+        endif;
+        
+        return $this->cancel_threshold;
+    }
+
+    /**
+     * Getting last unpaid invoice due date.
+     * 
+     * @return Carbon|null
+     */
+    public function getLastUnpaidInvoiceAt(): ?Carbon
+    {
+        return $this->last_unpaid_invoice_at;
+    }
+
+    /**
+     * Setting last unpaid invoice.
+     * 
+     * @param Carbon|null $invoice
+     * @return static
+     */
+    public function setLastUnpaidInvoiceAt(?Carbon $dueDate): AccountChargebeeContract
+    {
+        $this->last_unpaid_invoice_at = $dueDate;
+
+        return $this;
+    }
+
+    /**
+     * Telling if linked to an unpaid invoice.
+     * 
+     * @return bool
+     */
+    public function havingLastUnpaidInvoiceAt(): bool
+    {
+        return !!$this->getLastUnpaidInvoiceAt();
     }
 
     /**

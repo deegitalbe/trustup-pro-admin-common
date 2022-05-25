@@ -2,6 +2,8 @@
 namespace Deegitalbe\TrustupProAdminCommon\Tests\Unit;
 
 use Mockery\MockInterface;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Carbon as SupportCarbon;
 use Deegitalbe\TrustupProAdminCommon\Tests\TestCase;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountChargebee;
@@ -19,7 +21,7 @@ use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionPlanContra
 class AccountChargebeeTest extends TestCase
 {
     
-    /** @var MockInterface */
+    /** @var MockInterface|AccountChargebeeContract */
     protected $account_chargebee;
 
     /** @var MockInterface */
@@ -348,6 +350,295 @@ class AccountChargebeeTest extends TestCase
         $this->assertInstanceOf(AccountChargebeeContract::class, $this->account_chargebee->setAccount($this->account));
     }
 
+    /** @test */
+    public function account_chargebee_close_to_be_cancelled_saying_false_if_not_having_unpaid_invoices()
+    {
+        $this->mockAccountChargebee();
+
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(false);
+        $this->account_chargebee->expects()->isCloseToBeCancelled()->passthru();
+
+        $this->assertFalse($this->account_chargebee->isCloseToBeCancelled());
+    }
+
+    /** @test */
+    public function account_chargebee_close_to_be_cancelled_saying_false_if_being_cancelled_invoices()
+    {
+        $this->mockAccountChargebee();
+
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
+        $this->account_chargebee->expects()->isCancelled()->andReturn(true);
+        $this->account_chargebee->expects()->isCloseToBeCancelled()->passthru();
+
+        $this->assertFalse($this->account_chargebee->isCloseToBeCancelled());
+    }
+
+    /** @test */
+    public function account_chargebee_close_to_be_cancelled_saying_false_if_threshold_not_reached()
+    {
+        $this->mockAccountChargebee()
+            ->mockCarbonNow(new Carbon('2020-01-12'));
+
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
+        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getCancelAlertThreshold()->andReturn(14);
+        $this->account_chargebee->expects()->isCloseToBeCancelled()->passthru();
+
+        $this->assertFalse($this->account_chargebee->isCloseToBeCancelled());
+    }
+
+    /** @test */
+    public function account_chargebee_close_to_be_cancelled_saying_false_if_before_threshold_but_should_be_cancelled()
+    {
+        $this->mockAccountChargebee();
+            
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
+        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getCancelAlertThreshold()->andReturn(9);
+        $this->account_chargebee->expects()->shouldBeCancelled()->andReturn(true);
+        $this->account_chargebee->expects()->isCloseToBeCancelled()->passthru();
+
+        $this->assertFalse($this->account_chargebee->isCloseToBeCancelled());
+    }
+
+    /** @test */
+    public function account_chargebee_close_to_be_cancelled_saying_true_if_before_threshold_and_should_not_be_cancelled()
+    {
+        $this->mockAccountChargebee();
+            
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
+        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getCancelAlertThreshold()->andReturn(9);
+        $this->account_chargebee->expects()->shouldBeCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->isCloseToBeCancelled()->passthru();
+
+        $this->assertTrue($this->account_chargebee->isCloseToBeCancelled());
+    }
+
+    /** @test */
+    public function account_chargebee_should_alert_about_cancellation_saying_false_if_not_having_unpaid_invoices()
+    {
+        $this->mockAccountChargebee();
+
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(false);
+        $this->account_chargebee->expects()->shouldAlertAboutCancellation()->passthru();
+
+        $this->assertFalse($this->account_chargebee->shouldAlertAboutCancellation());
+    }
+
+    /** @test */
+    public function account_chargebee_should_alert_about_cancellation_saying_false_if_being_cancelled()
+    {
+        $this->mockAccountChargebee();
+
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
+        $this->account_chargebee->expects()->isCancelled()->andReturn(true);
+        $this->account_chargebee->expects()->shouldAlertAboutCancellation()->passthru();
+
+        $this->assertFalse($this->account_chargebee->shouldAlertAboutCancellation());
+    }
+
+    /** @test */
+    public function account_chargebee_should_alert_about_cancellation_saying_false_if_threshold_not_reached()
+    {
+        $this->mockAccountChargebee()
+            ->mockCarbonNow(new Carbon('2020-01-12'));
+
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
+        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getCancelAlertThreshold()->andReturn(14);
+        $this->account_chargebee->expects()->shouldAlertAboutCancellation()->passthru();
+
+        $this->assertFalse($this->account_chargebee->shouldAlertAboutCancellation());
+    }
+
+    /** @test */
+    public function account_chargebee_should_alert_about_cancellation_saying_true_if_same_as_threshold()
+    {
+        $this->mockAccountChargebee()
+            ->mockCarbonNow(new Carbon('2020-01-10'));
+
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
+        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getCancelAlertThreshold()->andReturn(9);
+        $this->account_chargebee->expects()->shouldAlertAboutCancellation()->passthru();
+
+        $this->assertTrue($this->account_chargebee->shouldAlertAboutCancellation());
+    }
+
+    /** @test */
+    public function account_chargebee_should_be_cancelled_saying_false_if_not_having_unpaid_invoices()
+    {
+        $this->mockAccountChargebee();
+
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(false);
+        $this->account_chargebee->expects()->shouldBeCancelled()->passthru();
+
+        $this->assertFalse($this->account_chargebee->shouldBeCancelled());
+    }
+
+    /** @test */
+    public function account_chargebee_should_be_cancelled_saying_false_if_being_cancelled()
+    {
+        $this->mockAccountChargebee();
+
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
+        $this->account_chargebee->expects()->isCancelled()->andReturn(true);
+        $this->account_chargebee->expects()->shouldBeCancelled()->passthru();
+
+        $this->assertFalse($this->account_chargebee->shouldBeCancelled());
+    }
+
+    /** @test */
+    public function account_chargebee_should_be_cancelled_saying_false_if_threshold_not_reached()
+    {
+        $this->mockAccountChargebee()
+            ->mockCarbonNow(new Carbon('2020-01-12'));
+
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
+        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getCancelThreshold()->andReturn(14);
+        $this->account_chargebee->expects()->shouldBeCancelled()->passthru();
+
+        $this->assertFalse($this->account_chargebee->shouldBeCancelled());
+    }
+
+    /** @test */
+    public function account_chargebee_should_be_cancelled_saying_false_if_same_as_threshold()
+    {
+        $this->mockAccountChargebee()
+            ->mockCarbonNow(new Carbon('2020-01-10'));
+
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
+        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getCancelThreshold()->andReturn(9);
+        $this->account_chargebee->expects()->shouldBeCancelled()->passthru();
+
+        $this->assertTrue($this->account_chargebee->shouldBeCancelled());
+    }
+
+    /** @test */
+    public function account_chargebee_should_be_cancelled_saying_false_if_after_threshold()
+    {
+        $this->mockAccountChargebee()
+            ->mockCarbonNow(new Carbon('2020-01-11'));
+
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
+        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getCancelThreshold()->andReturn(9);
+        $this->account_chargebee->expects()->shouldBeCancelled()->passthru();
+
+        $this->assertTrue($this->account_chargebee->shouldBeCancelled());
+    }
+
+    /** @test */
+    public function account_chargebee_getting_cancel_alert_threshold()
+    {
+        $threshold = 10;
+        $this->mockAccountChargebee(true);
+
+        $this->account_chargebee->expects()->setDefaultCancelAlertThreshold()->andSet('cancel_alert_threshold', $threshold)->andReturnSelf();
+
+        $this->assertEquals($threshold, $this->account_chargebee->getCancelAlertThreshold());
+    }
+
+    /** @test */
+    public function account_chargebee_setting_cancel_alert_threshold()
+    {
+        $threshold = 10;
+        $accountChargebee = app(AccountChargebeeContract::class);
+        $accountChargebee->setCancelAlertThreshold($threshold);
+
+        $this->assertEquals($threshold, $accountChargebee->cancel_alert_threshold);
+    }
+
+    /** @test */
+    public function account_chargebee_setting_default_cancel_alert_threshold()
+    {
+        $this->mockAccountChargebee(true);
+
+        $this->account_chargebee->expects()->setCancelAlertThreshold(9)->andReturnSelf();
+        $this->account_chargebee->expects()->setDefaultCancelAlertThreshold()->passthru();
+
+        $this->assertInstanceOf(AccountChargebeeContract::class, $this->account_chargebee->setDefaultCancelAlertThreshold());
+    }
+
+
+
+
+    /** @test */
+    public function account_chargebee_getting_cancel_threshold()
+    {
+        $threshold = 10;
+        $this->mockAccountChargebee(true);
+
+        $this->account_chargebee->expects()->setDefaultCancelThreshold()->andSet('cancel_threshold', $threshold)->andReturnSelf();
+
+        $this->assertEquals($threshold, $this->account_chargebee->getCancelThreshold());
+    }
+
+    /** @test */
+    public function account_chargebee_setting_cancel_threshold()
+    {
+        $threshold = 10;
+        $accountChargebee = app(AccountChargebeeContract::class);
+        $accountChargebee->setCancelThreshold($threshold);
+
+        $this->assertEquals($threshold, $accountChargebee->cancel_threshold);
+    }
+
+    /** @test */
+    public function account_chargebee_setting_default_cancel_threshold()
+    {
+        $this->mockAccountChargebee();
+
+        $this->account_chargebee->expects()->setDefaultCancelThreshold()->passthru();
+        $this->account_chargebee->expects()->setCancelThreshold(14)->andReturnSelf();
+
+        $this->assertInstanceOf(AccountChargebeeContract::class, $this->account_chargebee->setDefaultCancelThreshold());
+    }
+
+    /** @test */
+    public function account_chargebee_setting_last_unpaid_invoice_at()
+    {
+
+        $date = new Carbon('2020-01-10');
+        $accountChargebee = app(AccountChargebeeContract::class);
+
+        $this->assertInstanceOf(AccountChargebeeContract::class, $accountChargebee->setLastUnpaidInvoiceAt($date));
+        $accountChargebee->save();
+        $this->assertEquals($date->toDateTimeString(), $accountChargebee->fresh()->last_unpaid_invoice_at->toDateTimeString());
+    }
+
+    /** @test */
+    public function account_chargebee_getting_last_unpaid_invoice_at()
+    {
+        $this->assertNull(app(AccountChargebeeContract::class)->last_unpaid_invoice_at);
+    }
+
+    /** @test */
+    public function account_chargebee_telling_false_if_not_having_last_unpaid_invoice_at()
+    {
+        $this->assertFalse(app(AccountChargebeeContract::class)->havingLastUnpaidInvoiceAt());
+    }
+
+    /** @test */
+    public function account_chargebee_telling_true_if_having_last_unpaid_invoice_at()
+    {
+        $chargebee = app(AccountChargebeeContract::class);
+        $chargebee->last_unpaid_invoice_at = now();
+        
+        $this->assertTrue($chargebee->havingLastUnpaidInvoiceAt());
+    }
+
     /**
      * Mocking subscription.
      * 
@@ -389,9 +680,9 @@ class AccountChargebeeTest extends TestCase
      * 
      * @return self
      */
-    protected function mockAccountChargebee(): self
+    protected function mockAccountChargebee($is_partial = false): self
     {
-        $this->account_chargebee = $this->mockThis(Package::accountChargebee());
+        $this->account_chargebee = $this->mockThis(Package::accountChargebee(), $is_partial);
 
         return $this;
     }

@@ -139,4 +139,97 @@ interface AccountChargebeeContract extends PersistableContract
      * @return AccountChargebeeContract
      */
     public function setAccount(AccountContract $account): AccountChargebeeContract;
+    
+    /**
+     * Telling if this status is about to be cancelled.
+     * 
+     * It's depending on cancel alert threshold.
+     * 
+     * @return bool
+     */
+    public function isCloseToBeCancelled(): bool;
+
+     /**
+     * Telling if professional should be warned about cancellation.
+     * 
+     * It's depending on cancel alert threshold.
+     * 
+     * @return bool
+     */
+    public function shouldAlertAboutCancellation(): bool;
+
+    /**
+     * Setting cancel alert threshold.
+     * 
+     * @param int $days
+     * @return static
+     */
+    public function setCancelAlertThreshold(int $days): AccountChargebeeContract;
+
+    /**
+     * Setting cancel threshold.
+     * 
+     * @return static
+     */
+    public function setDefaultCancelAlertThreshold(): AccountChargebeeContract;
+    
+    /**
+     * Getting cancel alert threshold.
+     * 
+     * @return int
+     */
+    public function getCancelAlertThreshold(): int;
+
+    /**
+     * Telling if this status should be cancelled as soon as possible.
+     * 
+     * It's depending on cancel threshold.
+     * 
+     * @return bool
+     */
+    public function shouldBeCancelled(): bool;
+
+    /**
+     * Setting cancel threshold.
+     * 
+     * @param int $days
+     * @return static
+     */
+    public function setCancelThreshold(int $days): AccountChargebeeContract;
+
+    /**
+     * Setting cancel threshold.
+     * 
+     * @return static
+     */
+    public function setDefaultCancelThreshold(): AccountChargebeeContract;
+
+    /**
+     * Getting cancel threshold.
+     * 
+     * @return int
+     */
+    public function getCancelThreshold(): int;
+
+    /**
+     * Getting last unpaid invoice due date.
+     * 
+     * @return Carbon|null
+     */
+    public function getLastUnpaidInvoiceAt(): ?Carbon;
+
+    /**
+     * Setting last unpaid invoice.
+     * 
+     * @param Carbon|null $invoice
+     * @return static
+     */
+    public function setLastUnpaidInvoiceAt(?Carbon $dueDate): AccountChargebeeContract;
+
+    /**
+     * Telling if linked to an unpaid invoice.
+     * 
+     * @return bool
+     */
+    public function havingLastUnpaidInvoiceAt(): bool;
 }

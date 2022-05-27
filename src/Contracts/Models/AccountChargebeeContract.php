@@ -216,7 +216,7 @@ interface AccountChargebeeContract extends PersistableContract
      * 
      * @return Carbon|null
      */
-    public function getLastUnpaidInvoiceAt(): ?Carbon;
+    public function getFirstUnpaidInvoiceAt(): ?Carbon;
 
     /**
      * Setting last unpaid invoice.
@@ -224,7 +224,7 @@ interface AccountChargebeeContract extends PersistableContract
      * @param Carbon|null $invoice
      * @return static
      */
-    public function setLastUnpaidInvoiceAt(?Carbon $dueDate): AccountChargebeeContract;
+    public function setFirstUnpaidInvoiceAt(?Carbon $dueDate): AccountChargebeeContract;
 
     /**
      * Telling if linked to an unpaid invoice.

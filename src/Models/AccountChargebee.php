@@ -12,6 +12,7 @@ use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\PlanQueryContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
+use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionInvoiceApiContract;
 
 class AccountChargebee extends PersistableMongoModel implements AccountChargebeeContract
 {
@@ -55,7 +56,7 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
 
     protected $dates = [
         'trial_ending_at',
-        'last_unpaid_invoice_at'
+        'first_unpaid_invoice_at'
     ];
 
     protected $casts = [
@@ -198,7 +199,13 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
             return $this;
         endif;
 
-        return $this->refreshFromSubscription($subscription, $force);
+        $this->refreshFromSubscription($subscription, $force);
+
+        /** @var SubscriptionInvoiceApiContract */
+        $invoiceApi = app()->make(SubscriptionInvoiceApiContract::class);
+        $invoice = $invoiceApi->setSubscription($subscription)->firstLate();
+
+        return $this->setFirstUnpaidInvoiceAt(optional($invoice)->getDueDate())->persist();
     }
 
     /**
@@ -344,7 +351,7 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
             return false;
         endif;
 
-        return $this->getLastUnpaidInvoiceAt()->addDays($this->getCancelAlertThreshold())->isBefore(now())
+        return $this->getFirstUnpaidInvoiceAt()->addDays($this->getCancelAlertThreshold())->isBefore(now())
             && !$this->shouldBeCancelled();
     }
 
@@ -361,7 +368,7 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
             return false;
         endif;
 
-        return $this->getLastUnpaidInvoiceAt()->addDays($this->getCancelAlertThreshold())->isSameDay();
+        return $this->getFirstUnpaidInvoiceAt()->addDays($this->getCancelAlertThreshold())->isSameDay();
     }
 
 
@@ -415,7 +422,7 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
             return false;
         endif;
 
-        return $this->getLastUnpaidInvoiceAt()->addDays($this->getCancelThreshold())->isBefore(now());
+        return $this->getFirstUnpaidInvoiceAt()->addDays($this->getCancelThreshold())->isBefore(now());
     }
 
     /**
@@ -460,9 +467,9 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
      * 
      * @return Carbon|null
      */
-    public function getLastUnpaidInvoiceAt(): ?Carbon
+    public function getFirstUnpaidInvoiceAt(): ?Carbon
     {
-        return $this->last_unpaid_invoice_at;
+        return $this->first_unpaid_invoice_at;
     }
 
     /**
@@ -471,9 +478,9 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
      * @param Carbon|null $invoice
      * @return static
      */
-    public function setLastUnpaidInvoiceAt(?Carbon $dueDate): AccountChargebeeContract
+    public function setFirstUnpaidInvoiceAt(?Carbon $dueDate): AccountChargebeeContract
     {
-        $this->last_unpaid_invoice_at = $dueDate;
+        $this->first_unpaid_invoice_at = $dueDate;
 
         return $this;
     }
@@ -485,7 +492,7 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
      */
     public function havingLastUnpaidInvoiceAt(): bool
     {
-        return !!$this->getLastUnpaidInvoiceAt();
+        return !!$this->getFirstUnpaidInvoiceAt();
     }
 
     /**

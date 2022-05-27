@@ -12,7 +12,9 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionApiContract;
+use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionInvoiceApiContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\CustomerContract;
+use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\InvoiceContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\PlanQueryContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
@@ -165,17 +167,48 @@ class AccountChargebeeTest extends TestCase
     }
 
     /** @test */
-    public function account_chargebee_refresh_from_api_finding_subscription()
+    public function account_chargebee_refresh_from_api_finding_subscription_but_not_unpaid_invoice()
     {
         $subscription_api = $this->mockThis(SubscriptionApiContract::class);
+        $invoice_api = $this->mockThis(SubscriptionInvoiceApiContract::class);
         $account_chargebee = $this->mockThis(AccountChargebee::class);
-        $account = $this->mockThis(AccountContract::class);
         $subscription = $this->mockThis(SubscriptionContract::class);
 
         $subscription_api->expects()->find("test")->andReturn($subscription);
         
+        $invoice_api->expects()->setSubscription($subscription)->andReturnSelf();
+        $invoice_api->expects()->firstLate()->andReturnNull();
+        
         $account_chargebee->expects()->refreshFromApi()->passthru();
         $account_chargebee->expects()->getId()->andReturn("test");
+        $account_chargebee->expects()->setFirstUnpaidInvoiceAt(null)->andReturnSelf();
+        $account_chargebee->expects()->persist()->andReturnSelf();
+        $account_chargebee->expects()->refreshFromSubscription($subscription, false);
+
+        $account_chargebee->refreshFromApi();
+    }
+
+    /** @test */
+    public function account_chargebee_refresh_from_api_finding_subscription_and_unpaid_invoice()
+    {
+        $subscription_api = $this->mockThis(SubscriptionApiContract::class);
+        $invoice_api = $this->mockThis(SubscriptionInvoiceApiContract::class);
+        $account_chargebee = $this->mockThis(AccountChargebee::class);
+        $subscription = $this->mockThis(SubscriptionContract::class);
+        $invoice = $this->mockThis(InvoiceContract::class);
+        $date = now();
+
+        $invoice->expects()->getDueDate()->andReturn($date);
+
+        $subscription_api->expects()->find("test")->andReturn($subscription);
+        
+        $invoice_api->expects()->setSubscription($subscription)->andReturnSelf();
+        $invoice_api->expects()->firstLate()->andReturn($invoice);
+        
+        $account_chargebee->expects()->refreshFromApi()->passthru();
+        $account_chargebee->expects()->getId()->andReturn("test");
+        $account_chargebee->expects()->setFirstUnpaidInvoiceAt($date)->andReturnSelf();
+        $account_chargebee->expects()->persist()->andReturnSelf();
         $account_chargebee->expects()->refreshFromSubscription($subscription, false);
 
         $account_chargebee->refreshFromApi();
@@ -381,7 +414,7 @@ class AccountChargebeeTest extends TestCase
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
         $this->account_chargebee->expects()->isCancelled()->andReturn(false);
-        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
         $this->account_chargebee->expects()->getCancelAlertThreshold()->andReturn(14);
         $this->account_chargebee->expects()->isCloseToBeCancelled()->passthru();
 
@@ -395,7 +428,7 @@ class AccountChargebeeTest extends TestCase
             
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
         $this->account_chargebee->expects()->isCancelled()->andReturn(false);
-        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
         $this->account_chargebee->expects()->getCancelAlertThreshold()->andReturn(9);
         $this->account_chargebee->expects()->shouldBeCancelled()->andReturn(true);
         $this->account_chargebee->expects()->isCloseToBeCancelled()->passthru();
@@ -410,7 +443,7 @@ class AccountChargebeeTest extends TestCase
             
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
         $this->account_chargebee->expects()->isCancelled()->andReturn(false);
-        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
         $this->account_chargebee->expects()->getCancelAlertThreshold()->andReturn(9);
         $this->account_chargebee->expects()->shouldBeCancelled()->andReturn(false);
         $this->account_chargebee->expects()->isCloseToBeCancelled()->passthru();
@@ -449,7 +482,7 @@ class AccountChargebeeTest extends TestCase
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
         $this->account_chargebee->expects()->isCancelled()->andReturn(false);
-        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
         $this->account_chargebee->expects()->getCancelAlertThreshold()->andReturn(14);
         $this->account_chargebee->expects()->shouldAlertAboutCancellation()->passthru();
 
@@ -464,7 +497,7 @@ class AccountChargebeeTest extends TestCase
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
         $this->account_chargebee->expects()->isCancelled()->andReturn(false);
-        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
         $this->account_chargebee->expects()->getCancelAlertThreshold()->andReturn(9);
         $this->account_chargebee->expects()->shouldAlertAboutCancellation()->passthru();
 
@@ -502,7 +535,7 @@ class AccountChargebeeTest extends TestCase
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
         $this->account_chargebee->expects()->isCancelled()->andReturn(false);
-        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
         $this->account_chargebee->expects()->getCancelThreshold()->andReturn(14);
         $this->account_chargebee->expects()->shouldBeCancelled()->passthru();
 
@@ -517,11 +550,11 @@ class AccountChargebeeTest extends TestCase
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
         $this->account_chargebee->expects()->isCancelled()->andReturn(false);
-        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
         $this->account_chargebee->expects()->getCancelThreshold()->andReturn(9);
         $this->account_chargebee->expects()->shouldBeCancelled()->passthru();
 
-        $this->assertTrue($this->account_chargebee->shouldBeCancelled());
+        $this->assertFalse($this->account_chargebee->shouldBeCancelled());
     }
 
     /** @test */
@@ -532,7 +565,7 @@ class AccountChargebeeTest extends TestCase
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
         $this->account_chargebee->expects()->isCancelled()->andReturn(false);
-        $this->account_chargebee->expects()->getLastUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
+        $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
         $this->account_chargebee->expects()->getCancelThreshold()->andReturn(9);
         $this->account_chargebee->expects()->shouldBeCancelled()->passthru();
 
@@ -613,15 +646,15 @@ class AccountChargebeeTest extends TestCase
         $date = new Carbon('2020-01-10');
         $accountChargebee = app(AccountChargebeeContract::class);
 
-        $this->assertInstanceOf(AccountChargebeeContract::class, $accountChargebee->setLastUnpaidInvoiceAt($date));
+        $this->assertInstanceOf(AccountChargebeeContract::class, $accountChargebee->setFirstUnpaidInvoiceAt($date));
         $accountChargebee->save();
-        $this->assertEquals($date->toDateTimeString(), $accountChargebee->fresh()->last_unpaid_invoice_at->toDateTimeString());
+        $this->assertEquals($date->toDateTimeString(), $accountChargebee->fresh()->first_unpaid_invoice_at->toDateTimeString());
     }
 
     /** @test */
     public function account_chargebee_getting_last_unpaid_invoice_at()
     {
-        $this->assertNull(app(AccountChargebeeContract::class)->last_unpaid_invoice_at);
+        $this->assertNull(app(AccountChargebeeContract::class)->first_unpaid_invoice_at);
     }
 
     /** @test */
@@ -634,7 +667,7 @@ class AccountChargebeeTest extends TestCase
     public function account_chargebee_telling_true_if_having_last_unpaid_invoice_at()
     {
         $chargebee = app(AccountChargebeeContract::class);
-        $chargebee->last_unpaid_invoice_at = now();
+        $chargebee->first_unpaid_invoice_at = now();
         
         $this->assertTrue($chargebee->havingLastUnpaidInvoiceAt());
     }

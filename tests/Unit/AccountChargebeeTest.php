@@ -672,6 +672,97 @@ class AccountChargebeeTest extends TestCase
         $this->assertTrue($chargebee->havingLastUnpaidInvoiceAt());
     }
 
+    /** @test */
+    public function account_chargebee_get_expected_cancellation_at_returning_null_if_not_having_unpaid_invoices()
+    {
+        $this->mockAccountChargebee();
+
+        $this->account_chargebee->expects()->getExpectedCancellationAt()->passthru();
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(false);
+
+        $this->assertNull($this->account_chargebee->getExpectedCancellationAt());
+    }
+
+    /** @test */
+    public function account_chargebee_get_expected_cancellation_at_returning_null_if_being_cancelled()
+    {
+        $this->mockAccountChargebee();
+
+        $this->account_chargebee->expects()->getExpectedCancellationAt()->passthru();
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
+        $this->account_chargebee->expects()->isCancelled()->andReturn(true);
+
+        $this->assertNull($this->account_chargebee->getExpectedCancellationAt());
+    }
+
+    /** @test */
+    public function account_chargebee_get_expected_cancellation_at_returning_carbon_date()
+    {
+        $this->mockAccountChargebee();
+        $date = new Carbon('2020-01-01');
+        $threshold = 4;
+
+        $this->account_chargebee->expects()->getExpectedCancellationAt()->passthru();
+        $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
+        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn($date);
+        $this->account_chargebee->expects()->getCancelThreshold()->andReturn($threshold);
+
+        $this->assertEquals(new Carbon('2020-01-05'), $this->account_chargebee->getExpectedCancellationAt());
+    }
+
+    /** @test */
+    public function account_chargebee_get_days_before_expectation_returning_null_if_expected_cancellation_date_is_null()
+    {
+        $this->mockAccountChargebee();
+
+        $this->account_chargebee->expects()->getExpectedCancellationAt()->andReturnNull();
+        $this->account_chargebee->expects()->getDaysBeforeExpectedCancellation()->passthru();
+
+        $this->assertNull($this->account_chargebee->getDaysBeforeExpectedCancellation());
+    }
+
+    /** @test */
+    public function account_chargebee_get_days_before_expectation_returning_zero_if_same_day_cancellation_date_and_should_be_cancelled()
+    {
+        $this->mockAccountChargebee();
+        $this->mockCarbonNow($now = new Carbon('2020-01-01 05:00:00'));
+        $date = new Carbon('2020-01-02 03:00:00');
+
+        $this->account_chargebee->expects()->getExpectedCancellationAt()->andReturn($date);
+        $this->account_chargebee->expects()->shouldBeCancelled()->andReturn(true);
+        $this->account_chargebee->expects()->getDaysBeforeExpectedCancellation()->passthru();
+
+        $this->assertEquals(0, $this->account_chargebee->getDaysBeforeExpectedCancellation());
+    }
+
+    /** @test */
+    public function account_chargebee_get_days_before_expectation_returning_one_if_same_day_cancellation_date_and_should_not_be_cancelled()
+    {
+        $this->mockAccountChargebee();
+        $this->mockCarbonNow($now = new Carbon('2020-01-01 05:00:00'));
+        $date = new Carbon('2020-01-02 03:00:00');
+
+        $this->account_chargebee->expects()->getExpectedCancellationAt()->andReturn($date);
+        $this->account_chargebee->expects()->shouldBeCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->getDaysBeforeExpectedCancellation()->passthru();
+
+        $this->assertEquals(1, $this->account_chargebee->getDaysBeforeExpectedCancellation());
+    }
+
+    /** @test */
+    public function account_chargebee_get_days_before_expectation_returning_diff_in_days_compared_to_cancellation_date()
+    {
+        $this->mockAccountChargebee();
+        $this->mockCarbonNow($now = new Carbon('2020-01-01 05:00:00'));
+        $date = new Carbon('2020-01-05 05:00:00');
+
+        $this->account_chargebee->expects()->getExpectedCancellationAt()->andReturn($date);
+        $this->account_chargebee->expects()->getDaysBeforeExpectedCancellation()->passthru();
+
+        $this->assertEquals(4, $this->account_chargebee->getDaysBeforeExpectedCancellation());
+    }
+
     /**
      * Mocking subscription.
      * 

@@ -463,6 +463,38 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
     }
 
     /**
+     * Getting expected cancellation date.
+     * 
+     * @return Carbon|null
+     */
+    public function getExpectedCancellationAt(): ?Carbon
+    {
+        if (!$this->havingLastUnpaidInvoiceAt() || $this->isCancelled()):
+            return null;
+        endif;
+
+        return $this->getFirstUnpaidInvoiceAt()->addDays($this->getCancelThreshold());
+    }
+
+    /**
+     * Getting days before expected cancellation.
+     * 
+     * @return int|null
+     */
+    public function getDaysBeforeExpectedCancellation(): ?int
+    {
+        if (!$cancellationAt = $this->getExpectedCancellationAt()):
+            return null;
+        endif;
+
+        if (!$diff = $cancellationAt->diffInDays()):
+            return $this->shouldBeCancelled() ? 0 : 1;
+        endif;
+
+        return $diff;
+    }
+
+    /**
      * Getting last unpaid invoice due date.
      * 
      * @return Carbon|null

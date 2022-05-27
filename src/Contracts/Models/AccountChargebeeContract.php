@@ -212,6 +212,20 @@ interface AccountChargebeeContract extends PersistableContract
     public function getCancelThreshold(): int;
 
     /**
+     * Getting expected cancellation date.
+     * 
+     * @return Carbon|null
+     */
+    public function getExpectedCancellationAt(): ?Carbon;
+
+    /**
+     * Getting days before expected cancellation.
+     * 
+     * @return int|null
+     */
+    public function getDaysBeforeExpectedCancellation(): ?int;
+
+    /**
      * Getting last unpaid invoice due date.
      * 
      * @return Carbon|null

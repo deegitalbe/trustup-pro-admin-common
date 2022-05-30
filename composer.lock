@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ffa003082c2479bfbd1d4c7e32da55ac",
+    "content-hash": "c3c5f4f2717e71da4138c6b9010ed9d6",
     "packages": [
         {
             "name": "brick/math",
@@ -68,16 +68,16 @@
         },
         {
             "name": "deegitalbe/chargebee-client",
-            "version": "v1.5.3",
+            "version": "v1.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/deegitalbe/chargebee-client.git",
-                "reference": "9fb249f6c2d6260a744b1d4f5b2ec5e5cf0b0226"
+                "reference": "4aa3c95da540b64e3f4dec5e8e0d69561b93842e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/deegitalbe/chargebee-client/zipball/9fb249f6c2d6260a744b1d4f5b2ec5e5cf0b0226",
-                "reference": "9fb249f6c2d6260a744b1d4f5b2ec5e5cf0b0226",
+                "url": "https://api.github.com/repos/deegitalbe/chargebee-client/zipball/4aa3c95da540b64e3f4dec5e8e0d69561b93842e",
+                "reference": "4aa3c95da540b64e3f4dec5e8e0d69561b93842e",
                 "shasum": ""
             },
             "require": {
@@ -115,9 +115,9 @@
             "description": "Chargebee client used by our applications.",
             "support": {
                 "issues": "https://github.com/deegitalbe/chargebee-client/issues",
-                "source": "https://github.com/deegitalbe/chargebee-client/tree/v1.5.3"
+                "source": "https://github.com/deegitalbe/chargebee-client/tree/v1.5.4"
             },
-            "time": "2022-05-27T14:18:48+00:00"
+            "time": "2022-05-30T14:02:36+00:00"
         },
         {
             "name": "deegitalbe/server-authorization",

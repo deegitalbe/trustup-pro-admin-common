@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d8cf09a3359b682207665b322fb27387",
+    "content-hash": "269f3156c8b325ae5083ec27a061513d",
     "packages": [
         {
             "name": "brick/math",
@@ -68,16 +68,16 @@
         },
         {
             "name": "deegitalbe/chargebee-client",
-            "version": "v1.5.5-alpha.0",
+            "version": "v1.5.5-alpha.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/deegitalbe/chargebee-client.git",
-                "reference": "f2c2e8c79f11a7da85ba7f5b490b765a461e6598"
+                "reference": "b25347e1239f003f689090d467a06ae59fd8262b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/deegitalbe/chargebee-client/zipball/f2c2e8c79f11a7da85ba7f5b490b765a461e6598",
-                "reference": "f2c2e8c79f11a7da85ba7f5b490b765a461e6598",
+                "url": "https://api.github.com/repos/deegitalbe/chargebee-client/zipball/b25347e1239f003f689090d467a06ae59fd8262b",
+                "reference": "b25347e1239f003f689090d467a06ae59fd8262b",
                 "shasum": ""
             },
             "require": {
@@ -115,9 +115,9 @@
             "description": "Chargebee client used by our applications.",
             "support": {
                 "issues": "https://github.com/deegitalbe/chargebee-client/issues",
-                "source": "https://github.com/deegitalbe/chargebee-client/tree/v1.5.5-alpha.0"
+                "source": "https://github.com/deegitalbe/chargebee-client/tree/v1.5.5-alpha.1"
             },
-            "time": "2022-05-31T08:59:19+00:00"
+            "time": "2022-05-31T15:30:41+00:00"
         },
         {
             "name": "deegitalbe/server-authorization",
@@ -1431,16 +1431,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.83.14",
+            "version": "v8.83.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "141cf126f1746c7264f59aa78c923a84eaab501e"
+                "reference": "bf8fbdd9061611b2c05562fa14f6987cc5145d78"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/141cf126f1746c7264f59aa78c923a84eaab501e",
-                "reference": "141cf126f1746c7264f59aa78c923a84eaab501e",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/bf8fbdd9061611b2c05562fa14f6987cc5145d78",
+                "reference": "bf8fbdd9061611b2c05562fa14f6987cc5145d78",
                 "shasum": ""
             },
             "require": {
@@ -1600,7 +1600,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2022-05-24T14:04:02+00:00"
+            "time": "2022-05-31T14:57:02+00:00"
         },
         {
             "name": "laravel/serializable-closure",

@@ -44,6 +44,14 @@ interface AccountSwitcherContract extends ContextualContract
      */
     public function switchToCustomer(AccountContract $account, CustomerContract $customer): bool;
 
+    /** 
+     * Forcing activation for new subscription.
+     * 
+     * @param bool $force
+     * @return static
+     */
+    public function forceActivation($force): AccountSwitcherContract;
+
     /**
      * Getting account.
      * 

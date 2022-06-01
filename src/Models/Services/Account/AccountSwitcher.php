@@ -8,6 +8,7 @@ use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionApiContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\CustomerContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionPlanContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Contracts\AccountSubscriberContract;
 
@@ -31,11 +32,17 @@ class AccountSwitcher implements AccountSwitcherContract
     /** @var SubscriptionContract|null */
     protected $subscription;
 
+    /** @var SubscriptionContract|null */
+    protected $oldSubscription;
+
     /** @var SubscriptionApiContract */
     protected $subscription_api;
 
     /** @var AccountSubscriberContract */
     protected $account_subscriber;
+
+    /** @var bool */
+    protected $forceActiveStatus = false;
 
     public function __construct(
         SubscriptionApiContract $subscription_api,
@@ -94,13 +101,31 @@ class AccountSwitcher implements AccountSwitcherContract
         $this->fresh()
             ->setCustomer($customer)
             ->setAccount($account)
-            ->setPlan($account->getChargebee()->getPlan());
+            ->setPlan($account->getChargebee()->getPlan())
+            ->setOldSubscription();
+        
+        if ($this->isRelatedToSameCustomer()):
+            return true;
+        endif;
 
         if (!$this->successfullySwitchedAccount()):
             return false;
         endif;
 
-        $this->updateAccountStatus();
+        return $this->updateAccountStatus();
+    }
+
+    /** 
+     * Forcing activation for new subscription.
+     * 
+     * @param bool $force
+     * @return static
+     */
+    public function forceActivation($force): AccountSwitcherContract
+    {
+        $this->forceActiveStatus = $force;
+
+        return $this;
     }
 
     /**
@@ -112,7 +137,29 @@ class AccountSwitcher implements AccountSwitcherContract
     {
         return $this->cancelExistingSubscription()
             && $this->createNewSubscription()
-            && $this->activateNewSubscription();
+            && $this->setCorrectStatusForNewSubscription();
+    }
+
+    /**
+     * Telling if we're trying to assign same customer again.
+     * 
+     * @return bool
+     */
+    protected function isRelatedToSameCustomer(): bool
+    {
+        return optional($this->oldSubscription)->getCustomer()->getId() !== $this->customer;
+    }
+
+    /**
+     * Setting old subscription.
+     * 
+     * @return static
+     */
+    protected function setOldSubscription(): self
+    {
+        $this->oldSubscription = $this->subscription_api->find($this->account->getChargebee()->getId());
+
+        return $this;
     }
 
     /**
@@ -126,11 +173,11 @@ class AccountSwitcher implements AccountSwitcherContract
             return true;
         endif;
 
-        if (!$subscription = $this->subscription_api->find($this->account->getChargebee()->getId())):
+        if (!$this->oldSubscription):
             return true;
         endif;
 
-        return !!$this->subscription_api->cancelNow($subscription);
+        return !!$this->subscription_api->cancelNow($this->oldSubscription);
     }
 
     /**
@@ -157,12 +204,27 @@ class AccountSwitcher implements AccountSwitcherContract
      * 
      * @return bool
      */
-    protected function activateNewSubscription(): bool
+    protected function setCorrectStatusForNewSubscription(): bool
     {
-        $this->setSubscription($this->subscription_api->cancelNow($this->subscription));
+        /** @var AccountChargebeeContract */
+        $oldStatus = app()->make(AccountChargebeeContract::class);
+        $oldStatus->setStatus($this->oldSubscription->getStatus());
+
+        if (!$this->forceActiveStatus && $oldStatus->isTrial()):
+            return true;
+        endif;
+
+        $this->setSubscription(
+            !$this->forceActiveStatus && $oldStatus->isNonRenewing() ? $this->subscription_api->cancelAtTerms($this->subscription)
+            : $this->subscription_api->cancelNow($this->subscription)
+        );
 
         if (!$this->hasSubscription()):
             return null;
+        endif;
+
+        if (!$this->forceActiveStatus && $oldStatus->isCancelled()):
+            return true;
         endif;
 
         return $this->setSubscription($this->subscription_api->reactivate($this->subscription))->hasSubscription();
@@ -181,9 +243,11 @@ class AccountSwitcher implements AccountSwitcherContract
     /**
      * Updating account status in app environment.
      */
-    protected function updateAccountStatus(): void
+    protected function updateAccountStatus(): bool
     {
         $this->account->getChargebee()->refreshFromSubscription($this->subscription, true);
+
+        return true;
     }
 
     /**

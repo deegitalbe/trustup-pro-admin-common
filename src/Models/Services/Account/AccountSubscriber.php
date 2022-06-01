@@ -91,6 +91,30 @@ class AccountSubscriber implements AccountSubscriberContract
     }
 
     /**
+     * Subscribing given account with given customer.
+     * 
+     * @param AccountContract $account
+     * @param PlanContract $plan
+     * @param CustomerContract $customer
+     * @return AccountContract
+     */
+    public function subscribeToPlanWithCustomer(AccountContract $account, PlanContract $plan, CustomerContract $customer): bool
+    {
+        $this->fresh()
+            ->setCustomer($customer)
+            ->setAccount($account)
+            ->setPlan($plan);
+
+        if (!$this->successfullySubscribedAccount()):
+            return false;
+        endif;
+
+        $this->updateAccountStatus();
+        
+        return true;
+    }
+
+    /**
      * Trying to do account subscribing process.
      * 
      * @return bool Success state.
@@ -145,7 +169,7 @@ class AccountSubscriber implements AccountSubscriberContract
         $customer = $this->account->getProfessional()->getCustomer();
 
         // If not found => from user
-        if (!$customer):
+        if (!$customer && $this->user):
             return $this->user->toCustomer();
         endif;
 
@@ -159,8 +183,6 @@ class AccountSubscriber implements AccountSubscriberContract
      */
     protected function foundACustomer(): bool
     {
-        $this->setCustomerFromAccountOrUser();
-
         if (!$this->customer):
             return $this->notFindingCustomer();
         endif;

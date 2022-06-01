@@ -31,6 +31,16 @@ interface AccountSubscriberContract extends ContextualContract
     public function subscribeToPlan(AccountContract $account, PlanContract $plan, UserContract $user): bool;
 
     /**
+     * Subscribing given account with given customer.
+     * 
+     * @param AccountContract $account
+     * @param PlanContract $plan
+     * @param CustomerContract $customer.
+     * @return AccountContract
+     */
+    public function subscribeToPlanWithCustomer(AccountContract $account, PlanContract $plan, CustomerContract $customer): bool;
+
+    /**
      * Getting account.
      * 
      * @return AccountContract

@@ -12,19 +12,19 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountRefresh;
+use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountSwitcher;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
+use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountSubscriber;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 use Deegitalbe\TrustupVersionedPackage\Contracts\VersionedPackageCheckerContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountSetterByAppResponse;
 use Henrotaym\LaravelPackageVersioning\Providers\Abstracts\VersionablePackageServiceProvider;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Services\Account\AccountRefreshContract;
+use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Contracts\AccountSwitcherContract;
 use Henrotaym\LaravelContainerAutoRegister\Services\AutoRegister\Contracts\AutoRegisterContract;
-use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Services\Account\AccountSetterByAppResponseContract;
-use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountSubscriber;
-use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountSwitcher;
-use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountSwitcherContract;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Contracts\AccountSubscriberContract;
+use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Services\Account\AccountSetterByAppResponseContract;
 
 class TrustupProAdminCommonServiceProvider extends VersionablePackageServiceProvider
 {

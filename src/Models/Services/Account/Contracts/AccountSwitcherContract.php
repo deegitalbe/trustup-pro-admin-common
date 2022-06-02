@@ -1,5 +1,5 @@
 <?php
-namespace Deegitalbe\TrustupProAdminCommon\Models\Services\Account;
+namespace Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Contracts;
 
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;

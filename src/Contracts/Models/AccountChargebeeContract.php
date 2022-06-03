@@ -26,6 +26,8 @@ interface AccountChargebeeContract extends PersistableContract
     public function isActive(): bool;
 
     public function isCancelled(): bool;
+
+    public function isPaused(): bool;
     
     public function isNonRenewing(): bool;
 
@@ -141,89 +143,118 @@ interface AccountChargebeeContract extends PersistableContract
     public function setAccount(AccountContract $account): AccountChargebeeContract;
     
     /**
-     * Telling if this status is about to be cancelled.
+     * Telling if this status is about to be paused.
      * 
-     * It's depending on cancel alert threshold.
-     * 
-     * @return bool
-     */
-    public function isCloseToBeCancelled(): bool;
-
-     /**
-     * Telling if professional should be warned about cancellation.
-     * 
-     * It's depending on cancel alert threshold.
+     * It's depending on pause alert threshold.
      * 
      * @return bool
      */
-    public function shouldAlertAboutCancellation(): bool;
+    public function isCloseToBePaused(): bool;
 
     /**
-     * Setting cancel alert threshold.
+     * Telling if this subscription is paused due to unpaid invoices.
+     * 
+     * @return bool
+     */
+    public function isPausedDueToUnpaidInvoices(): bool;
+
+    /**
+     * Setting pause reason.
+     * 
+     * @param string|null $reason
+     * @return static
+     */
+    public function setPauseReason(?string $reason): AccountChargebeeContract;
+
+    /**
+     * Setting pause reason to be unpaid invoices.
+     * 
+     * @return static
+     */
+    public function setUnpaidInvoicesAsPauseReason(): AccountChargebeeContract;
+
+     /**
+     * Getting pause reason.
+     * 
+     * @return string|null
+     */
+    public function getPauseReason(): ?string;
+
+     /**
+     * Telling if professional should be warned about pause.
+     * 
+     * It's depending on pause alert threshold.
+     * 
+     * @return bool
+     */
+    public function shouldAlertAboutPause(): bool;
+
+    /**
+     * Setting pause alert threshold.
      * 
      * @param int $days
      * @return static
      */
-    public function setCancelAlertThreshold(int $days): AccountChargebeeContract;
+    public function setPauseAlertThreshold(int $days): AccountChargebeeContract;
 
     /**
-     * Setting cancel threshold.
+     * Setting pause threshold.
      * 
      * @return static
      */
-    public function setDefaultCancelAlertThreshold(): AccountChargebeeContract;
+    public function setDefaultPauseAlertThreshold(): AccountChargebeeContract;
     
     /**
-     * Getting cancel alert threshold.
+     * Getting pause alert threshold.
      * 
      * @return int
      */
-    public function getCancelAlertThreshold(): int;
+    public function getPauseAlertThreshold(): int;
 
     /**
-     * Telling if this status should be cancelled as soon as possible.
+     * Telling if this status should be paused as soon as possible.
      * 
      * It's depending on cancel threshold.
      * 
      * @return bool
      */
-    public function shouldBeCancelled(): bool;
+    public function shouldBePaused(): bool;
 
     /**
-     * Setting cancel threshold.
+     * Setting pause threshold.
      * 
      * @param int $days
      * @return static
      */
-    public function setCancelThreshold(int $days): AccountChargebeeContract;
+    public function setPauseThreshold(int $days): AccountChargebeeContract;
 
     /**
-     * Setting cancel threshold.
+     * Setting pause threshold.
      * 
      * @return static
      */
-    public function setDefaultCancelThreshold(): AccountChargebeeContract;
+    public function setDefaultPauseThreshold(): AccountChargebeeContract;
 
     /**
-     * Getting cancel threshold.
+     * Getting pause threshold.
      * 
      * @return int
      */
-    public function getCancelThreshold(): int;
+    public function getPauseThreshold(): int;
 
     /**
-     * Getting expected cancellation date.
+     * Getting expected pause date.
      * 
      * @return Carbon|null
      */
-    public function getExpectedCancellationAt(): ?Carbon;
+    public function getExpectedPauseAt(): ?Carbon;
 
     /**
-     * Getting days before expected cancellation.
+     * Getting days before expected pause.
      * 
      * @return int|null
      */
-    public function getDaysBeforeExpectedCancellation(): ?int;
+    public function getDaysBeforeExpectedPause(): ?int;
 
     /**
      * Getting last unpaid invoice due date.

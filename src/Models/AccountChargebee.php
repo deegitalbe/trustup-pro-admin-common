@@ -44,14 +44,22 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
      */
     const NON_RENEWING = "non_renewing";
 
+    /**
+     * Status paused key.
+     * 
+     * @var string
+     */
+    const PAUSED = "paused";
+
     protected $fillable = [
         'status',
         'subscription_id',
         'plan_id',
         'trial_ending_at',
         'is_chargeable',
-        'cancel_alert_threshold',
-        'cancel_threshold',
+        'pause_alert_threshold',
+        'pause_threshold',
+        'pause_reason'
     ];
 
     protected $dates = [
@@ -131,6 +139,10 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
         
         if ( $this->isCancelled() ) {
             return "Annulé";
+        }
+
+        if ( $this->isPaused() ) {
+            return "Pausé";
         }
 
         if ( $this->isNonRenewing() ) {
@@ -274,6 +286,11 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
         return $this->status === self::NON_RENEWING;
     }
 
+    public function isPaused(): bool
+    {
+        return $this->status === self::PAUSED;
+    }
+
     public function getAccount(): AccountContract
     {
         return $this->account;
@@ -330,6 +347,10 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
             ->setId($subscription->getId())
             ->setIsChargeable($is_chargeable);
 
+        if (!$this->isPaused()):
+            $this->setPauseReason(null);
+        endif;
+
         $plan = app()->make(PlanQueryContract::class)
             ->whereName($subscription->getPlan()->getId())
             ->whereApp($this->getAccount()->getApp())
@@ -339,156 +360,199 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
     }
 
     /**
-     * Telling if this status is about to be cancelled.
-     * 
-     * It's depending on cancel alert threshold.
+     * Telling if this subscription is paused due to unpaid invoices.
      * 
      * @return bool
      */
-    public function isCloseToBeCancelled(): bool
+    public function isPausedDueToUnpaidInvoices(): bool
     {
-        if (!$this->havingLastUnpaidInvoiceAt() || $this->isCancelled()):
-            return false;
-        endif;
-
-        return $this->getFirstUnpaidInvoiceAt()->addDays($this->getCancelAlertThreshold())->isBefore(now())
-            && !$this->shouldBeCancelled();
+        return $this->isPaused() && $this->pause_reason === "unpaid_invoices";
     }
 
     /**
-     * Telling if professional should be warned about cancellation.
+     * Setting pause reason.
      * 
-     * It's depending on cancel alert threshold.
-     * 
-     * @return bool
-     */
-    public function shouldAlertAboutCancellation(): bool
-    {
-        if (!$this->havingLastUnpaidInvoiceAt() || $this->isCancelled()):
-            return false;
-        endif;
-
-        return $this->getFirstUnpaidInvoiceAt()->addDays($this->getCancelAlertThreshold())->isSameDay();
-    }
-
-
-    /**
-     * Setting cancel alert threshold.
-     * 
-     * @param int $days
+     * @param string|null $reason
      * @return static
      */
-    public function setCancelAlertThreshold(int $days): AccountChargebeeContract
+    public function setPauseReason(?string $reason): AccountChargebeeContract
     {
-        $this->cancel_alert_threshold = $days;
+        $this->pause_reason = $reason;
 
         return $this;
     }
 
     /**
-     * Setting cancel threshold.
+     * Setting pause reason to be unpaid invoices.
      * 
      * @return static
      */
-    public function setDefaultCancelAlertThreshold(): AccountChargebeeContract
+    public function setUnpaidInvoicesAsPauseReason(): AccountChargebeeContract
     {
-        return $this->setCancelAlertThreshold(9);
+        return $this->setPauseReason("unpaid_invoices");
+    }
+
+    /**
+     * Getting pause reason.
+     * 
+     * @return string|null
+     */
+    public function getPauseReason(): ?string
+    {
+        return $this->pause_reason;
+    }
+
+    /**
+     * Telling if this status is about to be paused.
+     * 
+     * It's depending on cancel alert threshold.
+     * 
+     * @return bool
+     */
+    public function isCloseToBePaused(): bool
+    {
+        if (!$this->havingLastUnpaidInvoiceAt() || $this->isPaused()):
+            return false;
+        endif;
+
+        return $this->getFirstUnpaidInvoiceAt()->addDays($this->getPauseAlertThreshold())->isBefore(now())
+            && !$this->shouldBePaused();
+    }
+
+    /**
+     * Telling if professional should be warned about pause.
+     * 
+     * It's depending on cancel alert threshold.
+     * 
+     * @return bool
+     */
+    public function shouldAlertAboutPause(): bool
+    {
+        if (!$this->havingLastUnpaidInvoiceAt() || $this->isPaused()):
+            return false;
+        endif;
+
+        return $this->getFirstUnpaidInvoiceAt()->addDays($this->getPauseAlertThreshold())->isSameDay();
+    }
+
+
+    /**
+     * Setting pause alert threshold.
+     * 
+     * @param int $days
+     * @return static
+     */
+    public function setPauseAlertThreshold(int $days): AccountChargebeeContract
+    {
+        $this->pause_alert_threshold = $days;
+
+        return $this;
+    }
+
+    /**
+     * Setting pause threshold.
+     * 
+     * @return static
+     */
+    public function setDefaultPauseAlertThreshold(): AccountChargebeeContract
+    {
+        return $this->setPauseAlertThreshold(9);
     }
     
     /**
-     * Getting cancel alert threshold.
+     * Getting pause alert threshold.
      * 
      * @return int
      */
-    public function getCancelAlertThreshold(): int
+    public function getPauseAlertThreshold(): int
     {
-        if (!$this->cancel_alert_threshold):
-            $this->setDefaultCancelAlertThreshold()->save();
+        if (!$this->pause_alert_threshold):
+            $this->setDefaultPauseAlertThreshold()->save();
         endif;
         
-        return $this->cancel_alert_threshold;
+        return $this->pause_alert_threshold;
     }
 
     /**
-     * Telling if this status should be cancelled as soon as possible.
+     * Telling if this status should be paused as soon as possible.
      * 
-     * It's depending on cancel threshold.
+     * It's depending on pause threshold.
      * 
      * @return bool
      */
-    public function shouldBeCancelled(): bool
+    public function shouldBePaused(): bool
     {
-        if (!$this->havingLastUnpaidInvoiceAt() || $this->isCancelled()):
+        if (!$this->havingLastUnpaidInvoiceAt() || $this->isPaused()):
             return false;
         endif;
 
-        return $this->getFirstUnpaidInvoiceAt()->addDays($this->getCancelThreshold())->isBefore(now());
+        return $this->getFirstUnpaidInvoiceAt()->addDays($this->getPauseThreshold())->isBefore(now());
     }
 
     /**
-     * Setting cancel threshold.
+     * Setting pause threshold.
      * 
      * @param int $days
      * @return static
      */
-    public function setCancelThreshold(int $days): AccountChargebeeContract
+    public function setPauseThreshold(int $days): AccountChargebeeContract
     {
-        $this->cancel_threshold = $days;
+        $this->pause_threshold = $days;
 
         return $this;
     }
 
     /**
-     * Setting cancel threshold.
+     * Setting pause threshold.
      * 
      * @return static
      */
-    public function setDefaultCancelThreshold(): AccountChargebeeContract
+    public function setDefaultPauseThreshold(): AccountChargebeeContract
     {
-        return $this->setCancelThreshold(14);
+        return $this->setPauseThreshold(14);
     }
 
     /**
-     * Getting cancel threshold.
+     * Getting pause threshold.
      * 
      * @return int
      */
-    public function getCancelThreshold(): int
+    public function getPauseThreshold(): int
     {
-        if (!$this->cancel_threshold):
-            $this->setDefaultCancelThreshold()->save();
+        if (!$this->pause_threshold):
+            $this->setDefaultPauseThreshold()->save();
         endif;
         
-        return $this->cancel_threshold;
+        return $this->pause_threshold;
     }
 
     /**
-     * Getting expected cancellation date.
+     * Getting expected paused date.
      * 
      * @return Carbon|null
      */
-    public function getExpectedCancellationAt(): ?Carbon
+    public function getExpectedPauseAt(): ?Carbon
     {
-        if (!$this->havingLastUnpaidInvoiceAt() || $this->isCancelled()):
+        if (!$this->havingLastUnpaidInvoiceAt() || $this->isPaused()):
             return null;
         endif;
 
-        return $this->getFirstUnpaidInvoiceAt()->addDays($this->getCancelThreshold());
+        return $this->getFirstUnpaidInvoiceAt()->addDays($this->getPauseThreshold());
     }
 
     /**
-     * Getting days before expected cancellation.
+     * Getting days before expected pause.
      * 
      * @return int|null
      */
-    public function getDaysBeforeExpectedCancellation(): ?int
+    public function getDaysBeforeExpectedPause(): ?int
     {
-        if (!$cancellationAt = $this->getExpectedCancellationAt()):
+        if (!$cancellationAt = $this->getExpectedPauseAt()):
             return null;
         endif;
 
         if (!$diff = $cancellationAt->diffInDays()):
-            return $this->shouldBeCancelled() ? 0 : 1;
+            return $this->shouldBePaused() ? 0 : 1;
         endif;
 
         return $diff;

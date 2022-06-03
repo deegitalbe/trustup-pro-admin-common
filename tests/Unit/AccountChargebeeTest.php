@@ -145,6 +145,8 @@ class AccountChargebeeTest extends TestCase
 
         $this->account_chargebee->expects()->fromSubscription($this->subscription)->passthru();
         $this->account_chargebee->expects()->getAccount()->andReturn($this->account);
+        $this->account_chargebee->expects()->isPaused()->andReturn(false);
+        $this->account_chargebee->expects()->setPauseReason(null)->andReturnSelf();
         $this->account_chargebee->expects()->setStatus('subscription_status')->andReturnSelf();
         $this->account_chargebee->expects()->setId('subscription_id')->andReturnSelf();
         $this->account_chargebee->expects()->setTrialEndingAt(null)->andReturnSelf();
@@ -389,9 +391,9 @@ class AccountChargebeeTest extends TestCase
         $this->mockAccountChargebee();
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(false);
-        $this->account_chargebee->expects()->isCloseToBeCancelled()->passthru();
+        $this->account_chargebee->expects()->isCloseToBePaused()->passthru();
 
-        $this->assertFalse($this->account_chargebee->isCloseToBeCancelled());
+        $this->assertFalse($this->account_chargebee->isCloseToBePaused());
     }
 
     /** @test */
@@ -400,10 +402,10 @@ class AccountChargebeeTest extends TestCase
         $this->mockAccountChargebee();
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
-        $this->account_chargebee->expects()->isCancelled()->andReturn(true);
-        $this->account_chargebee->expects()->isCloseToBeCancelled()->passthru();
+        $this->account_chargebee->expects()->isPaused()->andReturn(true);
+        $this->account_chargebee->expects()->isCloseToBePaused()->passthru();
 
-        $this->assertFalse($this->account_chargebee->isCloseToBeCancelled());
+        $this->assertFalse($this->account_chargebee->isCloseToBePaused());
     }
 
     /** @test */
@@ -413,12 +415,12 @@ class AccountChargebeeTest extends TestCase
             ->mockCarbonNow(new Carbon('2020-01-12'));
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
-        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->isPaused()->andReturn(false);
         $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
-        $this->account_chargebee->expects()->getCancelAlertThreshold()->andReturn(14);
-        $this->account_chargebee->expects()->isCloseToBeCancelled()->passthru();
+        $this->account_chargebee->expects()->getPauseAlertThreshold()->andReturn(14);
+        $this->account_chargebee->expects()->isCloseToBePaused()->passthru();
 
-        $this->assertFalse($this->account_chargebee->isCloseToBeCancelled());
+        $this->assertFalse($this->account_chargebee->isCloseToBePaused());
     }
 
     /** @test */
@@ -427,13 +429,13 @@ class AccountChargebeeTest extends TestCase
         $this->mockAccountChargebee();
             
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
-        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->isPaused()->andReturn(false);
         $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
-        $this->account_chargebee->expects()->getCancelAlertThreshold()->andReturn(9);
-        $this->account_chargebee->expects()->shouldBeCancelled()->andReturn(true);
-        $this->account_chargebee->expects()->isCloseToBeCancelled()->passthru();
+        $this->account_chargebee->expects()->getPauseAlertThreshold()->andReturn(9);
+        $this->account_chargebee->expects()->shouldBePaused()->andReturn(true);
+        $this->account_chargebee->expects()->isCloseToBePaused()->passthru();
 
-        $this->assertFalse($this->account_chargebee->isCloseToBeCancelled());
+        $this->assertFalse($this->account_chargebee->isCloseToBePaused());
     }
 
     /** @test */
@@ -442,13 +444,13 @@ class AccountChargebeeTest extends TestCase
         $this->mockAccountChargebee();
             
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
-        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->isPaused()->andReturn(false);
         $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
-        $this->account_chargebee->expects()->getCancelAlertThreshold()->andReturn(9);
-        $this->account_chargebee->expects()->shouldBeCancelled()->andReturn(false);
-        $this->account_chargebee->expects()->isCloseToBeCancelled()->passthru();
+        $this->account_chargebee->expects()->getPauseAlertThreshold()->andReturn(9);
+        $this->account_chargebee->expects()->shouldBePaused()->andReturn(false);
+        $this->account_chargebee->expects()->isCloseToBePaused()->passthru();
 
-        $this->assertTrue($this->account_chargebee->isCloseToBeCancelled());
+        $this->assertTrue($this->account_chargebee->isCloseToBePaused());
     }
 
     /** @test */
@@ -457,9 +459,9 @@ class AccountChargebeeTest extends TestCase
         $this->mockAccountChargebee();
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(false);
-        $this->account_chargebee->expects()->shouldAlertAboutCancellation()->passthru();
+        $this->account_chargebee->expects()->shouldAlertAboutPause()->passthru();
 
-        $this->assertFalse($this->account_chargebee->shouldAlertAboutCancellation());
+        $this->assertFalse($this->account_chargebee->shouldAlertAboutPause());
     }
 
     /** @test */
@@ -468,10 +470,10 @@ class AccountChargebeeTest extends TestCase
         $this->mockAccountChargebee();
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
-        $this->account_chargebee->expects()->isCancelled()->andReturn(true);
-        $this->account_chargebee->expects()->shouldAlertAboutCancellation()->passthru();
+        $this->account_chargebee->expects()->isPaused()->andReturn(true);
+        $this->account_chargebee->expects()->shouldAlertAboutPause()->passthru();
 
-        $this->assertFalse($this->account_chargebee->shouldAlertAboutCancellation());
+        $this->assertFalse($this->account_chargebee->shouldAlertAboutPause());
     }
 
     /** @test */
@@ -481,12 +483,12 @@ class AccountChargebeeTest extends TestCase
             ->mockCarbonNow(new Carbon('2020-01-12'));
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
-        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->isPaused()->andReturn(false);
         $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
-        $this->account_chargebee->expects()->getCancelAlertThreshold()->andReturn(14);
-        $this->account_chargebee->expects()->shouldAlertAboutCancellation()->passthru();
+        $this->account_chargebee->expects()->getPauseAlertThreshold()->andReturn(14);
+        $this->account_chargebee->expects()->shouldAlertAboutPause()->passthru();
 
-        $this->assertFalse($this->account_chargebee->shouldAlertAboutCancellation());
+        $this->assertFalse($this->account_chargebee->shouldAlertAboutPause());
     }
 
     /** @test */
@@ -496,12 +498,12 @@ class AccountChargebeeTest extends TestCase
             ->mockCarbonNow(new Carbon('2020-01-10'));
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
-        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->isPaused()->andReturn(false);
         $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
-        $this->account_chargebee->expects()->getCancelAlertThreshold()->andReturn(9);
-        $this->account_chargebee->expects()->shouldAlertAboutCancellation()->passthru();
+        $this->account_chargebee->expects()->getPauseAlertThreshold()->andReturn(9);
+        $this->account_chargebee->expects()->shouldAlertAboutPause()->passthru();
 
-        $this->assertTrue($this->account_chargebee->shouldAlertAboutCancellation());
+        $this->assertTrue($this->account_chargebee->shouldAlertAboutPause());
     }
 
     /** @test */
@@ -510,9 +512,9 @@ class AccountChargebeeTest extends TestCase
         $this->mockAccountChargebee();
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(false);
-        $this->account_chargebee->expects()->shouldBeCancelled()->passthru();
+        $this->account_chargebee->expects()->shouldBePaused()->passthru();
 
-        $this->assertFalse($this->account_chargebee->shouldBeCancelled());
+        $this->assertFalse($this->account_chargebee->shouldBePaused());
     }
 
     /** @test */
@@ -521,10 +523,10 @@ class AccountChargebeeTest extends TestCase
         $this->mockAccountChargebee();
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
-        $this->account_chargebee->expects()->isCancelled()->andReturn(true);
-        $this->account_chargebee->expects()->shouldBeCancelled()->passthru();
+        $this->account_chargebee->expects()->isPaused()->andReturn(true);
+        $this->account_chargebee->expects()->shouldBePaused()->passthru();
 
-        $this->assertFalse($this->account_chargebee->shouldBeCancelled());
+        $this->assertFalse($this->account_chargebee->shouldBePaused());
     }
 
     /** @test */
@@ -534,12 +536,12 @@ class AccountChargebeeTest extends TestCase
             ->mockCarbonNow(new Carbon('2020-01-12'));
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
-        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->isPaused()->andReturn(false);
         $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
-        $this->account_chargebee->expects()->getCancelThreshold()->andReturn(14);
-        $this->account_chargebee->expects()->shouldBeCancelled()->passthru();
+        $this->account_chargebee->expects()->getPauseThreshold()->andReturn(14);
+        $this->account_chargebee->expects()->shouldBePaused()->passthru();
 
-        $this->assertFalse($this->account_chargebee->shouldBeCancelled());
+        $this->assertFalse($this->account_chargebee->shouldBePaused());
     }
 
     /** @test */
@@ -549,12 +551,12 @@ class AccountChargebeeTest extends TestCase
             ->mockCarbonNow(new Carbon('2020-01-10'));
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
-        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->isPaused()->andReturn(false);
         $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
-        $this->account_chargebee->expects()->getCancelThreshold()->andReturn(9);
-        $this->account_chargebee->expects()->shouldBeCancelled()->passthru();
+        $this->account_chargebee->expects()->getPauseThreshold()->andReturn(9);
+        $this->account_chargebee->expects()->shouldBePaused()->passthru();
 
-        $this->assertFalse($this->account_chargebee->shouldBeCancelled());
+        $this->assertFalse($this->account_chargebee->shouldBePaused());
     }
 
     /** @test */
@@ -564,12 +566,12 @@ class AccountChargebeeTest extends TestCase
             ->mockCarbonNow(new Carbon('2020-01-11'));
 
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
-        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->isPaused()->andReturn(false);
         $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn(new Carbon('2020-01-01'));
-        $this->account_chargebee->expects()->getCancelThreshold()->andReturn(9);
-        $this->account_chargebee->expects()->shouldBeCancelled()->passthru();
+        $this->account_chargebee->expects()->getPauseThreshold()->andReturn(9);
+        $this->account_chargebee->expects()->shouldBePaused()->passthru();
 
-        $this->assertTrue($this->account_chargebee->shouldBeCancelled());
+        $this->assertTrue($this->account_chargebee->shouldBePaused());
     }
 
     /** @test */
@@ -578,9 +580,9 @@ class AccountChargebeeTest extends TestCase
         $threshold = 10;
         $this->mockAccountChargebee(true);
 
-        $this->account_chargebee->expects()->setDefaultCancelAlertThreshold()->andSet('cancel_alert_threshold', $threshold)->andReturnSelf();
+        $this->account_chargebee->expects()->setDefaultPauseAlertThreshold()->andSet('pause_alert_threshold', $threshold)->andReturnSelf();
 
-        $this->assertEquals($threshold, $this->account_chargebee->getCancelAlertThreshold());
+        $this->assertEquals($threshold, $this->account_chargebee->getPauseAlertThreshold());
     }
 
     /** @test */
@@ -588,9 +590,9 @@ class AccountChargebeeTest extends TestCase
     {
         $threshold = 10;
         $accountChargebee = app(AccountChargebeeContract::class);
-        $accountChargebee->setCancelAlertThreshold($threshold);
+        $accountChargebee->setPauseAlertThreshold($threshold);
 
-        $this->assertEquals($threshold, $accountChargebee->cancel_alert_threshold);
+        $this->assertEquals($threshold, $accountChargebee->pause_alert_threshold);
     }
 
     /** @test */
@@ -598,10 +600,10 @@ class AccountChargebeeTest extends TestCase
     {
         $this->mockAccountChargebee(true);
 
-        $this->account_chargebee->expects()->setCancelAlertThreshold(9)->andReturnSelf();
-        $this->account_chargebee->expects()->setDefaultCancelAlertThreshold()->passthru();
+        $this->account_chargebee->expects()->setPauseAlertThreshold(9)->andReturnSelf();
+        $this->account_chargebee->expects()->setDefaultPauseAlertThreshold()->passthru();
 
-        $this->assertInstanceOf(AccountChargebeeContract::class, $this->account_chargebee->setDefaultCancelAlertThreshold());
+        $this->assertInstanceOf(AccountChargebeeContract::class, $this->account_chargebee->setDefaultPauseAlertThreshold());
     }
 
 
@@ -613,9 +615,9 @@ class AccountChargebeeTest extends TestCase
         $threshold = 10;
         $this->mockAccountChargebee(true);
 
-        $this->account_chargebee->expects()->setDefaultCancelThreshold()->andSet('cancel_threshold', $threshold)->andReturnSelf();
+        $this->account_chargebee->expects()->setDefaultPauseThreshold()->andSet('pause_threshold', $threshold)->andReturnSelf();
 
-        $this->assertEquals($threshold, $this->account_chargebee->getCancelThreshold());
+        $this->assertEquals($threshold, $this->account_chargebee->getPauseThreshold());
     }
 
     /** @test */
@@ -623,9 +625,9 @@ class AccountChargebeeTest extends TestCase
     {
         $threshold = 10;
         $accountChargebee = app(AccountChargebeeContract::class);
-        $accountChargebee->setCancelThreshold($threshold);
+        $accountChargebee->setPauseThreshold($threshold);
 
-        $this->assertEquals($threshold, $accountChargebee->cancel_threshold);
+        $this->assertEquals($threshold, $accountChargebee->pause_threshold);
     }
 
     /** @test */
@@ -633,10 +635,10 @@ class AccountChargebeeTest extends TestCase
     {
         $this->mockAccountChargebee();
 
-        $this->account_chargebee->expects()->setDefaultCancelThreshold()->passthru();
-        $this->account_chargebee->expects()->setCancelThreshold(14)->andReturnSelf();
+        $this->account_chargebee->expects()->setDefaultPauseThreshold()->passthru();
+        $this->account_chargebee->expects()->setPauseThreshold(14)->andReturnSelf();
 
-        $this->assertInstanceOf(AccountChargebeeContract::class, $this->account_chargebee->setDefaultCancelThreshold());
+        $this->assertInstanceOf(AccountChargebeeContract::class, $this->account_chargebee->setDefaultPauseThreshold());
     }
 
     /** @test */
@@ -677,10 +679,10 @@ class AccountChargebeeTest extends TestCase
     {
         $this->mockAccountChargebee();
 
-        $this->account_chargebee->expects()->getExpectedCancellationAt()->passthru();
+        $this->account_chargebee->expects()->getExpectedPauseAt()->passthru();
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(false);
 
-        $this->assertNull($this->account_chargebee->getExpectedCancellationAt());
+        $this->assertNull($this->account_chargebee->getExpectedPauseAt());
     }
 
     /** @test */
@@ -688,11 +690,11 @@ class AccountChargebeeTest extends TestCase
     {
         $this->mockAccountChargebee();
 
-        $this->account_chargebee->expects()->getExpectedCancellationAt()->passthru();
+        $this->account_chargebee->expects()->getExpectedPauseAt()->passthru();
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
-        $this->account_chargebee->expects()->isCancelled()->andReturn(true);
+        $this->account_chargebee->expects()->isPaused()->andReturn(true);
 
-        $this->assertNull($this->account_chargebee->getExpectedCancellationAt());
+        $this->assertNull($this->account_chargebee->getExpectedPauseAt());
     }
 
     /** @test */
@@ -702,13 +704,13 @@ class AccountChargebeeTest extends TestCase
         $date = new Carbon('2020-01-01');
         $threshold = 4;
 
-        $this->account_chargebee->expects()->getExpectedCancellationAt()->passthru();
+        $this->account_chargebee->expects()->getExpectedPauseAt()->passthru();
         $this->account_chargebee->expects()->havingLastUnpaidInvoiceAt()->andReturn(true);
-        $this->account_chargebee->expects()->isCancelled()->andReturn(false);
+        $this->account_chargebee->expects()->isPaused()->andReturn(false);
         $this->account_chargebee->expects()->getFirstUnpaidInvoiceAt()->andReturn($date);
-        $this->account_chargebee->expects()->getCancelThreshold()->andReturn($threshold);
+        $this->account_chargebee->expects()->getPauseThreshold()->andReturn($threshold);
 
-        $this->assertEquals(new Carbon('2020-01-05'), $this->account_chargebee->getExpectedCancellationAt());
+        $this->assertEquals(new Carbon('2020-01-05'), $this->account_chargebee->getExpectedPauseAt());
     }
 
     /** @test */
@@ -716,10 +718,10 @@ class AccountChargebeeTest extends TestCase
     {
         $this->mockAccountChargebee();
 
-        $this->account_chargebee->expects()->getExpectedCancellationAt()->andReturnNull();
-        $this->account_chargebee->expects()->getDaysBeforeExpectedCancellation()->passthru();
+        $this->account_chargebee->expects()->getExpectedPauseAt()->andReturnNull();
+        $this->account_chargebee->expects()->getDaysBeforeExpectedPause()->passthru();
 
-        $this->assertNull($this->account_chargebee->getDaysBeforeExpectedCancellation());
+        $this->assertNull($this->account_chargebee->getDaysBeforeExpectedPause());
     }
 
     /** @test */
@@ -729,11 +731,11 @@ class AccountChargebeeTest extends TestCase
         $this->mockCarbonNow($now = new Carbon('2020-01-01 05:00:00'));
         $date = new Carbon('2020-01-02 03:00:00');
 
-        $this->account_chargebee->expects()->getExpectedCancellationAt()->andReturn($date);
-        $this->account_chargebee->expects()->shouldBeCancelled()->andReturn(true);
-        $this->account_chargebee->expects()->getDaysBeforeExpectedCancellation()->passthru();
+        $this->account_chargebee->expects()->getExpectedPauseAt()->andReturn($date);
+        $this->account_chargebee->expects()->shouldBePaused()->andReturn(true);
+        $this->account_chargebee->expects()->getDaysBeforeExpectedPause()->passthru();
 
-        $this->assertEquals(0, $this->account_chargebee->getDaysBeforeExpectedCancellation());
+        $this->assertEquals(0, $this->account_chargebee->getDaysBeforeExpectedPause());
     }
 
     /** @test */
@@ -743,11 +745,11 @@ class AccountChargebeeTest extends TestCase
         $this->mockCarbonNow($now = new Carbon('2020-01-01 05:00:00'));
         $date = new Carbon('2020-01-02 03:00:00');
 
-        $this->account_chargebee->expects()->getExpectedCancellationAt()->andReturn($date);
-        $this->account_chargebee->expects()->shouldBeCancelled()->andReturn(false);
-        $this->account_chargebee->expects()->getDaysBeforeExpectedCancellation()->passthru();
+        $this->account_chargebee->expects()->getExpectedPauseAt()->andReturn($date);
+        $this->account_chargebee->expects()->shouldBePaused()->andReturn(false);
+        $this->account_chargebee->expects()->getDaysBeforeExpectedPause()->passthru();
 
-        $this->assertEquals(1, $this->account_chargebee->getDaysBeforeExpectedCancellation());
+        $this->assertEquals(1, $this->account_chargebee->getDaysBeforeExpectedPause());
     }
 
     /** @test */
@@ -757,10 +759,10 @@ class AccountChargebeeTest extends TestCase
         $this->mockCarbonNow($now = new Carbon('2020-01-01 05:00:00'));
         $date = new Carbon('2020-01-05 05:00:00');
 
-        $this->account_chargebee->expects()->getExpectedCancellationAt()->andReturn($date);
-        $this->account_chargebee->expects()->getDaysBeforeExpectedCancellation()->passthru();
+        $this->account_chargebee->expects()->getExpectedPauseAt()->andReturn($date);
+        $this->account_chargebee->expects()->getDaysBeforeExpectedPause()->passthru();
 
-        $this->assertEquals(4, $this->account_chargebee->getDaysBeforeExpectedCancellation());
+        $this->assertEquals(4, $this->account_chargebee->getDaysBeforeExpectedPause());
     }
 
     /**

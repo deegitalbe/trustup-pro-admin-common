@@ -221,6 +221,15 @@ interface AccountChargebeeContract extends PersistableContract
     public function shouldBePaused(): bool;
 
     /**
+     * Telling if this status should be resumed as soon as possible.
+     * 
+     * It's depending on pause_reason.
+     * 
+     * @return bool
+     */
+    public function shouldBeResumed(): bool;
+
+    /**
      * Setting pause threshold.
      * 
      * @param int $days

@@ -490,6 +490,26 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
     }
 
     /**
+     * Telling if this status should be resumed as soon as possible.
+     * 
+     * It's depending on pause_reason.
+     * 
+     * @return bool
+     */
+    public function shouldBeResumed(): bool
+    {
+        if (!$this->isPausedDueToUnpaidInvoices()):
+            return false;
+        endif;
+
+        if (!$this->havingLastUnpaidInvoiceAt()):
+            return true;
+        endif;
+
+        return !$this->getFirstUnpaidInvoiceAt()->addDays($this->getPauseThreshold())->isBefore(now());
+    }
+
+    /**
      * Setting pause threshold.
      * 
      * @param int $days

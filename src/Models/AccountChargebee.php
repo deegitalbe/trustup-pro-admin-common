@@ -411,7 +411,7 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
      */
     public function isCloseToBePaused(): bool
     {
-        if (!$this->havingLastUnpaidInvoiceAt() || $this->isPaused()):
+        if (!$this->havingLastUnpaidInvoiceAt() || !$this->isPausable()):
             return false;
         endif;
 
@@ -428,7 +428,7 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
      */
     public function shouldAlertAboutPause(): bool
     {
-        if (!$this->havingLastUnpaidInvoiceAt() || $this->isPaused()):
+        if (!$this->havingLastUnpaidInvoiceAt() || !$this->isPausable()):
             return false;
         endif;
 
@@ -482,7 +482,7 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
      */
     public function shouldBePaused(): bool
     {
-        if (!$this->havingLastUnpaidInvoiceAt() || $this->isPaused()):
+        if (!$this->havingLastUnpaidInvoiceAt() || !$this->isPausable()):
             return false;
         endif;
 
@@ -533,11 +533,21 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
      */
     public function getExpectedPauseAt(): ?Carbon
     {
-        if (!$this->havingLastUnpaidInvoiceAt() || $this->isPaused()):
+        if (!$this->havingLastUnpaidInvoiceAt() || !$this->isPausable()):
             return null;
         endif;
 
         return $this->getFirstUnpaidInvoiceAt()->addDays($this->getPauseThreshold());
+    }
+
+    /**
+     * Telling if included in pausable statuses.
+     * 
+     * @return bool
+     */
+    protected function isPausable(): bool
+    {
+        return $this->isActive() || $this->isNonRenewing();
     }
 
     /**

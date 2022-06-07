@@ -142,7 +142,7 @@ class AccountChargebee extends PersistableMongoModel implements AccountChargebee
         }
 
         if ( $this->isPaused() ) {
-            return "Pausé";
+            return "En pause";
         }
 
         if ( $this->isNonRenewing() ) {

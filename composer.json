@@ -15,7 +15,7 @@
         "henrotaym/laravel-test-suite": "^2.0",
         "deegitalbe/trustup-versioned-package": "^1.0",
         "deegitalbe/server-authorization": "^1.1",
-        "deegitalbe/chargebee-client": "^1.5.5-alpha.3",
+        "deegitalbe/chargebee-client": "^1.5.5-alpha.4",
         "henrotaym/laravel-model-queries": "^1.0",
         "henrotaym/laravel-package-versioning-config": "^1.3"
     },

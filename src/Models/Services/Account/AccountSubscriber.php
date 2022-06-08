@@ -78,7 +78,8 @@ class AccountSubscriber implements AccountSubscriberContract
         $this->fresh()
             ->setUser($user)
             ->setAccount($account)
-            ->setPlan($plan);
+            ->setPlan($plan)
+            ->setCustomerFromAccountOrUser();
 
         if (!$this->successfullySubscribedAccount()):
             return false;

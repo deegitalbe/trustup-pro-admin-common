@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fa9846574167dd091deb2c6d078d20a5",
+    "content-hash": "08b684dc5d86dcd1e0a41d54387da72b",
     "packages": [
         {
             "name": "brick/math",
@@ -68,16 +68,16 @@
         },
         {
             "name": "deegitalbe/chargebee-client",
-            "version": "v1.6.0",
+            "version": "v1.6.1-alpha.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/deegitalbe/chargebee-client.git",
-                "reference": "f65431ff2da094c9855195f6c272df161e439c58"
+                "reference": "66e1e97504e28f843b76fa411128602bd563578e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/deegitalbe/chargebee-client/zipball/f65431ff2da094c9855195f6c272df161e439c58",
-                "reference": "f65431ff2da094c9855195f6c272df161e439c58",
+                "url": "https://api.github.com/repos/deegitalbe/chargebee-client/zipball/66e1e97504e28f843b76fa411128602bd563578e",
+                "reference": "66e1e97504e28f843b76fa411128602bd563578e",
                 "shasum": ""
             },
             "require": {
@@ -115,9 +115,9 @@
             "description": "Chargebee client used by our applications.",
             "support": {
                 "issues": "https://github.com/deegitalbe/chargebee-client/issues",
-                "source": "https://github.com/deegitalbe/chargebee-client/tree/v1.6.0"
+                "source": "https://github.com/deegitalbe/chargebee-client/tree/v1.6.1-alpha.0"
             },
-            "time": "2022-06-07T17:37:46+00:00"
+            "time": "2022-06-08T15:34:34+00:00"
         },
         {
             "name": "deegitalbe/server-authorization",
@@ -8633,7 +8633,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "deegitalbe/chargebee-client": 15
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

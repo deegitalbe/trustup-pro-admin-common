@@ -46,9 +46,9 @@ interface ProfessionalContract extends PersistableContract, Arrayable
     /**
      * Getting professional creation date.
      * 
-     * @return Carbon
+     * @return Carbon|null
      */
-    public function getCreatedAt(): Carbon;
+    public function getCreatedAt(): ?Carbon;
 
     /**
      * Getting customer id.

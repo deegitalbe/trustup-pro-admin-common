@@ -38,9 +38,9 @@ trait ProfessionalModel
     /**
      * Getting professional authorization key.
      * 
-     * @return string
+     * @return string|null
      */
-    public function getCreatedAt(): Carbon
+    public function getCreatedAt(): ?Carbon
     {
         return $this->created_at;
     }

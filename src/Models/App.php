@@ -18,7 +18,7 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\PlanQueryContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 
-class App extends AdminModel implements AppContract
+class App extends PersistableMongoModel implements AppContract
 {
     use SoftDeletes;
     

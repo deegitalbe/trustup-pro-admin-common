@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * User who successfully accessed to account.
  * 
  */
-class AccountAccessEntryUser extends AdminModel implements AccountAccessEntryUserContract
+class AccountAccessEntryUser extends EmbeddableMongoModel implements AccountAccessEntryUserContract
 {
     protected $fillable = [
         'first_name',
@@ -20,10 +20,10 @@ class AccountAccessEntryUser extends AdminModel implements AccountAccessEntryUse
         'avatar'
     ];
 
-    public function accountAccessEntry(): BelongsTo
-    {
-        return $this->belongsTo(AccountAccessEntry::class);
-    }
+    // public function accountAccessEntry(): BelongsTo
+    // {
+    //     return $this->belongsTo(AccountAccessEntry::class);
+    // }
 
     /**
      * User full name.
@@ -134,6 +134,6 @@ class AccountAccessEntryUser extends AdminModel implements AccountAccessEntryUse
      */
     public function getAccountAccessEntry(): AccountAccessEntryContract
     {
-        return $this->accountAccessEntry;
+        return $this->account_access_entry;
     }
 }

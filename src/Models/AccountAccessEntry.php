@@ -16,7 +16,7 @@ use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 
-class AccountAccessEntry extends AdminModel implements AccountAccessEntryContract
+class AccountAccessEntry extends PersistableMongoModel implements AccountAccessEntryContract
 {
     use SoftDeletes;
     

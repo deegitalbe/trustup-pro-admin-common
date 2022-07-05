@@ -25,7 +25,7 @@ use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
  * Professional app account.
  * 
  */
-class Account extends AdminModel implements AccountContract
+class Account extends PersistableMongoModel implements AccountContract
 {
     use SoftDeletes;
 

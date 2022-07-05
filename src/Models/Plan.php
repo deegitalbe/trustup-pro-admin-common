@@ -16,7 +16,7 @@ use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 /**
  * Representing app plan.
  */
-class Plan extends AdminModel implements PlanContract
+class Plan extends PersistableMongoModel implements PlanContract
 {
     use SoftDeletes;
     

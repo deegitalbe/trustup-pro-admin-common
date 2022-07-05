@@ -15,7 +15,7 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionInvoiceApiContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 
-class AccountChargebee extends AdminModel implements AccountChargebeeContract
+class AccountChargebee extends PersistableMongoModel implements AccountChargebeeContract
 {
     /**
      * Status trial key.

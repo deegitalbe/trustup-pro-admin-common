@@ -42,6 +42,12 @@ return [
         'account_chargebee' => \Deegitalbe\TrustupProAdminCommon\Models\AccountChargebee::class,
 
     ],
+    
+    /** 
+     * Connection used for models.
+     */
+    'connection' => "admin",
+
     /**
      * Projects using this package (only their url).
      */

@@ -126,7 +126,7 @@ class TrustupProAdminCommonServiceProvider extends VersionablePackageServiceProv
     protected function addAdminConnection(): self
     {
         config([
-            'database.connections.admin' => [
+            'database.connections.'. Package::databaseConnection() => [
                 'driver' => 'mysql',
                 'url' => env('DATABASE_ADMIN_URL'),
                 'host' => env('DB_ADMIN_HOST', '127.0.0.1'),

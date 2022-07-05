@@ -2,7 +2,7 @@
 namespace Deegitalbe\TrustupProAdminCommon\Tests\Unit\Query;
 
 use Mockery\MockInterface;
-use Jenssegers\Mongodb\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Deegitalbe\TrustupProAdminCommon\Models\Query\AccountQuery;
 use Deegitalbe\TrustupProAdminCommon\Tests\NotUsingDatabaseTestCase;
 

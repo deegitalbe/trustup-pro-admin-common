@@ -2,9 +2,10 @@
 namespace Deegitalbe\TrustupProAdminCommon\Models;
 
 use Carbon\Carbon;
-use Jenssegers\Mongodb\Eloquent\Builder;
-use Jenssegers\Mongodb\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionApiContract;
@@ -13,7 +14,6 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\PlanQueryContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionInvoiceApiContract;
-use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 
 class AccountChargebee extends AdminModel implements AccountChargebeeContract
 {

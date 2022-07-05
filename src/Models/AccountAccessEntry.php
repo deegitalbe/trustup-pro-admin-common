@@ -2,19 +2,19 @@
 namespace Deegitalbe\TrustupProAdminCommon\Models;
 
 use Carbon\Carbon;
-use Jenssegers\Mongodb\Eloquent\Builder;
-use Jenssegers\Mongodb\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use Jenssegers\Mongodb\Relations\EmbedsOne;
+use Jenssegers\Mongodb\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Deegitalbe\TrustupProAdminCommon\Models\Account;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntryUser;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
-use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 
 class AccountAccessEntry extends AdminModel implements AccountAccessEntryContract
 {

@@ -4,6 +4,7 @@ namespace Deegitalbe\TrustupProAdminCommon\Models;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\EmbeddableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * User who successfully accessed to account.
@@ -17,6 +18,11 @@ class AccountAccessEntryUser extends EmbeddableMongoModel implements AccountAcce
         'user_id',
         'avatar'
     ];
+
+    public function accountAccessEntry(): BelongsTo
+    {
+        return $this->belongsTo(AccountAccessEntry::class);
+    }
 
     /**
      * User full name.
@@ -127,6 +133,6 @@ class AccountAccessEntryUser extends EmbeddableMongoModel implements AccountAcce
      */
     public function getAccountAccessEntry(): AccountAccessEntryContract
     {
-        return $this->account_access_entry;
+        return $this->accountAccessEntry;
     }
 }

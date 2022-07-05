@@ -12,6 +12,7 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 
 class AccountAccessEntry extends PersistableMongoModel implements AccountAccessEntryContract
@@ -27,9 +28,9 @@ class AccountAccessEntry extends PersistableMongoModel implements AccountAccessE
         return $this->belongsTo(Package::account());
     }
 
-    public function user(): EmbedsOne
+    public function user(): HasOne
     {
-        return $this->embedsOne(Package::accountAccessEntryUser());
+        return $this->hasOne(Package::accountAccessEntryUser());
     }
 
     /**

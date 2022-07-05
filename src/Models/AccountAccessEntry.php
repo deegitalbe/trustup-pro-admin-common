@@ -16,10 +16,8 @@ use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 
-class AccountAccessEntry extends PersistableMongoModel implements AccountAccessEntryContract
+class AccountAccessEntry extends AdminModel implements AccountAccessEntryContract
 {
-    use SoftDeletes;
-    
     protected $fillable = ['access_at'];
 
     protected $dates = ['access_at'];
@@ -29,9 +27,9 @@ class AccountAccessEntry extends PersistableMongoModel implements AccountAccessE
         return $this->belongsTo(Package::account());
     }
 
-    public function user(): EmbedsOne
+    public function user(): HasOne
     {
-        return $this->embedsOne(Package::accountAccessEntryUser());
+        return $this->hasOne(Package::accountAccessEntryUser());
     }
 
     /**
@@ -87,7 +85,9 @@ class AccountAccessEntry extends PersistableMongoModel implements AccountAccessE
      */
     public function setUser(AccountAccessEntryUserContract $user): self
     {
-        return $this->embedsOneThis($user, 'user');
+        $this->user()->save($user);
+
+        return $this->persist();
     }
 
     /**

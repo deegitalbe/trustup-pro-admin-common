@@ -18,10 +18,8 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\PlanQueryContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 
-class App extends PersistableMongoModel implements AppContract
+class App extends AdminModel implements AppContract
 {
-    use SoftDeletes;
-    
     /**
      * Dashboard key (trustup.pro)
      * 

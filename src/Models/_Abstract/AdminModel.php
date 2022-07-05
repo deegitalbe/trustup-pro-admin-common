@@ -3,15 +3,18 @@ namespace Deegitalbe\TrustupProAdminCommon\Models\_Abstract;
 
 use Deegitalbe\TrustupProAdminCommon\Models\Traits\BeingPersistable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Do not extends this class directly!
- * You should use EmbeddableMongoModel or PersistableMongoModel
+ * Extends this class to get an admin database related model.
  */
 abstract class AdminModel extends Model
 {
-    use BeingPersistable;
-    
+    use
+        BeingPersistable,
+        SoftDeletes
+    ;
+
     /**
      * The database connection that should be used by the model.
      *

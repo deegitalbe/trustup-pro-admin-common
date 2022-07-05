@@ -16,10 +16,8 @@ use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 /**
  * Representing app plan.
  */
-class Plan extends PersistableMongoModel implements PlanContract
-{
-    use SoftDeletes;
-    
+class Plan extends AdminModel implements PlanContract
+{    
     /**
      * Fillable attributes.
      * 
@@ -60,7 +58,7 @@ class Plan extends PersistableMongoModel implements PlanContract
      */
     public function accountChargebees(): HasMany
     {
-        return $this->HasMany(Package::accountChargebee());
+        return $this->hasMany(Package::accountChargebee());
     }
 
     /**

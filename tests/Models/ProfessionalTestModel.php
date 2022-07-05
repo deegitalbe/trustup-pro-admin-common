@@ -5,12 +5,13 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Models\Traits\ProfessionalModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
+use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 
 /**
  * Representing professional.
  */
-class ProfessionalTestModel extends PersistableMongoModel implements ProfessionalContract
+class ProfessionalTestModel extends AdminModel implements ProfessionalContract
 {
     use ProfessionalModel;
     

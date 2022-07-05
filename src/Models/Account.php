@@ -25,10 +25,8 @@ use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
  * Professional app account.
  * 
  */
-class Account extends PersistableMongoModel implements AccountContract
+class Account extends AdminModel implements AccountContract
 {
-    use SoftDeletes;
-
     protected $fillable = [
         'uuid',
         'professional_id',

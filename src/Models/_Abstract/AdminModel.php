@@ -2,6 +2,7 @@
 namespace Deegitalbe\TrustupProAdminCommon\Models\_Abstract;
 
 use Deegitalbe\TrustupProAdminCommon\Models\Traits\BeingPersistable;
+use Deegitalbe\TrustupProAdminCommon\Models\Traits\CrossDatabaseRelations;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -12,6 +13,7 @@ abstract class AdminModel extends Model
 {
     use
         BeingPersistable,
+        CrossDatabaseRelations,
         SoftDeletes
     ;
 

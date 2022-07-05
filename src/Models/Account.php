@@ -19,12 +19,13 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
+use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 
 /**
  * Professional app account.
  * 
  */
-class Account extends PersistableMongoModel implements AccountContract
+class Account extends AdminModel implements AccountContract
 {
     use SoftDeletes;
 

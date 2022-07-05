@@ -12,10 +12,11 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
+use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 
-class AccountAccessEntry extends PersistableMongoModel implements AccountAccessEntryContract
+class AccountAccessEntry extends AdminModel implements AccountAccessEntryContract
 {
     use SoftDeletes;
     

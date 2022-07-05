@@ -4,13 +4,14 @@ namespace Deegitalbe\TrustupProAdminCommon\Models;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\EmbeddableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
+use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * User who successfully accessed to account.
  * 
  */
-class AccountAccessEntryUser extends EmbeddableMongoModel implements AccountAccessEntryUserContract
+class AccountAccessEntryUser extends AdminModel implements AccountAccessEntryUserContract
 {
     protected $fillable = [
         'first_name',

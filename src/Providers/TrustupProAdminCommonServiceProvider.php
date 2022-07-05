@@ -25,6 +25,7 @@ use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Contracts\AccountSw
 use Henrotaym\LaravelContainerAutoRegister\Services\AutoRegister\Contracts\AutoRegisterContract;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Contracts\AccountSubscriberContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Services\Account\AccountSetterByAppResponseContract;
+use PDO;
 
 class TrustupProAdminCommonServiceProvider extends VersionablePackageServiceProvider
 {
@@ -36,6 +37,7 @@ class TrustupProAdminCommonServiceProvider extends VersionablePackageServiceProv
     protected function addToRegister(): void
     {
         $this
+            ->addAdminConnection()
             ->bindModels()
             ->bindServices();
 
@@ -112,6 +114,38 @@ class TrustupProAdminCommonServiceProvider extends VersionablePackageServiceProv
         $this->app->bind(AccountRefreshContract::class, AccountRefresh::class);
         $this->app->bind(AccountSubscriberContract::class, AccountSubscriber::class);
         $this->app->bind(AccountSwitcherContract::class, AccountSwitcher::class);
+
+        return $this;
+    }
+
+    /**
+     * Adding admin connection used by package.
+     * 
+     * @return self
+     */
+    protected function addAdminConnection(): self
+    {
+        config([
+            'database.connections.admin' => [
+                'driver' => 'mysql',
+                'url' => env('DATABASE_ADMIN_URL'),
+                'host' => env('DB_ADMIN_HOST', '127.0.0.1'),
+                'port' => env('DB_ADMIN_PORT', '3306'),
+                'database' => env('DB_ADMIN_DATABASE', 'forge'),
+                'username' => env('DB_ADMIN_USERNAME', 'forge'),
+                'password' => env('DB_ADMIN_PASSWORD', ''),
+                'unix_socket' => env('DB_ADMIN_SOCKET', ''),
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci',
+                'prefix' => '',
+                'prefix_indexes' => true,
+                'strict' => true,
+                'engine' => null,
+                'options' => extension_loaded('pdo_mysql') ? array_filter([
+                    PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                ]) : [],
+            ]
+        ]);
 
         return $this;
     }

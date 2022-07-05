@@ -29,9 +29,9 @@ class AccountAccessEntry extends PersistableMongoModel implements AccountAccessE
         return $this->belongsTo(Package::account());
     }
 
-    public function user(): HasOne
+    public function user(): EmbedsOne
     {
-        return $this->hasOne(Package::accountAccessEntryUser());
+        return $this->embedsOne(Package::accountAccessEntryUser());
     }
 
     /**

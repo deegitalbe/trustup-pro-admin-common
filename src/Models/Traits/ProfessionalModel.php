@@ -12,8 +12,7 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 trait ProfessionalModel
 {
     use 
-        BeingPersistable,
-        CrossDatabaseRelations
+        BeingPersistable
     ;
 
     /**

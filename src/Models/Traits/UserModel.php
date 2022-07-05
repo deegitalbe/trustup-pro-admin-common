@@ -10,8 +10,7 @@ use Deegitalbe\TrustupProAdminCommon\Models\Traits\BeingPersistable;
 trait UserModel
 {
     use 
-        BeingPersistable,
-        CrossDatabaseRelations
+        BeingPersistable
     ;
     
     /**

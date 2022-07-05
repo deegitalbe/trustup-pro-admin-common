@@ -20,6 +20,7 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
+use Deegitalbe\TrustupProAdminCommon\Models\Traits\CrossDatabaseRelations;
 
 /**
  * Professional app account.
@@ -27,6 +28,8 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract
  */
 class Account extends AdminModel implements AccountContract
 {
+    use CrossDatabaseRelations;
+    
     protected $fillable = [
         'uuid',
         'professional_id',

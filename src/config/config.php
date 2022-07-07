@@ -50,12 +50,12 @@ return [
         /**
          * Admin DB connection name.
          */
-        'admin' => "admin",
+        'admin' => env("DB_ADMIN_CONNECTION", "admin"),
 
         /**
          * Trustup DB connection name.
          */
-        'trustup' => "trustup"
+        'trustup' => env("DB_TRUSTUP_CONNECTION", "trustup"),
     ],
 
     /**

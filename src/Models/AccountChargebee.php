@@ -178,6 +178,7 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
      * @return AccountChargebeeContract
      */
     public function setIsChargeable(bool $is_chargeable): AccountChargebeeContract
+    {
         $this->is_chargeable = $is_chargeable;
 
         return $this;

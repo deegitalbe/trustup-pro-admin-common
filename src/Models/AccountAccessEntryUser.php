@@ -1,7 +1,6 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Models;
 
-use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\EmbeddableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;

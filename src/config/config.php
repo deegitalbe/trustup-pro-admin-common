@@ -44,9 +44,19 @@ return [
     ],
     
     /** 
-     * Connection used for models.
+     * Connections used for models.
      */
-    'connection' => "admin",
+    'connections' => [
+        /**
+         * Admin DB connection name.
+         */
+        'admin' => "admin",
+
+        /**
+         * Trustup DB connection name.
+         */
+        'trustup' => "trustup"
+    ],
 
     /**
      * Projects using this package (only their url).

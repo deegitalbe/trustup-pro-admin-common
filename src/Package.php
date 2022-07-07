@@ -103,9 +103,19 @@ class Package extends VersionablePackage implements VersionedPackageContract
      * 
      * @return string
      */
-    public function databaseConnection(): string
+    public function adminConnection(): string
     {
-        return $this->config('connection');
+        return $this->config('connections.admin');
+    }
+
+    /**
+     * Telling which connection should be used for trustup database.
+     * 
+     * @return string
+     */
+    public function trustupConnection(): string
+    {
+        return $this->config('connections.trustup');
     }
 
     /**

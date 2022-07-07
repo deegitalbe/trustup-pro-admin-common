@@ -9,7 +9,6 @@ use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionApiContract;
-use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\PlanQueryContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
@@ -179,7 +178,6 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
      * @return AccountChargebeeContract
      */
     public function setIsChargeable(bool $is_chargeable): AccountChargebeeContract
-    {
         $this->is_chargeable = $is_chargeable;
 
         return $this;

@@ -2,14 +2,12 @@
 namespace Deegitalbe\TrustupProAdminCommon\Models;
 
 use Illuminate\Database\Eloquent\Collection;
-use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
-use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionPlanApiContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionPlanContract;
 

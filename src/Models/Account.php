@@ -3,20 +3,15 @@ namespace Deegitalbe\TrustupProAdminCommon\Models;
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\App;
-use Jenssegers\Mongodb\Eloquent\Builder;
-use Jenssegers\Mongodb\Relations\HasOne;
-use Jenssegers\Mongodb\Relations\HasMany;
-use Jenssegers\Mongodb\Relations\EmbedsOne;
-use Jenssegers\Mongodb\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Deegitalbe\TrustupProAdminCommon\Models\AccountChargebee;
-use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntry;
+use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
-use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 
@@ -24,10 +19,8 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract
  * Professional app account.
  * 
  */
-class Account extends PersistableMongoModel implements AccountContract
-{
-    use SoftDeletes;
-
+class Account extends AdminModel implements AccountContract
+{    
     protected $fillable = [
         'uuid',
         'professional_id',

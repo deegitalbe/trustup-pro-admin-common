@@ -99,6 +99,26 @@ class Package extends VersionablePackage implements VersionedPackageContract
     }
 
     /**
+     * Telling which connection should be used for admin database.
+     * 
+     * @return string
+     */
+    public function adminConnection(): string
+    {
+        return $this->config('connections.admin');
+    }
+
+    /**
+     * Telling which connection should be used for trustup database.
+     * 
+     * @return string
+     */
+    public function trustupConnection(): string
+    {
+        return $this->config('connections.trustup');
+    }
+
+    /**
      * Getting config value.
      * Prefix is automatically added to given key.
      * 

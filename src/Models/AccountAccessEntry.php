@@ -2,22 +2,17 @@
 namespace Deegitalbe\TrustupProAdminCommon\Models;
 
 use Carbon\Carbon;
-use Jenssegers\Mongodb\Eloquent\Builder;
-use Jenssegers\Mongodb\Relations\BelongsTo;
-use Jenssegers\Mongodb\Relations\EmbedsOne;
-use Deegitalbe\TrustupProAdminCommon\Models\Account;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
-use Deegitalbe\TrustupProAdminCommon\Models\AccountAccessEntryUser;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
-use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountAccessEntryUserContract;
-use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 
-class AccountAccessEntry extends PersistableMongoModel implements AccountAccessEntryContract
+class AccountAccessEntry extends AdminModel implements AccountAccessEntryContract
 {
-    use SoftDeletes;
-    
     protected $fillable = ['access_at'];
 
     protected $dates = ['access_at'];
@@ -27,9 +22,9 @@ class AccountAccessEntry extends PersistableMongoModel implements AccountAccessE
         return $this->belongsTo(Package::account());
     }
 
-    public function user(): EmbedsOne
+    public function user(): HasOne
     {
-        return $this->embedsOne(Package::accountAccessEntryUser());
+        return $this->hasOne(Package::accountAccessEntryUser());
     }
 
     /**
@@ -85,7 +80,9 @@ class AccountAccessEntry extends PersistableMongoModel implements AccountAccessE
      */
     public function setUser(AccountAccessEntryUserContract $user): self
     {
-        return $this->embedsOneThis($user, 'user');
+        $this->user()->save($user);
+
+        return $this->persist();
     }
 
     /**

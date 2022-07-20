@@ -1,24 +1,21 @@
 <?php
 namespace Deegitalbe\TrustupProAdminCommon\Models;
 
-use Jenssegers\Mongodb\Relations\HasMany;
-use Jenssegers\Mongodb\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
-use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
 use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionPlanApiContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionPlanContract;
-use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 
 /**
  * Representing app plan.
  */
-class Plan extends PersistableMongoModel implements PlanContract
-{
-    use SoftDeletes;
-    
+class Plan extends AdminModel implements PlanContract
+{    
     /**
      * Fillable attributes.
      * 
@@ -59,7 +56,7 @@ class Plan extends PersistableMongoModel implements PlanContract
      */
     public function accountChargebees(): HasMany
     {
-        return $this->HasMany(Package::accountChargebee());
+        return $this->hasMany(Package::accountChargebee());
     }
 
     /**

@@ -9,7 +9,9 @@ use Deegitalbe\TrustupProAdminCommon\Models\Traits\BeingPersistable;
  */
 trait UserModel
 {
-    use BeingPersistable;
+    use 
+        BeingPersistable
+    ;
     
     /**
      * Getting user first name.

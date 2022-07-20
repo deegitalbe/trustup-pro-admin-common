@@ -8,13 +8,12 @@ trait BeingPersistable
 {
     /**
      * Persisting instance.
+     * 
      * @param array $options
      * @return static
      */
     public function persist(array $options = [])
     {
-        $this->save($options);
-
-        return $this;
+        return tap($this)->save($options);
     }
 }

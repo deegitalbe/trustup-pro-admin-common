@@ -11,7 +11,9 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
  */
 trait ProfessionalModel
 {
-    use BeingPersistable;
+    use 
+        BeingPersistable
+    ;
 
     /**
      * Getting professional id.

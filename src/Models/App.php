@@ -2,25 +2,18 @@
 namespace Deegitalbe\TrustupProAdminCommon\Models;
 
 use Illuminate\Support\Collection;
-use Jenssegers\Mongodb\Eloquent\Builder;
-use Jenssegers\Mongodb\Relations\HasMany;
-use Jenssegers\Mongodb\Relations\EmbedsMany;
-use Deegitalbe\TrustupProAdminCommon\Models\Plan;
+use Illuminate\Database\Eloquent\Builder;
 use Deegitalbe\TrustupProAdminCommon\App\AppClient;
-use Deegitalbe\TrustupProAdminCommon\Models\Account;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
+use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AppContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\App\AppClientContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
-use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\PersistableMongoModel;
-use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\PlanQueryContract;
-use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 
-class App extends PersistableMongoModel implements AppContract
+class App extends AdminModel implements AppContract
 {
-    use SoftDeletes;
-    
     /**
      * Dashboard key (trustup.pro)
      * 

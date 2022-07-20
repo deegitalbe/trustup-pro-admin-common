@@ -42,6 +42,22 @@ return [
         'account_chargebee' => \Deegitalbe\TrustupProAdminCommon\Models\AccountChargebee::class,
 
     ],
+    
+    /** 
+     * Connections used for models.
+     */
+    'connections' => [
+        /**
+         * Admin DB connection name.
+         */
+        'admin' => env("DB_ADMIN_CONNECTION", "admin"),
+
+        /**
+         * Trustup DB connection name.
+         */
+        'trustup' => env("DB_TRUSTUP_CONNECTION", "trustup"),
+    ],
+
     /**
      * Projects using this package (only their url).
      */

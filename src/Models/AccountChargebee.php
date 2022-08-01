@@ -529,7 +529,7 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
      */
     public function setDefaultPauseThreshold(): AccountChargebeeContract
     {
-        return $this->setPauseThreshold(14);
+        return $this->setPauseThreshold(30);
     }
 
     /**

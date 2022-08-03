@@ -26,6 +26,7 @@ class Plan extends AdminModel implements PlanContract
         'trial_duration',
         'is_default_plan',
         'is_default_yearly_plan',
+        'is_yearly',
         'price'
     ];
     
@@ -36,7 +37,8 @@ class Plan extends AdminModel implements PlanContract
      */
     protected $casts = [
         'is_default_plan' => "boolean",
-        'is_default_yearly_plan' => "boolean"
+        'is_default_yearly_plan' => "boolean",
+        'is_yearly' => "boolean"
     ];
 
     /**
@@ -162,6 +164,26 @@ class Plan extends AdminModel implements PlanContract
     public function isDefault(): bool
     {
         return $this->is_default_plan ?? false;
+    }
+
+    /**
+     * Telling if plan is billed annually.
+     * 
+     * @return bool
+     */
+    public function isYearlyBilled(): bool
+    {
+        return $this->is_yearly;
+    }
+
+    /**
+     * Telling if plan is billed monthly.
+     * 
+     * @return bool
+     */
+    public function isMonthlyBilled(): bool
+    {
+        return !$this->is_yearly;
     }
 
     /**

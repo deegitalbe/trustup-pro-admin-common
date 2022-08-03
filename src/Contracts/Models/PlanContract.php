@@ -94,6 +94,20 @@ interface PlanContract extends PersistableContract
     public function isDefault(): bool;
 
     /**
+     * Telling if plan is billed annually.
+     * 
+     * @return bool
+     */
+    public function isYearlyBilled(): bool;
+
+    /**
+     * Telling if plan is billed monthly.
+     * 
+     * @return bool
+     */
+    public function isMonthlyBilled(): bool;
+
+    /**
      * Getting app linked to this plan.
      */
     public function getApp(): AppContract;

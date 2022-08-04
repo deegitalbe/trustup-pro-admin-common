@@ -612,6 +612,23 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
     }
 
     /**
+     * Telling if switch to annual billing is possible.
+     * 
+     * @return bool
+     */
+    public function isAnnualBillingSwitchPossible(): bool
+    {
+        if (!$this->hasPlan()
+            || $this->getPlan()->isYearlyBilled()
+            || $this->isTrial() && !$this->getIsChargeable()
+        ):
+            return false;
+        endif;
+
+        return true;
+    }
+
+    /**
      * Telling if linked to an unpaid invoice.
      * 
      * @return bool

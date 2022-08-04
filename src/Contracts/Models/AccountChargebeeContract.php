@@ -286,4 +286,11 @@ interface AccountChargebeeContract extends PersistableContract
      * @return bool
      */
     public function havingLastUnpaidInvoiceAt(): bool;
+
+    /**
+     * Telling if switch to annual billing is possible.
+     * 
+     * @return bool
+     */
+    public function isAnnualBillingSwitchPossible(): bool;
 }

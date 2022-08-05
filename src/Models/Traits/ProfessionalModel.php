@@ -16,6 +16,20 @@ trait ProfessionalModel
     ;
 
     /**
+     * Telling if chargebee customer was retrieved from api.
+     * 
+     * @var bool
+     */
+    protected $chargebeeCustomerRetrieved = false;
+
+    /**
+     * Related chargebee customer.
+     * 
+     * @var CustomerContract|null
+     */
+    protected $chargebeeCustomer;
+
+    /**
      * Getting professional id.
      * 
      * @return int
@@ -82,15 +96,20 @@ trait ProfessionalModel
     /**
      * Getting customer.
      * 
+     * @param bool $fresh
      * @return CustomerContract|null
      */
-    public function getCustomer(): ?CustomerContract
+    public function getCustomer($fresh = false): ?CustomerContract
     {
-        if (!$this->getCustomerId()):
-            return null;
+        if ($this->chargebeeCustomerRetrieved && !$fresh):
+            return $this->chargebeeCustomer;
         endif;
 
-        return app()->make(CustomerApiContract::class)->find($this->getCustomerId());
+        $this->chargebeeCustomerRetrieved = true;
+
+        return $this->chargebeeCustomer = $this->getCustomerId() ?
+            app()->make(CustomerApiContract::class)->find($this->getCustomerId())
+            : null;
     }
 
     /**

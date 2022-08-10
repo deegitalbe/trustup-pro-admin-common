@@ -86,6 +86,16 @@ interface AccountChargebeeContract extends PersistableContract
     public function hasPlan(): bool;
 
     /**
+     * Merging attributes from given model instance.
+     * 
+     * This does not persist data.
+     * 
+     * @param AccountChargebeeContract $accountChargebee
+     * @return AccountChargebeeContract
+     */
+    public function mergeAttributesFromModel(AccountChargebeeContract $accountChargebee): AccountChargebeeContract;
+
+    /**
      * Refreshing its own attributes from chargebee api directly.
      * 
      * This does persist data.

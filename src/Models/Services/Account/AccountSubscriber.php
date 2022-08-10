@@ -251,7 +251,7 @@ class AccountSubscriber implements AccountSubscriberContract
     }
 
     /**
-     * Updating professional related customer.
+     * Updating professional account status.
      * 
      * @return self
      */

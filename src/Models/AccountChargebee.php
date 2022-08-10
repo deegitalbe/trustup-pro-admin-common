@@ -194,6 +194,26 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
         return !!$this->is_chargeable;
     }
 
+    /**
+     * Merging attributes from given model instance.
+     * 
+     * This does not persist data.
+     * 
+     * @param AccountChargebeeContract $accountChargebee
+     * @return AccountChargebeeContract
+     */
+    public function mergeAttributesFromModel(AccountChargebeeContract $accountChargebee): AccountChargebeeContract
+    {
+        $conditionalAttributes = collect(['pause_threshold', 'pause_alert_threshold']);
+        
+        // Not keeping conditional attributes without values.
+        $attributes = collect($accountChargebee->getAttributes())
+            ->reject(fn ($attributeValue, $attributeName) => !$attributeValue && $conditionalAttributes->contains($attributeName))
+            ->all();
+
+        return $this->fill($attributes);
+    }
+
 
     /**
      * Refreshing its own attributes from chargebee api directly.

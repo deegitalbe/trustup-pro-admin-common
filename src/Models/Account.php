@@ -83,15 +83,45 @@ class Account extends AdminModel implements AccountContract
      */
     public function setChargebee(?AccountChargebeeContract $chargebee): AccountContract
     {
-        // Deleting status from database
-        $this->chargebee()->delete();
-        
-        if ( $chargebee ) {
-            // Saving relationship
-            $this->chargebee()->save($chargebee);
-        }
+        $this->setChargebeeRelation($chargebee);
         
         return $this->refresh();
+    }
+
+    /**
+     * Setting chargebee relation while making sure to keep only one merged chargebee status.
+     * 
+     * @param AccountChargebeeContract $chargebee
+     * @return void
+     */
+    protected function setChargebeeRelation(?AccountChargebeeContract $chargebee): void
+    {
+        // Was not having status and not setting new one => stop.
+        if (!$this->getChargebee() && !$chargebee):
+            return;
+        endif;
+
+        // Was having status and not setting new one => delete old one (no need for soft delete in this case).
+        if ($this->getChargebee() && !$chargebee):
+            return $this->getChargebee()->forceDelete();
+        endif;
+
+        // Was not having status and setting new one => save new one.
+        if (!$this->getChargebee() && $chargebee):
+            return $this->chargebee()->save($chargebee);
+        endif;
+
+        // At this point we're sure account was having status and we're trying to set new one.
+        // Saving merged chargebee attributes.
+        $this->getChargebee()->mergeAttributesFromModel($chargebee)
+            ->persist();
+
+        if (!$chargebee->exists):
+            return;
+        endif;
+
+        // We're sure new status was stored for unforseen reasons => force delete it.
+        $chargebee->forceDelete();
     }
 
     /**

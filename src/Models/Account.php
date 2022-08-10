@@ -103,12 +103,14 @@ class Account extends AdminModel implements AccountContract
 
         // Was having status and not setting new one => delete old one (no need for soft delete in this case).
         if ($this->getChargebee() && !$chargebee):
-            return $this->getChargebee()->forceDelete();
+            $this->getChargebee()->forceDelete();
+            return;
         endif;
 
         // Was not having status and setting new one => save new one.
         if (!$this->getChargebee() && $chargebee):
-            return $this->chargebee()->save($chargebee);
+            $this->chargebee()->save($chargebee);
+            return;
         endif;
 
         // At this point we're sure account was having status and we're trying to set new one.

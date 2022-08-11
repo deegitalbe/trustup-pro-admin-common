@@ -51,4 +51,11 @@ interface AccountChargebeeQueryContract extends QueryContract
      * @return AccountChargebeeQueryContract
      */
     public function cancelled(): AccountChargebeeQueryContract;
+
+    /**
+     * Limiting chargebee status to active freemium.
+     * 
+     * @return AccountChargebeeQueryContract
+     */
+    public function activeFreemium(): AccountChargebeeQueryContract;
 }

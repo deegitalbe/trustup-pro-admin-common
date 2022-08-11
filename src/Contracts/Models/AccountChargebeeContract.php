@@ -24,6 +24,13 @@ interface AccountChargebeeContract extends PersistableContract
     public function isTrial(): bool;
 
     public function isActive(): bool;
+    
+    /**
+     * Telling if status is concerning non premium account.
+     * 
+     * @return bool
+     */
+    public function isNonPremium(): bool;
 
     public function isCancelled(): bool;
 

@@ -85,4 +85,14 @@ class AccountChargebeeQuery extends AbstractQuery implements AccountChargebeeQue
     {
         return $this->whereStatus($this->getModel()::CANCELLED);
     }
+
+    /**
+     * Limiting chargebee status to active freemium.
+     * 
+     * @return AccountChargebeeQueryContract
+     */
+    public function activeFreemium(): AccountChargebeeQueryContract
+    {
+        return $this->whereStatus($this->getModel()::NON_PREMIUM);
+    }
 }

@@ -24,6 +24,13 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
     const TRIAL = "in_trial";
 
     /**
+     * Non premium status key.
+     * 
+     * @var string
+     */
+    const NON_PREMIUM = "non_premium";
+
+    /**
      * Status active key.
      * 
      * @var string
@@ -135,6 +142,10 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
 
         if ( $this->isActive() ) {
             return "Actif";
+        }
+
+        if ( $this->isNonPremium() ) {
+            return "Freemium";
         }
         
         if ( $this->isCancelled() ) {
@@ -294,6 +305,16 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
     public function isActive(): bool
     {
         return $this->status === self::ACTIVE;
+    }
+
+    /**
+     * Telling if status is concerning non premium account.
+     * 
+     * @return bool
+     */
+    public function isNonPremium(): bool
+    {
+        return $this->status === self::NON_PREMIUM;
     }
 
     public function isCancelled(): bool
@@ -712,5 +733,16 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
     public function scopeCancelled(Builder $query): Builder
     {
         return $query->whereStatus(self::CANCELLED);
+    }
+
+    /**
+     * Limiting chargebee status to freemium.
+     * 
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeActiveFreemium(Builder $query): Builder
+    {
+        return $query->whereStatus(self::NON_PREMIUM);
     }
 }

@@ -400,9 +400,9 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
     /**
      * Getting related price.
      * 
-     * @return int
+     * @return int|null
      */
-    public function getPrice(): int
+    public function getPrice(): ?int
     {
         return $this->price;
     }
@@ -410,11 +410,13 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
     /**
      * Getting related price in euro.
      * 
-     * @return float
+     * @return float|null
      */
-    public function getPriceInEuro(): float
+    public function getPriceInEuro(): ?float
     {
-        return $this->price / 100;
+        return $this->price ?
+            $this->price / 100
+            : null;
     }
 
     /**

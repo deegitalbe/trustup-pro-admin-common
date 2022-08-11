@@ -66,16 +66,16 @@ interface AccountChargebeeContract extends PersistableContract
     /**
      * Getting related price.
      * 
-     * @return int
+     * @return int|null
      */
-    public function getPrice(): int;
+    public function getPrice(): ?int;
 
     /**
      * Get related price in euro.
      * 
-     * @return float
+     * @return float|null
      */
-    public function getPriceInEuro(): float;
+    public function getPriceInEuro(): ?float;
 
     /**
      * Getting ending trial date.

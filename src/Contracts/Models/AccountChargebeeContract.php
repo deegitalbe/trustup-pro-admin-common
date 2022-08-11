@@ -56,6 +56,28 @@ interface AccountChargebeeContract extends PersistableContract
     public function setPlan(?PlanContract $plan): AccountChargebeeContract;
 
     /**
+     * Setting related price.
+     * 
+     * @param int $price
+     * @return static
+     */
+    public function setPrice(int $price): AccountChargebeeContract;
+
+    /**
+     * Getting related price.
+     * 
+     * @return int
+     */
+    public function getPrice(): int;
+
+    /**
+     * Get related price in euro.
+     * 
+     * @return float
+     */
+    public function getPriceInEuro(): float;
+
+    /**
      * Getting ending trial date.
      * 
      * @return Carbon|null
@@ -122,6 +144,13 @@ interface AccountChargebeeContract extends PersistableContract
      * @return AccountChargebeeContract
      */
     public function refreshFromSubscription(SubscriptionContract $subscription, bool $force = false): AccountChargebeeContract;
+
+    /**
+     * Getting chargebee subscription.
+     * 
+     * @return SubscriptionContract|null
+     */
+    public function getChargebeeSubscription(): ?SubscriptionContract;
 
     /**
      * Telling if this account chargebee is different than stored one concerning app database.

@@ -16,6 +16,12 @@ use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionInvoiceApiContrac
 
 class AccountChargebee extends AdminModel implements AccountChargebeeContract
 {
+    /** @var SubscriptionContract|null */
+    protected $chargebeeSubscription;
+
+    /** @var bool */
+    protected $chargebeeSubscriptionRetrieved = false;
+
     /**
      * Status trial key.
      * 
@@ -66,7 +72,8 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
         'is_chargeable',
         'pause_alert_threshold',
         'pause_threshold',
-        'pause_reason'
+        'pause_reason',
+        'price'
     ];
 
     protected $dates = [
@@ -225,6 +232,38 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
         return $this->fill($attributes);
     }
 
+    /**
+     * Getting chargebee subscription from API directly.
+     * 
+     * @return SubscriptionContract|null
+     */
+    protected function getFreshChargebeeSubscription(): ?SubscriptionContract
+    {
+        if ($this->getId()):
+            return null;
+        endif;
+
+        /** @var SubscriptionApiContract */
+        $api = app()->make(SubscriptionApiContract::class);
+
+        return $api->find($this->getId());
+    }
+
+    /**
+     * Getting chargebee subscription.
+     * 
+     * @return SubscriptionContract|null
+     */
+    public function getChargebeeSubscription(): ?SubscriptionContract
+    {
+        if ($this->chargebeeSubscriptionRetrieved):
+            return $this->chargebeeSubscription;
+        endif;
+
+        $this->chargebeeSubscriptionRetrieved = true;
+
+        return $this->chargebeeSubscription = $this->getFreshChargebeeSubscription();
+    }
 
     /**
      * Refreshing its own attributes from chargebee api directly.
@@ -236,17 +275,15 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
      */
     public function refreshFromApi(bool $force = false): AccountChargebeeContract
     {
-        $subscription = app()->make(SubscriptionApiContract::class)->find($this->getId());
-        
-        if (!$subscription):
+        if (!$this->getChargebeeSubscription()):
             return $this;
         endif;
 
-        $this->refreshFromSubscription($subscription, $force);
+        $this->refreshFromSubscription($this->getChargebeeSubscription(), $force);
 
         /** @var SubscriptionInvoiceApiContract */
         $invoiceApi = app()->make(SubscriptionInvoiceApiContract::class);
-        $invoice = $invoiceApi->setSubscription($subscription)->firstLate();
+        $invoice = $invoiceApi->setSubscription($this->getChargebeeSubscription())->firstLate();
 
         return $this->setFirstUnpaidInvoiceAt(optional($invoice)->getDueDate())->persist();
     }
@@ -348,6 +385,39 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
     }
 
     /**
+     * Setting related price.
+     * 
+     * @param int $price
+     * @return static
+     */
+    public function setPrice(int $price): AccountChargebeeContract
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Getting related price.
+     * 
+     * @return int
+     */
+    public function getPrice(): int
+    {
+        return $this->price;
+    }
+
+    /**
+     * Getting related price in euro.
+     * 
+     * @return float
+     */
+    public function getPriceInEuro(): float
+    {
+        return $this->price / 100;
+    }
+
+    /**
      * Telling if account chargebee has a plan.
      * 
      * @return bool
@@ -386,7 +456,8 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
         $this->setStatus($subscription->getStatus())
             ->setTrialEndingAt($subscription->getTrialEndingAt())
             ->setId($subscription->getId())
-            ->setIsChargeable($is_chargeable);
+            ->setIsChargeable($is_chargeable)
+            ->setPrice(optional($subscription->getPlan())->getPriceInCent());
 
         if (!$this->isPaused()):
             $this->setPauseReason(null);

@@ -145,7 +145,7 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
         }
 
         if ( $this->isNonPremium() ) {
-            return "Freemium";
+            return "Non premium";
         }
         
         if ( $this->isCancelled() ) {

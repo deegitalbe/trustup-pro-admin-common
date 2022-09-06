@@ -9,6 +9,7 @@ use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\CustomerContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionPlanContract;
+use Deegitalbe\TrustupProAdminCommon\Models\Plan;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Exceptions\AppBeingFree;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Exceptions\NotFindingCustomer;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Exceptions\PlanNotBelongingToApp;
@@ -43,6 +44,32 @@ class AccountSubscriber implements AccountSubscriberContract
     public function __construct(SubscriptionApiContract $subscription_api)
     {
         $this->subscription_api = $subscription_api;
+    }
+
+    /**
+     * Suscribe the account to the existing Pack subscription based on the ID given.
+     * 
+     * @param AccountContract $account
+     * @param UserContract $user Used as callback for customer if professional not being one already.
+     * @param string $packSucriptionId The ID of the subcription used for the pack.
+     * @return AccountContract
+     */
+    public function usePackSubscription(AccountContract $account, UserContract $user, string $packSubscriptionId): bool
+    {
+        $this->fresh()
+            ->setAccount($account)
+            ->setUser($user);
+
+        $this->setSubscription( $this->subscription_api->find($packSubscriptionId) );
+        $this->setPlan( Plan::where('name', $this->subscription->getPlan()->getId())->first() );
+        
+        $this->account
+            ->setChargebee(app()->make(AccountChargebeeContract::class))
+            ->getChargebee()
+            ->fromSubscription($this->subscription)
+            ->persist();
+
+        return true;
     }
 
     /**
@@ -251,7 +278,7 @@ class AccountSubscriber implements AccountSubscriberContract
     }
 
     /**
-     * Updating professional account status.
+     * Updating professional related customer.
      * 
      * @return self
      */
@@ -260,8 +287,8 @@ class AccountSubscriber implements AccountSubscriberContract
         $this->account
             ->setChargebee(app()->make(AccountChargebeeContract::class))
             ->getChargebee()
-                ->fromSubscription($this->subscription)
-                ->persist();
+            ->fromSubscription($this->subscription)
+            ->persist();
 
         return $this;
     }

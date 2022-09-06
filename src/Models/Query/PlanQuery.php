@@ -76,4 +76,23 @@ class PlanQuery extends AbstractQuery implements PlanQueryContract
 
         return $this;
     }
+
+    /**
+     * Limiting plans to those matching given app or global plans (app_id = null).
+     * 
+     * @param AppContract $app
+     * @return PlanQueryContract
+     */
+    public function whereAppOrGlobal(AppContract $app): PlanQueryContract
+    {
+        $this->getQuery()->where(function(Builder $builder) use ($app) {
+            $builder->whereHas('app', function(Builder $builder) use ($app) {
+                $query = app()->make(AppQueryContract::class);
+                $query->setQuery($builder)
+                    ->whereKeyIs($app->getKey());
+            })->orWhereNull('app_id');
+        });
+
+        return $this;
+    }
 }

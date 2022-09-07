@@ -11,6 +11,17 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\UserContract;
 
 interface AccountSubscriberContract extends ContextualContract
 {
+
+    /**
+     * Suscribe the account to the existing Pack subscription based on the ID given.
+     * 
+     * @param AccountContract $account
+     * @param UserContract $user Used as callback for customer if professional not being one already.
+     * @param string $packSucriptionId The ID of the subcription used for the pack.
+     * @return AccountContract
+     */
+    public function usePackSubscription(AccountContract $account, UserContract $user, string $packSubscriptionId): bool;
+
     /**
      * Subscribing given account.
      * 

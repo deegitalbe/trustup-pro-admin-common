@@ -38,4 +38,12 @@ interface PlanQueryContract extends QueryContract
      * @return PlanQueryContract
      */
     public function whereApp(AppContract $app): PlanQueryContract;
+
+    /**
+     * Limiting plans to those matching given app or global plans
+     * 
+     * @param AppContract $app
+     * @return PlanQueryContract
+     */
+    public function whereAppOrGlobal(AppContract $app): PlanQueryContract;
 }

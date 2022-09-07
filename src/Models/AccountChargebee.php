@@ -467,7 +467,7 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
 
         $plan = app()->make(PlanQueryContract::class)
             ->whereName($subscription->getPlan()->getId())
-            ->whereApp($this->getAccount()->getApp())
+            ->whereAppOrGlobal($this->getAccount()->getApp())
             ->first();
 
         return $this->setPlan($plan);

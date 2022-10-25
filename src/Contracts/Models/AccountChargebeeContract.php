@@ -34,6 +34,13 @@ interface AccountChargebeeContract extends PersistableContract
 
     public function isCancelled(): bool;
 
+    /**
+     * Telling if status can be cancelled.
+     * 
+     * @return bool
+     */
+    public function cancellable(): bool;
+
     public function isPaused(): bool;
     
     public function isNonRenewing(): bool;

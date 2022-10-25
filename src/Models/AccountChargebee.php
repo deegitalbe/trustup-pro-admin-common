@@ -369,6 +369,16 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
         return $this->status === self::PAUSED;
     }
 
+    /**
+     * Telling if status can be cancelled.
+     * 
+     * @return bool
+     */
+    public function cancellable(): bool
+    {
+        return $this->isActive() || $this->isTrial();
+    }
+
     public function getAccount(): AccountContract
     {
         return $this->account;

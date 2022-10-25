@@ -48,6 +48,26 @@ class PlanQuery extends AbstractQuery implements PlanQueryContract
     }
 
     /**
+     * Limiting plans to yearly ones.
+     * 
+     * @return static
+     */
+    public function beingYearly(): PlanQueryContract
+    {
+        return $this->getQuery()->where('is_yearly', true);
+    }
+
+    /**
+     * Limiting plans to monthly ones.
+     * 
+     * @return static
+     */
+    public function beingMonthly(): PlanQueryContract
+    {
+        return $this->getQuery()->where('is_yearly', false);
+    }
+
+    /**
      * Limiting plans to those matching given name.
      * 
      * @param string $name
@@ -75,6 +95,17 @@ class PlanQuery extends AbstractQuery implements PlanQueryContract
         });
 
         return $this;
+    }
+
+    /**
+     * Limiting plans to global plans.
+     * 
+     * @param AppContract $app
+     * @return PlanQueryContract
+     */
+    public function whereGlobal(): PlanQueryContract
+    {
+        return $this->getQuery()->whereNull('app_id');
     }
 
     /**

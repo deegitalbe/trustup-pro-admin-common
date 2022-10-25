@@ -239,7 +239,7 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
      */
     protected function getFreshChargebeeSubscription(): ?SubscriptionContract
     {
-        if ($this->getId()):
+        if (!$this->getId()):
             return null;
         endif;
 

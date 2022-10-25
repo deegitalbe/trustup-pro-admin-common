@@ -24,6 +24,20 @@ interface PlanQueryContract extends QueryContract
     public function beingYearlyDefault(): PlanQueryContract;
 
     /**
+     * Limiting plans to yearly ones.
+     * 
+     * @return static
+     */
+    public function beingYearly(): PlanQueryContract;
+
+    /**
+     * Limiting plans to monthly ones.
+     * 
+     * @return static
+     */
+    public function beingMonthly(): PlanQueryContract;
+
+    /**
      * Limiting plans to those matching given name.
      * 
      * @param string $name
@@ -38,6 +52,14 @@ interface PlanQueryContract extends QueryContract
      * @return PlanQueryContract
      */
     public function whereApp(AppContract $app): PlanQueryContract;
+
+    /**
+     * Limiting plans to global plans.
+     * 
+     * @param AppContract $app
+     * @return PlanQueryContract
+     */
+    public function whereGlobal(): PlanQueryContract;
 
     /**
      * Limiting plans to those matching given app or global plans

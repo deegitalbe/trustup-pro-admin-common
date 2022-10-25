@@ -25,6 +25,8 @@ use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Contracts\AccountSw
 use Henrotaym\LaravelContainerAutoRegister\Services\AutoRegister\Contracts\AutoRegisterContract;
 use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Contracts\AccountSubscriberContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Services\Account\AccountSetterByAppResponseContract;
+use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\AccountPackSwitcher;
+use Deegitalbe\TrustupProAdminCommon\Models\Services\Account\Contracts\AccountPackSwitcherContract;
 use PDO;
 
 class TrustupProAdminCommonServiceProvider extends VersionablePackageServiceProvider
@@ -114,6 +116,7 @@ class TrustupProAdminCommonServiceProvider extends VersionablePackageServiceProv
         $this->app->bind(AccountRefreshContract::class, AccountRefresh::class);
         $this->app->bind(AccountSubscriberContract::class, AccountSubscriber::class);
         $this->app->bind(AccountSwitcherContract::class, AccountSwitcher::class);
+        $this->app->bind(AccountPackSwitcherContract::class, AccountPackSwitcher::class);
 
         return $this;
     }

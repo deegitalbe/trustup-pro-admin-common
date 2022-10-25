@@ -50,15 +50,13 @@ class AccountSubscriber implements AccountSubscriberContract
      * Suscribe the account to the existing Pack subscription based on the ID given.
      * 
      * @param AccountContract $account
-     * @param UserContract $user Used as callback for customer if professional not being one already.
      * @param string $packSucriptionId The ID of the subcription used for the pack.
-     * @return AccountContract
+     * @return bool
      */
-    public function usePackSubscription(AccountContract $account, UserContract $user, string $packSubscriptionId): bool
+    public function usePackSubscription(AccountContract $account, string $packSubscriptionId): bool
     {
         $this->fresh()
-            ->setAccount($account)
-            ->setUser($user);
+            ->setAccount($account);
 
         $this->setSubscription( $this->subscription_api->find($packSubscriptionId) );
         $this->setPlan( Plan::where('name', $this->subscription->getPlan()->getId())->first() );

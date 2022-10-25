@@ -54,7 +54,9 @@ class PlanQuery extends AbstractQuery implements PlanQueryContract
      */
     public function beingYearly(): PlanQueryContract
     {
-        return $this->getQuery()->where('is_yearly', true);
+        $this->getQuery()->where('is_yearly', true);
+
+        return $this;
     }
 
     /**
@@ -64,7 +66,9 @@ class PlanQuery extends AbstractQuery implements PlanQueryContract
      */
     public function beingMonthly(): PlanQueryContract
     {
-        return $this->getQuery()->where('is_yearly', false);
+        $this->getQuery()->where('is_yearly', false);
+
+        return $this;
     }
 
     /**
@@ -105,7 +109,9 @@ class PlanQuery extends AbstractQuery implements PlanQueryContract
      */
     public function whereGlobal(): PlanQueryContract
     {
-        return $this->getQuery()->whereNull('app_id');
+        $this->getQuery()->whereNull('app_id');
+
+        return $this;
     }
 
     /**

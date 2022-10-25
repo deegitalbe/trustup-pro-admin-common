@@ -111,7 +111,7 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
         );
     }
 
-    protected function cancelAccount(AccountContract $account): void
+    protected function cancelAccount(AccountContract $account): void    
     {
         if ($account->getChargebee()->isCancelled()):
             $this->getCancelledSubscriptions()->push($account->getChargebee()->getChargebeeSubscription());

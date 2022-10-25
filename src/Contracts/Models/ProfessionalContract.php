@@ -58,6 +58,16 @@ interface ProfessionalContract extends PersistableContract, Arrayable
     public function getCustomerId(): ?string;
 
     /**
+     * Getting related pack subscription id.
+     */
+    public function getPackSubscriptionId(): ?string;
+
+    /**
+     * Telling if having pack subscription.
+     */
+    public function hasPackSubscription(): bool;
+
+    /**
      * Getting customer.
      * 
      * @return CustomerContract|null

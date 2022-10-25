@@ -79,7 +79,8 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
 
         if (!$this->hasCreatedPackSubscription()) return false;
 
-        $this->subscribeAccounts();
+        $this->updateProfessionalPackSubscription()
+            ->subscribeAccounts();
 
         return $this->hasSuccessfullySubscribedAccounts();
     }
@@ -142,6 +143,14 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
             $plan,
             $this->professional->getCustomer()
         );
+    }
+
+    protected function updateProfessionalPackSubscription(): self
+    {
+        $this->professional->chargebee_subscription_pro_pack_id = $this->packSubscription->getId();
+        $this->professional->persist();
+
+        return $this;
     }
 
     protected function subscribeAccounts(): Collection

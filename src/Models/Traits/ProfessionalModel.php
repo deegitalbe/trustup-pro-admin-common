@@ -94,6 +94,22 @@ trait ProfessionalModel
     }
 
     /**
+     * Getting related pack subscription id.
+     */
+    public function getPackSubscriptionId(): ?string
+    {
+        return $this->chargebee_subscription_pro_pack_id;
+    }
+
+    /**
+     * Telling if having pack subscription.
+     */
+    public function hasPackSubscription(): bool
+    {
+        return !!$this->getPackSubscriptionId();
+    }
+
+    /**
      * Getting customer.
      * 
      * @param bool $fresh

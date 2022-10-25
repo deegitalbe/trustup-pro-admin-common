@@ -139,10 +139,14 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
     {
         if (!$plan = $this->getPackPlan()) return null;
 
-        return $this->subscriptionApi->create(
+        $subscription = $this->subscriptionApi->create(
             $plan,
             $this->professional->getCustomer()
         );
+
+        if (!$subscription) return null;
+
+        return $this->subscriptionApi->endTrialNow($subscription);
     }
 
     protected function updateProfessionalPackSubscription(): self

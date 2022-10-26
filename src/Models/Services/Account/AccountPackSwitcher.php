@@ -146,6 +146,7 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
     {
         if (!$plan = $this->getPackPlan()) return null;
 
+        // Creating pack subscription
         $subscription = $this->subscriptionApi->create(
             $plan,
             $this->professional->getCustomer()
@@ -153,7 +154,13 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
 
         if (!$subscription) return null;
 
-        return $this->subscriptionApi->endTrialNow($subscription);
+        // Cancelling pack subscription to end trial.
+        $subscription = $this->subscriptionApi->cancelNow($subscription);
+
+        if (!$subscription) return null;
+
+        // Reactivating subscription
+        return $this->subscriptionApi->reactivate($subscription);
     }
 
     protected function updateProfessionalPackSubscription(): self

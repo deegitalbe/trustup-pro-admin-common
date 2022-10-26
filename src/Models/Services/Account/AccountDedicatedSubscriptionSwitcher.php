@@ -189,20 +189,41 @@ class AccountDedicatedSubscriptionSwitcher implements AccountDedicatedSubscripti
         // Stop if subscription was not created.
         if (!$this->subscriber->getSubscription()) return;
 
+        $subscription = $this->subscriber->getSubscription();
+
         // If pack was in trial stop and consider subscription as successfull.
         if ($this->packSubscriptionStatus->isTrial()):
-            $this->successfullySubscribedAccount($account, $this->subscriber->getSubscription());
+            $this->successfullySubscribedAccount($account, $subscription);
             return;
         endif;
 
-        // Stop if subscription cancellation failed.
-        if (!$subscription = $this->subscriptionApi->cancelNow($this->subscriber->getSubscription())) return;
-
-        // Stop if subscription reactivation failed.
-        if (!$subscription = $this->subscriptionApi->reactivate($subscription)) return;
+        // Stop if activation failed.
+        // @TODO Uncomment this line to handle activation process.
+        // if (!$subscription = $this->activateSubscription($this->subscriber->getSubscription())) return;
 
         // Consider subscription as successfull.
         $this->successfullySubscribedAccount($account, $subscription);
+    }
+
+    /**
+     * Trying to activate given subscription.
+     * 
+     * @TODO If activation fails, set it back to trial.
+     * 
+     * @return ?SubscriptionContract
+     */
+    protected function activateSubscription(SubscriptionContract $subscription): ?SubscriptionContract
+    {
+        // Stop if subscription cancellation failed.
+        if (!$subscription = $this->subscriptionApi->cancelNow($subscription)) return null;
+        
+        // Stop if subscription reactivation failed.
+        if (!$subscription = $this->subscriptionApi->reactivate($subscription)):
+            // @TODO if reactivation failed, set it back to trial.
+            return null;
+        endif;
+
+        return $subscription;
     }
 
     /**

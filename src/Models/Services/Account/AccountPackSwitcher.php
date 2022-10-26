@@ -186,13 +186,32 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
         // If pack should be left as trial stop.
         if (!$this->shouldActivatePack()) return $subscription;
 
-        // Cancelling pack subscription to end trial.
-        $subscription = $this->subscriptionApi->cancelNow($subscription);
+        // @TODO Uncomment this line to handle activation.
+        // return $this->activatePackSubscription($subscription);
 
-        if (!$subscription) return null;
+        // @TODO Remove this line when handling activation.
+        return $subscription;
+    }
 
-        // Reactivating subscription
-        return $this->subscriptionApi->reactivate($subscription);
+    /**
+     * Trying to activate given subscription.
+     * 
+     * @TODO If activation fails, set it back to trial.
+     * 
+     * @return ?SubscriptionContract
+     */
+    protected function activatePackSubscription(SubscriptionContract $subscription): ?SubscriptionContract
+    {
+        // Stop if subscription cancellation failed.
+        if (!$subscription = $this->subscriptionApi->cancelNow($subscription)) return null;
+        
+        // Stop if subscription reactivation failed.
+        if (!$subscription = $this->subscriptionApi->reactivate($subscription)):
+            // @TODO if reactivation failed, set it back to trial.
+            return null;
+        endif;
+
+        return $subscription;
     }
 
     /**

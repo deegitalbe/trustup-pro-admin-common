@@ -48,6 +48,13 @@ class AccountDedicatedSubscriptionSwitcher implements AccountDedicatedSubscripti
     protected ?SubscriptionContract $packSubscription;
 
     /**
+     * Pack subscription status (before cancellation).
+     * 
+     * @var AccountChargebeeContract
+     */
+    protected AccountChargebeeContract $packSubscriptionStatus;
+
+    /**
      * Injecting dependencies.
      * 
      * @param SubscriptionApiContract $subscriptionApi
@@ -89,13 +96,11 @@ class AccountDedicatedSubscriptionSwitcher implements AccountDedicatedSubscripti
      */
     protected function cancelPackSubscription(): self
     {
-        /** @var AccountChargebeeContract */
-        $status = app()->make(AccountChargebeeContract::class);
-        $status->setStatus($this->packSubscription->getStatus());
+        $this->setPackSubscriptionStatus();
 
-        if ($status->isCancelled()) return $this;
+        if ($this->packSubscriptionStatus->isCancelled()) return $this;
 
-        if (!$status->cancellable()) return $this->setPackSubscription(null);
+        if (!$this->packSubscriptionStatus->cancellable()) return $this->setPackSubscription(null);
 
         return $this->setPackSubscription(
             $this->subscriptionApi->cancelNow($this->packSubscription, true)
@@ -184,16 +189,35 @@ class AccountDedicatedSubscriptionSwitcher implements AccountDedicatedSubscripti
         // Stop if subscription was not created.
         if (!$this->subscriber->getSubscription()) return;
 
+        // If pack was in trial stop and consider subscription as successfull.
+        if ($this->packSubscriptionStatus->isTrial()):
+            $this->successfullySubscribedAccount($account, $this->subscriber->getSubscription());
+            return;
+        endif;
+
         // Stop if subscription cancellation failed.
         if (!$subscription = $this->subscriptionApi->cancelNow($this->subscriber->getSubscription())) return;
 
         // Stop if subscription reactivation failed.
         if (!$subscription = $this->subscriptionApi->reactivate($subscription)) return;
 
-        // Refresh account status.
+        // Consider subscription as successfull.
+        $this->successfullySubscribedAccount($account, $subscription);
+    }
+
+    /**
+     * Refreshing account status based on given subscription.
+     * 
+     * @param AccountContract $account
+     * @param SubscriptionContract $subscription
+     * @return void
+     */
+    protected function successfullySubscribedAccount(AccountContract $account, SubscriptionContract $subscription): void
+    {
+        // Refresh account status based on subscription.
         $account->getChargebee()->refreshFromSubscription($subscription);
 
-        // Push subscription as successfully subscribed ones.
+        // Push subscription as successfull.
         $this->getSubscribedSubscriptions()->push($subscription);
     }
 
@@ -252,6 +276,22 @@ class AccountDedicatedSubscriptionSwitcher implements AccountDedicatedSubscripti
     protected function setSubscribedSubscriptions(Collection $subscribedSubscriptions): self
     {
         $this->subscribedSubscriptions = $subscribedSubscriptions;
+
+        return $this;
+    }
+
+    /**
+     * Setting pack subscription status (before cancellation).
+     * 
+     * @return static
+     */
+    protected function setPackSubscriptionStatus(): self
+    {
+        /** @var AccountChargebeeContract */
+        $status = app()->make(AccountChargebeeContract::class);
+        $status->setStatus($this->packSubscription->getStatus());
+        
+        $this->packSubscriptionStatus = $status;
 
         return $this;
     }

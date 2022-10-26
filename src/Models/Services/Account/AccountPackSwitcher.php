@@ -53,6 +53,12 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
      */
     protected ?SubscriptionContract $packSubscription;
 
+    /**
+     * Injecting dependencies.
+     * 
+     * @param SubscriptionApiContract $subscriptionApi
+     * @param AccountSubscriberContract $subscriber
+     */
     public function __construct(
         SubscriptionApiContract $subscriptionApi,
         AccountSubscriberContract $subscriber
@@ -104,13 +110,26 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
             );
     }
 
-    protected function cancelAccounts(): Collection
+    /**
+     * Cancelling accounts.
+     * 
+     * @return static
+     */
+    protected function cancelAccounts(): self
     {
-        return $this->accounts->each(fn(AccountContract $account) =>
+        $this->accounts->each(fn(AccountContract $account) =>
             $this->cancelAccount($account)
         );
+
+        return $this;
     }
 
+    /**
+     * Cancelling given account
+     * 
+     * @param AccountContract $account
+     * @return void
+     */
     protected function cancelAccount(AccountContract $account): void    
     {
         if ($account->getChargebee()->isCancelled()):
@@ -125,6 +144,11 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
         if ($subscription) $this->getCancelledSubscriptions()->push($subscription);
     }
 
+    /**
+     * Getting pack related plan.
+     * 
+     * @return ?SubscriptionPlanContract
+     */
     protected function getPackPlan(): ?SubscriptionPlanContract
     {
         /** @var PlanQueryContract */
@@ -142,6 +166,11 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
         return $plan?->toSubscriptionPlan();
     }
 
+    /**
+     * Creating pack subscription.
+     * 
+     * @return ?SubscriptionContract
+     */
     protected function createPackSubscription(): ?SubscriptionContract
     {
         if (!$plan = $this->getPackPlan()) return null;
@@ -154,6 +183,9 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
 
         if (!$subscription) return null;
 
+        // If pack should be left as trial stop.
+        if (!$this->shouldActivatePack()) return $subscription;
+
         // Cancelling pack subscription to end trial.
         $subscription = $this->subscriptionApi->cancelNow($subscription);
 
@@ -163,6 +195,11 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
         return $this->subscriptionApi->reactivate($subscription);
     }
 
+    /**
+     * Updating professional concerning newly created pack.
+     * 
+     * @return static
+     */
     protected function updateProfessionalPackSubscription(): self
     {
         $this->professional->chargebee_subscription_pro_pack_id = $this->packSubscription->getId();
@@ -171,13 +208,26 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
         return $this;
     }
 
-    protected function subscribeAccounts(): Collection
+    /**
+     * Subscribing accounts to pack.
+     * 
+     * @return static
+     */
+    protected function subscribeAccounts(): self
     {
-        return $this->accounts->each(fn (AccountContract $account) =>
+        $this->accounts->each(fn (AccountContract $account) =>
             $this->subscribeAccount($account)
         );
+
+        return $this;
     }
 
+    /**
+     * Subscribing given account to pack.
+     * 
+     * @param AccountContract $account
+     * @return void
+     */
     protected function subscribeAccount(AccountContract $account): void
     {
         $success = $this->subscriber->usePackSubscription($account, $this->packSubscription->getId());
@@ -185,16 +235,42 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
         if ($success) $this->getSubscribedSubscriptions()->push($this->packSubscription);
     }
 
+    /**
+     * Telling if pack should be activated when created.
+     * 
+     * @return bool
+     */
+    protected function shouldActivatePack(): bool
+    {
+        // If at least an account is not in trial, pack should be activated.
+        return $this->accounts->first(fn (AccountContract $account) => !$account->getChargebee()->isTrial());
+    }
+
+    /**
+     * Telling if accounts were successfully cancelled.
+     * 
+     * @return bool
+     */
     protected function hasSuccessfullyCancelledAccounts(): bool
     {
         return $this->getCancelledSubscriptions()->count() === $this->accounts->count();
     }
 
+    /**
+     * Telling if accounts were successfully subscribed.
+     * 
+     * @return bool
+     */
     protected function hasSuccessfullySubscribedAccounts(): bool
     {
         return $this->getSubscribedSubscriptions()->count() === $this->accounts->count();
     }
 
+    /**
+     * Telling if pack subscription was successfully created.
+     * 
+     * @return bool
+     */
     protected function hasCreatedPackSubscription(): bool
     {
         return !!$this->packSubscription;

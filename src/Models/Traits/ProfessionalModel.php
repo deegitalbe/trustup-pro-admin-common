@@ -3,7 +3,9 @@ namespace Deegitalbe\TrustupProAdminCommon\Models\Traits;
 
 use Carbon\Carbon;
 use Deegitalbe\ChargebeeClient\Chargebee\Contracts\CustomerApiContract;
+use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionApiContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\CustomerContract;
+use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
 
 /**
@@ -11,6 +13,8 @@ use Deegitalbe\TrustupProAdminCommon\Contracts\Models\ProfessionalContract;
  */
 trait ProfessionalModel
 {
+    protected ?SubscriptionContract $packSubscription;
+
     use 
         BeingPersistable
     ;
@@ -107,6 +111,23 @@ trait ProfessionalModel
     public function hasPackSubscription(): bool
     {
         return !!$this->getPackSubscriptionId();
+    }
+
+    /**
+     * Getting related pack subscription.
+     * 
+     * @return ?SubscriptionContract
+     */
+    public function getPackSubscription(): ?SubscriptionContract
+    {
+        if (isset($this->packSubscription)) return $this->packSubscription;
+
+        /** @var SubscriptionApiContract */
+        $subscriptionApi = app()->make(SubscriptionApiContract::class);
+
+        return $this->packSubscription = $this->hasPackSubscription() ?
+            $subscriptionApi->find($this->getPackSubscriptionId())
+            : null;
     }
 
     /**

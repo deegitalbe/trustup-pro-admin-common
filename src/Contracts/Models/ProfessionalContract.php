@@ -3,6 +3,7 @@ namespace Deegitalbe\TrustupProAdminCommon\Contracts\Models;
 
 use Carbon\Carbon;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\CustomerContract;
+use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionContract;
 use Illuminate\Contracts\Support\Arrayable;
 use Deegitalbe\TrustupProAdminCommon\Contracts\PersistableContract;
 
@@ -61,6 +62,13 @@ interface ProfessionalContract extends PersistableContract, Arrayable
      * Getting related pack subscription id.
      */
     public function getPackSubscriptionId(): ?string;
+
+    /**
+     * Getting related pack subscription.
+     * 
+     * @return ?SubscriptionContract
+     */
+    public function getPackSubscription(): ?SubscriptionContract;
 
     /**
      * Telling if having pack subscription.

@@ -191,7 +191,7 @@ class AccountDedicatedSubscriptionSwitcher implements AccountDedicatedSubscripti
         if (!$subscription = $this->subscriptionApi->reactivate($subscription)) return;
 
         // Refresh account status.
-        $account->getChargebee()->fromSubscription($subscription);
+        $account->getChargebee()->refreshFromSubscription($subscription);
 
         // Push subscription as successfully subscribed ones.
         $this->getSubscribedSubscriptions()->push($subscription);

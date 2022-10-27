@@ -183,6 +183,9 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
 
         if (!$subscription) return null;
 
+        // Making sure client won't be charged after trial period.
+        $this->subscriptionApi->cancelAtTerms($subscription);
+
         // If pack should be left as trial stop.
         if (!$this->shouldActivatePack()) return $subscription;
 
@@ -262,7 +265,7 @@ class AccountPackSwitcher implements AccountPackSwitcherContract
     protected function shouldActivatePack(): bool
     {
         // If at least an account is not in trial, pack should be activated.
-        return $this->accounts->first(fn (AccountContract $account) => !$account->getChargebee()->isTrial());
+        return !!$this->accounts->first(fn (AccountContract $account) => !$account->getChargebee()->isTrial());
     }
 
     /**

@@ -2,17 +2,22 @@
 namespace Deegitalbe\TrustupProAdminCommon\Models;
 
 use Carbon\Carbon;
+use ChargeBee\ChargeBee\Result;
+use ChargeBee\ChargeBee\Models\Invoice;
 use Illuminate\Database\Eloquent\Builder;
+use ChargeBee\ChargeBee\Models\InvoiceLineItem;
 use Deegitalbe\TrustupProAdminCommon\Facades\Package;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Deegitalbe\TrustupProAdminCommon\Models\_Abstract\AdminModel;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\PlanContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionApiContract;
+use Deegitalbe\ChargebeeClient\Chargebee\Contracts\Utils\ApiStatusContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\Query\PlanQueryContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Models\Contracts\SubscriptionContract;
 use Deegitalbe\TrustupProAdminCommon\Contracts\Models\AccountChargebeeContract;
 use Deegitalbe\ChargebeeClient\Chargebee\Contracts\SubscriptionInvoiceApiContract;
+use Illuminate\Support\Collection;
 
 class AccountChargebee extends AdminModel implements AccountChargebeeContract
 {
@@ -285,7 +290,34 @@ class AccountChargebee extends AdminModel implements AccountChargebeeContract
         $invoiceApi = app()->make(SubscriptionInvoiceApiContract::class);
         $invoice = $invoiceApi->setSubscription($this->getChargebeeSubscription())->firstLate();
 
-        return $this->setFirstUnpaidInvoiceAt(optional($invoice)->getDueDate())->persist();
+        $results = collect(Invoice::all([
+            "customerId[is]" => $this->getAccount()->getProfessional()->getCustomerId(),
+            "status[in]" => ["not_paid", "payment_due"],
+            "sortBy[asc]" => "date",
+            "limit" => 100,
+        ]));
+
+        /** @var ApiStatusContract */
+        $apiStatus = app()->make(ApiStatusContract::class);
+        /** @var Collection<int, Result> */
+        $results = $apiStatus->whenHealthy(fn () => collect(Invoice::all([
+            "customerId[is]" => $this->getAccount()->getProfessional()->getCustomerId(),
+            "status[in]" => ["not_paid", "payment_due"],
+            "sortBy[asc]" => "date",
+            "limit" => 100,
+        ])));
+        /** @var ?Result */
+        $result = $results->first(
+            fn (Result $result) => collect($result->invoice()->lineItems)->contains(
+                fn (InvoiceLineItem $line) => ($line?->subscriptionId ?? null) === $this->getId()
+            )
+        );
+        $invoice = $result?->invoice();
+        $dueDate = $invoice
+            ? new Carbon($invoice->dueDate)
+            : null;
+
+        return $this->setFirstUnpaidInvoiceAt($dueDate)->persist();
     }
 
     /**

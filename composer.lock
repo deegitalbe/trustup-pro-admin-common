@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9ea95f2588cbe4f1f6a35fa3a715eb7",
+    "content-hash": "6353c7c9f633ecf3608ca92e42943102",
     "packages": [
         {
             "name": "brick/math",
@@ -114,6 +114,54 @@
                 "source": "https://github.com/deegitalbe/chargebee-client/tree/v1.17.0"
             },
             "time": "2023-10-17T12:41:05+00:00"
+        },
+        {
+            "name": "deegitalbe/chargebee-php",
+            "version": "v3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/deegitalbe/chargebee-php.git",
+                "reference": "23681e53ef0b170fa0bbfa1c5c42536ea09f40bc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/deegitalbe/chargebee-php/zipball/23681e53ef0b170fa0bbfa1c5c42536ea09f40bc",
+                "reference": "23681e53ef0b170fa0bbfa1c5c42536ea09f40bc",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "guzzlehttp/guzzle": "^7.0",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "simpletest/simpletest": "^1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "ChargeBee": "lib/"
+                },
+                "psr-4": {
+                    "ChargeBee\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "ChargeBee API client implementation for PHP",
+            "homepage": "https://github.com/chargebee/chargebee-php",
+            "keywords": [
+                "chargebee",
+                "payments",
+                "recurring billing",
+                "subscription billing"
+            ],
+            "support": {
+                "source": "https://github.com/deegitalbe/chargebee-php/tree/v3.1.0"
+            },
+            "time": "2021-09-17T09:28:28+00:00"
         },
         {
             "name": "deegitalbe/server-authorization",
